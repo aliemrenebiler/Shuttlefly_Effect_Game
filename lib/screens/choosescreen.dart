@@ -12,80 +12,29 @@ class ChooseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(seDarkBlue),
-      body: SingleChildScrollView(
-        primary: false,
-        scrollDirection: Axis.vertical,
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                child: const TopBar(),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+              child: const TopBar(),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  for (int i = 0; i < 3; i++)
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        child: CharBox(index: i),
+                      ),
+                    ),
+                ],
               ),
-              for (int i = 0; i < 3; i++)
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: CharBox(index: i),
-                ),
-              /*
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: const [
-                          Expanded(
-                            child: CharSelectionBox(
-                              index: 0,
-                            ),
-                          ),
-                          SkillSelectionBox(
-                            index: 0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: const [
-                          Expanded(
-                            child: CharSelectionBox(
-                              index: 1,
-                            ),
-                          ),
-                          SkillSelectionBox(
-                            index: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: const [
-                          Expanded(
-                            child: CharSelectionBox(
-                              index: 2,
-                            ),
-                          ),
-                          SkillSelectionBox(
-                            index: 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              */
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -181,36 +130,38 @@ class CharBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Color(seLightCream),
+        color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(seCream),
+          color: Color(seLightGrey),
         ),
       ),
       child: Column(
         children: [
           Container(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             padding: const EdgeInsets.all(5),
             child: Text(
               'CHARACTER #${index + 1}',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Color(seDarkPinkyRed),
+                color: Color(seDarkBlue),
                 fontSize: 20,
               ),
             ),
           ),
-          Row(
-            children: [
-              CharSelectionBox(index: index),
-              SkillSelectionBox(index: index),
-            ],
-          )
+          Expanded(
+            flex: 3,
+            child: CharSelectionBox(index: index),
+          ),
+          Expanded(
+            flex: 2,
+            child: SkillSelectionBox(index: index),
+          ),
         ],
       ),
     );
@@ -253,143 +204,96 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
           selectedChars[widget.index].charID = char.charID;
           selectedChars[widget.index].charName = char.charName;
           selectedChars[widget.index].imgURL = char.imgURL;
-          return Container(
-            margin: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Color(seLightCream),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(
-                width: seBorderWidth,
-                color: Color(seCream),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: ArrowButton(
+                  text: '<',
+                  onTapAction: () {
+                    if (counter == 0) {
+                      counter = 4;
+                    } else {
+                      counter--;
+                    }
+                    setState(() {});
+                  },
+                  buttonColor: sePinkyRed,
+                  borderColor: seDarkPinkyRed,
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    'CHARACTER #${widget.index + 1}',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(seDarkPinkyRed),
-                      fontSize: 20,
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: Color(seLightCream),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      width: seBorderWidth,
+                      color: Color(seCream),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Container(
-                      margin: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            char.imgURL!,
-                          ),
-                        ),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: seBorderWidth,
-                          color: Color(seDarkCream),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ArrowButton(
-                        text: '<',
-                        onTapAction: () async {
-                          if (counter == 0) {
-                            counter = 4;
-                          } else {
-                            counter--;
-                          }
-                          setState(() {});
-                        },
-                        buttonColor: sePinkyRed,
-                        borderColor: seDarkPinkyRed,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: seTextBoxHeight,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(
-                                width: seBorderWidth,
-                                color: Color(seDarkCream),
-                              ),
-                            ),
-                            margin: const EdgeInsets.only(top: 5, bottom: 5),
-                            child: Text(
-                              char.charName!,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        onTap: () {
-                          if (counter == 4) {
-                            counter = 0;
-                          } else {
-                            counter++;
-                          }
-                          setState(() {});
-                        },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
                         child: Container(
-                          alignment: Alignment.center,
-                          height: seTextBoxHeight,
-                          decoration: BoxDecoration(
-                            color: Color(sePinkyRed),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(
-                              width: seBorderWidth,
-                              color: Color(seDarkPinkyRed),
-                            ),
-                          ),
-                          margin: const EdgeInsets.all(5),
-                          child: const Text(
-                            '>',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 35,
+                          padding: const EdgeInsets.all(3),
+                          child: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: seBorderWidth,
+                                  color: Color(seDarkCream),
+                                ),
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: NetworkImage(
+                                    char.imgURL!,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        child: Text(
+                          char.charName!,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Color(seDarkPinkyRed),
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: ArrowButton(
+                  text: '>',
+                  onTapAction: () {
+                    if (counter == 4) {
+                      counter = 0;
+                    } else {
+                      counter++;
+                    }
+                    setState(() {});
+                  },
+                  buttonColor: sePinkyRed,
+                  borderColor: seDarkPinkyRed,
+                ),
+              ),
+            ],
           );
         }
       },
@@ -405,7 +309,7 @@ class SkillSelectionBox extends StatefulWidget {
     required this.index,
   }) : super(key: key);
   @override
-  _SkillSelectionBoxState createState() => _SkillSelectionBoxState();
+  State<SkillSelectionBox> createState() => _SkillSelectionBoxState();
 }
 
 class _SkillSelectionBoxState extends State<SkillSelectionBox> {
@@ -415,137 +319,89 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
     return FutureBuilder<Character>(
       future: DatabaseService().getOnlySkill(counter),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container();
-        var char = snapshot.data!;
-        selectedChars[widget.index].skillID = char.skillID;
-        selectedChars[widget.index].skillName = char.skillName;
-        selectedChars[widget.index].skillDesc = char.skillDesc;
-        return Container(
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Color(seLightGrey),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            border: Border.all(
-              width: seBorderWidth,
-              color: Color(seGrey),
-            ),
-          ),
-          child: Column(
+        if (!snapshot.hasData) {
+          return Container();
+        } else {
+          var char = snapshot.data!;
+          selectedChars[widget.index].skillID = char.skillID;
+          selectedChars[widget.index].skillName = char.skillName;
+          selectedChars[widget.index].skillDesc = char.skillDesc;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 5),
-                child: Text(
-                  'SKILL OF ${widget.index}',
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Color(seDarkBlue),
-                    fontSize: 20,
+                padding: const EdgeInsets.all(3),
+                child: ArrowButton(
+                  text: '<',
+                  onTapAction: () {
+                    if (counter == 0) {
+                      counter = 9;
+                    } else {
+                      counter--;
+                    }
+                    setState(() {});
+                  },
+                  buttonColor: seLightBlue,
+                  borderColor: seBlue,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SkillDescAlertBox(
+                          skillName: char.skillName!,
+                          skillDesc: char.skillDesc!,
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: Color(seLightGrey),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                        width: seBorderWidth,
+                        color: Color(seGrey),
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'The\n${char.skillName!}',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.fade,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: ArrowButton(
-                      text: '<',
-                      onTapAction: () {
-                        if (counter == 0) {
-                          counter = 9;
-                        } else {
-                          counter--;
-                        }
-                        setState(() {});
-                      },
-                      buttonColor: seLightBlue,
-                      borderColor: seBlue,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SkillDescAlertBox(
-                              skillName: char.skillName!,
-                              skillDesc: char.skillDesc!,
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        height: seTextBoxHeight,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            width: seBorderWidth,
-                            color: Color(seDarkGrey),
-                          ),
-                        ),
-                        margin: const EdgeInsets.only(top: 5, bottom: 5),
-                        alignment: Alignment.center,
-                        child: Text(
-                          char.skillName!,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () {
-                        if (counter == 9) {
-                          counter = 0;
-                        } else {
-                          counter++;
-                        }
-
-                        // GEREKLİ İŞLEMLER <======
-
-                        setState(() {});
-                      },
-                      child: Container(
-                        height: seTextBoxHeight,
-                        decoration: BoxDecoration(
-                          color: Color(seLightBlue),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            width: seBorderWidth,
-                            color: Color(seBlue),
-                          ),
-                        ),
-                        margin: const EdgeInsets.all(5),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          '>',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 35,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: ArrowButton(
+                  text: '>',
+                  onTapAction: () {
+                    if (counter == 9) {
+                      counter = 0;
+                    } else {
+                      counter++;
+                    }
+                    setState(() {});
+                  },
+                  buttonColor: seLightBlue,
+                  borderColor: seBlue,
+                ),
               ),
             ],
-          ),
-        );
+          );
+        }
       },
     );
   }
@@ -615,7 +471,7 @@ class SkillDescAlertBox extends StatelessWidget {
                 child: Text(
                   skillDesc,
                   textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 15,
@@ -650,7 +506,7 @@ class ArrowButton extends StatelessWidget {
       onTap: onTapAction,
       child: Container(
         alignment: Alignment.center,
-        height: seTextBoxHeight,
+        width: 40,
         decoration: BoxDecoration(
           color: Color(buttonColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -659,7 +515,6 @@ class ArrowButton extends StatelessWidget {
             color: Color(borderColor),
           ),
         ),
-        margin: const EdgeInsets.all(5),
         child: Text(
           text,
           textAlign: TextAlign.center,
