@@ -53,7 +53,7 @@ class _GameScreenState extends State<GameScreen> {
                     flex: 5,
                     child: CharStateBox(
                       index: 3,
-                      char: selectedChars[3],
+                      char: selectedChars[2],
                       notifyParent: refresh,
                     ),
                   ),
@@ -149,7 +149,7 @@ class _EventBoxState extends State<EventBox> {
                 child: Text(
                   eventPageIndex != 1 ? event.desc! : selection.desc!,
                   textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
@@ -325,7 +325,7 @@ class StateValueBox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _StateValueBoxState createState() => _StateValueBoxState();
+  State<StateValueBox> createState() => _StateValueBoxState();
 }
 
 class _StateValueBoxState extends State<StateValueBox> {
