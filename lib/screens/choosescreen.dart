@@ -66,13 +66,13 @@ class TopBar extends StatelessWidget {
               Navigator.pushReplacementNamed(context, '/storyscreen');
             },
           ),
-          const Expanded(
+          Expanded(
             child: Text(
               'CHOOSE CHARACTERS',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white,
+                color: Color(seWhite),
                 fontSize: 25,
               ),
             ),
@@ -110,8 +110,8 @@ class TopBarButton extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Color(seWhite),
             fontSize: 18,
           ),
         ),
@@ -120,6 +120,7 @@ class TopBarButton extends StatelessWidget {
   }
 }
 
+// SELECTION BOXES
 class CharBox extends StatelessWidget {
   final int index;
   const CharBox({
@@ -132,7 +133,7 @@ class CharBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(seWhite),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
@@ -168,7 +169,6 @@ class CharBox extends StatelessWidget {
   }
 }
 
-// CHARACTER NAME AND PICTURE BOX
 class CharSelectionBox extends StatefulWidget {
   final int index;
 
@@ -190,11 +190,11 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
         if (!snapshot.hasData) {
           return Container(
             alignment: Alignment.center,
-            child: const Text(
+            child: Text(
               'Loading...',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: Color(seLightBlue),
                 fontSize: 30,
               ),
             ),
@@ -219,6 +219,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     }
                     setState(() {});
                   },
+                  textColor: seWhite,
                   buttonColor: sePinkyRed,
                   borderColor: seDarkPinkyRed,
                 ),
@@ -246,6 +247,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
+                                color: Color(seGrey),
                                 border: Border.all(
                                   width: seBorderWidth,
                                   color: Color(seDarkCream),
@@ -289,6 +291,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     }
                     setState(() {});
                   },
+                  textColor: seWhite,
                   buttonColor: sePinkyRed,
                   borderColor: seDarkPinkyRed,
                 ),
@@ -301,7 +304,6 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   }
 }
 
-// CHARACTER NAME AND PICTURE BOX
 class SkillSelectionBox extends StatefulWidget {
   final int index;
   const SkillSelectionBox({
@@ -341,6 +343,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     }
                     setState(() {});
                   },
+                  textColor: seWhite,
                   buttonColor: seLightBlue,
                   borderColor: seBlue,
                 ),
@@ -352,9 +355,10 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return SkillDescAlertBox(
-                          skillName: char.skillName!,
-                          skillDesc: char.skillDesc!,
+                        return PopUpAlertBox(
+                          alertTitle: char.skillName!,
+                          alertDesc: char.skillDesc!,
+                          closeButtonActive: true,
                         );
                       },
                     );
@@ -395,6 +399,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     }
                     setState(() {});
                   },
+                  textColor: seWhite,
                   buttonColor: seLightBlue,
                   borderColor: seBlue,
                 ),
@@ -407,14 +412,18 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
   }
 }
 
-// SKILL DESCRIPTION BOX
-class SkillDescAlertBox extends StatelessWidget {
-  final String skillName;
-  final String skillDesc;
-  const SkillDescAlertBox({
+// ALERT BOX
+class PopUpAlertBox extends StatelessWidget {
+  final String alertTitle;
+  final String? alertDesc;
+  final bool closeButtonActive;
+  final List<Widget>? buttons;
+  const PopUpAlertBox({
     Key? key,
-    required this.skillName,
-    required this.skillDesc,
+    required this.alertTitle,
+    this.alertDesc,
+    required this.closeButtonActive,
+    this.buttons,
   }) : super(key: key);
 
   @override
@@ -428,8 +437,8 @@ class SkillDescAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: Color(seWhite),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
             color: Color(seGrey),
@@ -440,15 +449,20 @@ class SkillDescAlertBox extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: closeButtonActive
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(5),
-                    alignment: Alignment.bottomLeft,
+                    alignment: closeButtonActive
+                        ? Alignment.bottomLeft
+                        : Alignment.bottomCenter,
                     child: Text(
-                      skillName,
-                      textAlign: TextAlign.left,
+                      alertTitle,
+                      textAlign:
+                          closeButtonActive ? TextAlign.left : TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.black,
@@ -457,28 +471,44 @@ class SkillDescAlertBox extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: const MenuCloseButton(),
-                ),
+                if (closeButtonActive)
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: SquareButton(
+                      text: 'X',
+                      onTapAction: () {
+                        Navigator.pop(context);
+                      },
+                      textColor: seDarkPinkyRed,
+                      buttonColor: seLightGrey,
+                      borderColor: seGrey,
+                    ),
+                  ),
               ],
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(5),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Text(
-                  skillDesc,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.fade,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
+            if (alertDesc != null)
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(5),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Text(
+                    alertDesc!,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
-            ),
+            if (buttons != null)
+              for (int i = 0; i < buttons!.length; i++)
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: buttons![i],
+                ),
           ],
         ),
       ),
@@ -490,12 +520,14 @@ class SkillDescAlertBox extends StatelessWidget {
 class ArrowButton extends StatelessWidget {
   final String text;
   final VoidCallback onTapAction;
+  final int textColor;
   final int buttonColor;
   final int borderColor;
   const ArrowButton({
     Key? key,
     required this.text,
     required this.onTapAction,
+    required this.textColor,
     required this.buttonColor,
     required this.borderColor,
   }) : super(key: key);
@@ -519,8 +551,8 @@ class ArrowButton extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Color(textColor),
             fontSize: 35,
           ),
         ),
@@ -529,34 +561,43 @@ class ArrowButton extends StatelessWidget {
   }
 }
 
-class MenuCloseButton extends StatelessWidget {
-  const MenuCloseButton({Key? key}) : super(key: key);
+class SquareButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTapAction;
+  final int textColor;
+  final int buttonColor;
+  final int borderColor;
+  const SquareButton({
+    Key? key,
+    required this.text,
+    required this.onTapAction,
+    required this.textColor,
+    required this.buttonColor,
+    required this.borderColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        // SAVE GAME AND GO BACK TO MAIN MENU
-      },
+      onTap: onTapAction,
       child: Container(
         alignment: Alignment.center,
         height: 50,
         width: 50,
         decoration: BoxDecoration(
-          color: Color(seLightGrey),
+          color: Color(buttonColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seGrey),
+            color: Color(borderColor),
           ),
         ),
         child: Text(
-          'X',
+          text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Color(seDarkPinkyRed),
+            color: Color(textColor),
             fontSize: 30,
           ),
         ),

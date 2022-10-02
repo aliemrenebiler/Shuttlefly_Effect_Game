@@ -666,7 +666,7 @@ class DoneButton extends StatelessWidget {
             fontSize: 30,
           ),
         ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
           color: Color(seLightGrey),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -724,20 +724,11 @@ class MainMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacementNamed(context, '/homescreen');
       },
       child: Container(
         alignment: Alignment.center,
-        child: Text(
-          'MAIN MENU',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
           color: Color(seLightBlue),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -747,6 +738,15 @@ class MainMenuButton extends StatelessWidget {
           ),
         ),
         margin: const EdgeInsets.all(5),
+        child: const Text(
+          'MAIN MENU',
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }
@@ -784,7 +784,7 @@ class RestartButton extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
           color: Color(sePinkyRed),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -822,7 +822,7 @@ class YesButton extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
           color: Color(sePinkyRed),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -857,7 +857,7 @@ class NoButton extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
           color: Color(seGrey),
           borderRadius: const BorderRadius.all(Radius.circular(10)),

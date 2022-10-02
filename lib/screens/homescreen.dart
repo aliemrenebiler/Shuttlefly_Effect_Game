@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../database/methods.dart';
 import '../database/variables.dart';
 import '../database/theme.dart';
+
+Timer? animationTimer;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,27 +26,148 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 0),
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height * 2 / 3,
-              margin: const EdgeInsets.all(5),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: AssetImage('assets/shuttlefly_effect_logo.png'),
-                ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: AnimatedLogo(
+                width: MediaQuery.of(context).size.width / 2,
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width / 4,
-              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width / 3.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  NewGameButton(),
-                  ContinueButton(),
-                  ExitButton(),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: FixedHeightButton(
+                      text: 'NEW GAME',
+                      onTapAction: () async {
+                        if (await DatabaseService().dataExists) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return PopUpAlertBox(
+                                alertTitle: 'ARE YOU SURE?',
+                                alertDesc:
+                                    'Your previous progress will be deleted.',
+                                closeButtonActive: false,
+                                buttons: [
+                                  FixedHeightButton(
+                                    text: 'NO',
+                                    onTapAction: () {
+                                      Navigator.pop(context);
+                                    },
+                                    textColor: seWhite,
+                                    buttonColor: seLightBlue,
+                                    borderColor: seBlue,
+                                  ),
+                                  FixedHeightButton(
+                                    text: 'YES',
+                                    onTapAction: () async {
+                                      Navigator.popAndPushNamed(
+                                          context, '/storyscreen');
+                                      animationTimer!.cancel();
+                                      await DatabaseService().eraseSavedData();
+                                    },
+                                    textColor: seWhite,
+                                    buttonColor: sePinkyRed,
+                                    borderColor: seDarkPinkyRed,
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          Navigator.pushNamed(context, '/storyscreen');
+                          animationTimer!.cancel();
+                        }
+                      },
+                      textColor: seWhite,
+                      buttonColor: seLightBlue,
+                      borderColor: seBlue,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: FixedHeightButton(
+                      text: 'CONTINUE',
+                      onTapAction: () async {
+                        if (await DatabaseService().dataExists) {
+                          Navigator.pushReplacementNamed(
+                              context, '/gamescreen');
+                          animationTimer!.cancel();
+                          selectedChars[0] =
+                              await DatabaseService().getCharFromLocal(1);
+                          selectedChars[1] =
+                              await DatabaseService().getCharFromLocal(2);
+                          selectedChars[2] =
+                              await DatabaseService().getCharFromLocal(3);
+
+                          event.eventID =
+                              await DatabaseService().getEventIDFromLocal();
+                          event =
+                              await DatabaseService().getEvent(event.eventID!);
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const PopUpAlertBox(
+                                alertTitle: 'NO DATA!',
+                                alertDesc:
+                                    'There is no progress saved.\nYou should start a new game.',
+                                closeButtonActive: true,
+                              );
+                            },
+                          );
+                        }
+                      },
+                      textColor: seWhite,
+                      buttonColor: sePinkyRed,
+                      borderColor: seDarkPinkyRed,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: FixedHeightButton(
+                      text: 'EXIT',
+                      onTapAction: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return PopUpAlertBox(
+                              alertTitle: 'LEAVING?',
+                              closeButtonActive: false,
+                              buttons: [
+                                FixedHeightButton(
+                                  text: 'NO',
+                                  onTapAction: () {
+                                    Navigator.pop(context);
+                                  },
+                                  textColor: seWhite,
+                                  buttonColor: seLightBlue,
+                                  borderColor: seBlue,
+                                ),
+                                FixedHeightButton(
+                                  text: 'YES',
+                                  onTapAction: () {
+                                    animationTimer!.cancel();
+                                    SystemNavigator.pop(); // EXIT
+                                  },
+                                  textColor: seWhite,
+                                  buttonColor: sePinkyRed,
+                                  borderColor: seDarkPinkyRed,
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      textColor: seWhite,
+                      buttonColor: seGrey,
+                      borderColor: seDarkGrey,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -53,169 +178,154 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// EXIT BOX
-class ExitBox extends StatelessWidget {
-  const ExitBox({Key? key}) : super(key: key);
+// ANIMATED LOGO
+class AnimatedLogo extends StatefulWidget {
+  final double width;
+  const AnimatedLogo({super.key, required this.width});
+
+  @override
+  State<AnimatedLogo> createState() => _AnimatedLogoState();
+}
+
+class _AnimatedLogoState extends State<AnimatedLogo> {
+  bool animationState = true;
+
+  @override
+  void initState() {
+    super.initState();
+    animationTimer = Timer.periodic(
+      const Duration(seconds: 1, milliseconds: 500),
+      (dataTimer) => setState(() {
+        animationState = !animationState;
+      }),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    animationTimer!.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FittedBox(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.all(5),
-                height: 50,
-                child: Text(
-                  'ARE YOU SURE?',
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              const NoButton(),
-              const YesButton(),
-            ],
+    return AnimatedContainer(
+      padding: animationState
+          ? const EdgeInsets.only(bottom: 30)
+          : const EdgeInsets.only(top: 30),
+      duration: const Duration(seconds: 1, milliseconds: 500),
+      curve: Curves.easeInOut,
+      child: Container(
+        width: widget.width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.contain,
+            image: AssetImage('assets/shuttlefly_effect_logo.png'),
           ),
-          width: 200,
-          margin: const EdgeInsets.all(15),
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: Color(seGrey),
         ),
       ),
     );
   }
 }
 
-// RESTART BOX
-class RestartBox extends StatelessWidget {
-  const RestartBox({Key? key}) : super(key: key);
+// ALERT BOX
+class PopUpAlertBox extends StatelessWidget {
+  final String alertTitle;
+  final String? alertDesc;
+  final bool closeButtonActive;
+  final List<Widget>? buttons;
+  const PopUpAlertBox({
+    Key? key,
+    required this.alertTitle,
+    this.alertDesc,
+    required this.closeButtonActive,
+    this.buttons,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FittedBox(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.all(5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'ARE YOU SURE?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      content: Container(
+        width: 300,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Color(seWhite),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            width: seBorderWidth,
+            color: Color(seGrey),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: closeButtonActive
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    alignment: closeButtonActive
+                        ? Alignment.bottomLeft
+                        : Alignment.bottomCenter,
+                    child: Text(
+                      alertTitle,
+                      textAlign:
+                          closeButtonActive ? TextAlign.left : TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 20,
+                        fontSize: 25,
                       ),
-                    ),
-                    Text(
-                      'Your previous progress\nwill be deleted.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(sePinkyRed),
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const NoButton2(),
-              const YesButton2(),
-            ],
-          ),
-          width: 200,
-          margin: const EdgeInsets.all(15),
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: Color(seGrey),
-        ),
-      ),
-    );
-  }
-}
-
-// NO SAVED DATA BOX
-class NoDataBox extends StatelessWidget {
-  const NoDataBox({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: FittedBox(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: Text(
-                        'NO DATA!',
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                        ),
-                      ),
-                      margin: const EdgeInsets.only(left: 10),
                     ),
                   ),
-                  const MenuCloseButton(),
-                ],
-              ),
+                ),
+                if (closeButtonActive)
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: SquareButton(
+                      text: 'X',
+                      onTapAction: () {
+                        Navigator.pop(context);
+                      },
+                      textColor: seDarkPinkyRed,
+                      buttonColor: seLightGrey,
+                      borderColor: seGrey,
+                    ),
+                  ),
+              ],
+            ),
+            if (alertDesc != null)
               Container(
-                alignment: Alignment.topCenter,
-                margin: const EdgeInsets.all(5),
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(5),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Text(
-                    'There is no progress saved. You should start a new game.',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    alertDesc!,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(
                       color: Colors.black,
-                      fontSize: 13,
+                      fontSize: 15,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-          width: 200,
-          margin: const EdgeInsets.all(15),
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: Color(seGrey),
+            if (buttons != null)
+              for (int i = 0; i < buttons!.length; i++)
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: buttons![i],
+                ),
+          ],
         ),
       ),
     );
@@ -223,332 +333,90 @@ class NoDataBox extends StatelessWidget {
 }
 
 // BUTTONS
-class NewGameButton extends StatelessWidget {
-  const NewGameButton({Key? key}) : super(key: key);
+class FixedHeightButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTapAction;
+  final int textColor;
+  final int buttonColor;
+  final int borderColor;
+  const FixedHeightButton({
+    Key? key,
+    required this.text,
+    required this.onTapAction,
+    required this.textColor,
+    required this.buttonColor,
+    required this.borderColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        if (await DatabaseService().dataExists) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const RestartBox(),
-                contentPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              );
-            },
-          );
-        } else {
-          Navigator.pushNamed(context, '/storyscreen');
-        }
-      },
+      onTap: onTapAction,
       child: Container(
         alignment: Alignment.center,
-        child: Text(
-          'NEW GAME',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
+        height: 50,
         decoration: BoxDecoration(
-          color: Color(seLightBlue),
+          color: Color(buttonColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seBlue),
+            color: Color(borderColor),
           ),
         ),
-        margin: const EdgeInsets.all(5),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Color(textColor),
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }
 }
 
-class ContinueButton extends StatelessWidget {
-  const ContinueButton({Key? key}) : super(key: key);
+class SquareButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTapAction;
+  final int textColor;
+  final int buttonColor;
+  final int borderColor;
+  const SquareButton({
+    Key? key,
+    required this.text,
+    required this.onTapAction,
+    required this.textColor,
+    required this.buttonColor,
+    required this.borderColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        if (await DatabaseService().dataExists) {
-          selectedChars[0] = await DatabaseService().getCharFromLocal(1);
-          selectedChars[1] = await DatabaseService().getCharFromLocal(2);
-          selectedChars[2] = await DatabaseService().getCharFromLocal(3);
-
-          event.eventID = await DatabaseService().getEventIDFromLocal();
-          event = await DatabaseService().getEvent(event.eventID!);
-
-          Navigator.pushNamed(context, '/gamescreen');
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const NoDataBox(),
-                contentPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              );
-            },
-          );
-        }
-      },
+      onTap: onTapAction,
       child: Container(
         alignment: Alignment.center,
-        child: Text(
-          'CONTINUE',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(sePinkyRed),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkPinkyRed),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class ExitButton extends StatelessWidget {
-  const ExitButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const ExitBox(),
-              contentPadding: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            );
-          },
-        );
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'EXIT',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(seGrey),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkGrey),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class YesButton extends StatelessWidget {
-  const YesButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        SystemNavigator.pop(); // EXIT
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'YES',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(sePinkyRed),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkPinkyRed),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class NoButton extends StatelessWidget {
-  const NoButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'NO',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(seGrey),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkGrey),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class YesButton2 extends StatelessWidget {
-  const YesButton2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        await DatabaseService().eraseSavedData();
-        Navigator.popAndPushNamed(context, '/storyscreen');
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'YES',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(sePinkyRed),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkPinkyRed),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class NoButton2 extends StatelessWidget {
-  const NoButton2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'NO',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        height: seButtonHeight,
-        decoration: BoxDecoration(
-          color: Color(seGrey),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(seDarkGrey),
-          ),
-        ),
-        margin: const EdgeInsets.all(5),
-      ),
-    );
-  }
-}
-
-class MenuCloseButton extends StatelessWidget {
-  const MenuCloseButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        // SAVE GAME AND GO BACK TO MAIN MENU
-      },
-      child: Container(
-        alignment: Alignment.center,
-        child: Text(
-          'X',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Color(seDarkPinkyRed),
-            fontSize: 30,
-          ),
-        ),
         height: 50,
         width: 50,
         decoration: BoxDecoration(
-          color: Color(seLightGrey),
+          color: Color(buttonColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seGrey),
+            color: Color(borderColor),
           ),
         ),
-        margin: const EdgeInsets.all(5),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Color(textColor),
+            fontSize: 30,
+          ),
+        ),
       ),
     );
   }
