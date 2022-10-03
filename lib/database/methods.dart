@@ -189,7 +189,6 @@ void saveSelectedChars() async {
   await DatabaseService().saveCharacters();
   event = await DatabaseService().getRandomEvent();
   await DatabaseService().saveEventID();
-  print("SAVED");
 }
 
 void manageStates(Character char1, Character char2, Character char3) {

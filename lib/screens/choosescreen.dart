@@ -494,13 +494,15 @@ class PopUpAlertBox extends StatelessWidget {
             ),
             if (alertDesc != null)
               Container(
-                alignment: Alignment.centerLeft,
+                alignment:
+                    closeButtonActive ? Alignment.centerLeft : Alignment.center,
                 padding: const EdgeInsets.all(5),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Text(
                     alertDesc!,
-                    textAlign: TextAlign.left,
+                    textAlign:
+                        closeButtonActive ? TextAlign.left : TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: const TextStyle(
                       color: Colors.black,
