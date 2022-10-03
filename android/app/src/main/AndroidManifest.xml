@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.shuttlefly_effect">
    <application
-        android:label="shuttlefly_effect"
+        android:label="Shuttlefly Effect"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
