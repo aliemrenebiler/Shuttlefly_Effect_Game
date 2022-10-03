@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: FixedHeightButton(
+                    child: AnyButton(
                       text: 'NEW GAME',
                       onTapAction: () async {
                         if (await DatabaseService().dataExists) {
@@ -53,16 +53,17 @@ class HomeScreen extends StatelessWidget {
                                     'Your previous progress will be deleted.',
                                 closeButtonActive: false,
                                 buttons: [
-                                  FixedHeightButton(
+                                  AnyButton(
                                     text: 'NO',
                                     onTapAction: () {
                                       Navigator.pop(context);
                                     },
+                                    height: 50,
                                     textColor: seWhite,
                                     buttonColor: seLightBlue,
                                     borderColor: seBlue,
                                   ),
-                                  FixedHeightButton(
+                                  AnyButton(
                                     text: 'YES',
                                     onTapAction: () async {
                                       Navigator.popAndPushNamed(
@@ -70,6 +71,7 @@ class HomeScreen extends StatelessWidget {
                                       animationTimer!.cancel();
                                       await DatabaseService().eraseSavedData();
                                     },
+                                    height: 50,
                                     textColor: seWhite,
                                     buttonColor: sePinkyRed,
                                     borderColor: seDarkPinkyRed,
@@ -83,6 +85,7 @@ class HomeScreen extends StatelessWidget {
                           animationTimer!.cancel();
                         }
                       },
+                      height: 50,
                       textColor: seWhite,
                       buttonColor: seLightBlue,
                       borderColor: seBlue,
@@ -90,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: FixedHeightButton(
+                    child: AnyButton(
                       text: 'CONTINUE',
                       onTapAction: () async {
                         if (await DatabaseService().dataExists) {
@@ -122,6 +125,7 @@ class HomeScreen extends StatelessWidget {
                           );
                         }
                       },
+                      height: 50,
                       textColor: seWhite,
                       buttonColor: sePinkyRed,
                       borderColor: seDarkPinkyRed,
@@ -129,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: FixedHeightButton(
+                    child: AnyButton(
                       text: 'EXIT',
                       onTapAction: () {
                         showDialog(
@@ -139,21 +143,23 @@ class HomeScreen extends StatelessWidget {
                               alertTitle: 'LEAVING?',
                               closeButtonActive: false,
                               buttons: [
-                                FixedHeightButton(
+                                AnyButton(
                                   text: 'NO',
                                   onTapAction: () {
                                     Navigator.pop(context);
                                   },
+                                  height: 50,
                                   textColor: seWhite,
                                   buttonColor: seLightBlue,
                                   borderColor: seBlue,
                                 ),
-                                FixedHeightButton(
+                                AnyButton(
                                   text: 'YES',
                                   onTapAction: () {
                                     animationTimer!.cancel();
                                     SystemNavigator.pop(); // EXIT
                                   },
+                                  height: 50,
                                   textColor: seWhite,
                                   buttonColor: sePinkyRed,
                                   borderColor: seDarkPinkyRed,
@@ -163,6 +169,7 @@ class HomeScreen extends StatelessWidget {
                           },
                         );
                       },
+                      height: 50,
                       textColor: seWhite,
                       buttonColor: seGrey,
                       borderColor: seDarkGrey,
@@ -290,11 +297,13 @@ class PopUpAlertBox extends StatelessWidget {
                 if (closeButtonActive)
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: SquareButton(
+                    child: AnyButton(
                       text: 'X',
                       onTapAction: () {
                         Navigator.pop(context);
                       },
+                      height: 50,
+                      width: 50,
                       textColor: seDarkPinkyRed,
                       buttonColor: seLightGrey,
                       borderColor: seGrey,
@@ -332,17 +341,21 @@ class PopUpAlertBox extends StatelessWidget {
   }
 }
 
-// BUTTONS
-class FixedHeightButton extends StatelessWidget {
+// BUTTON
+class AnyButton extends StatelessWidget {
   final String text;
   final VoidCallback onTapAction;
+  final double? width;
+  final double? height;
   final int textColor;
   final int buttonColor;
   final int borderColor;
-  const FixedHeightButton({
+  const AnyButton({
     super.key,
     required this.text,
     required this.onTapAction,
+    this.width,
+    this.height,
     required this.textColor,
     required this.buttonColor,
     required this.borderColor,
@@ -354,7 +367,8 @@ class FixedHeightButton extends StatelessWidget {
       onTap: onTapAction,
       child: Container(
         alignment: Alignment.center,
-        height: 50,
+        height: (height != null) ? height : null,
+        width: (width != null) ? width : null,
         decoration: BoxDecoration(
           color: Color(buttonColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -370,51 +384,6 @@ class FixedHeightButton extends StatelessWidget {
           style: TextStyle(
             color: Color(textColor),
             fontSize: 20,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SquareButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onTapAction;
-  final int textColor;
-  final int buttonColor;
-  final int borderColor;
-  const SquareButton({
-    super.key,
-    required this.text,
-    required this.onTapAction,
-    required this.textColor,
-    required this.buttonColor,
-    required this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTapAction,
-      child: Container(
-        alignment: Alignment.center,
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: Color(buttonColor),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: Color(borderColor),
-          ),
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Color(textColor),
-            fontSize: 30,
           ),
         ),
       ),
