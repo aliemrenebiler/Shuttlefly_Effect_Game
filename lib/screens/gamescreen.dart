@@ -5,7 +5,7 @@ import '../database/variables.dart';
 import '../database/theme.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({Key? key}) : super(key: key);
+  const GameScreen({super.key});
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
@@ -94,7 +94,7 @@ class _GameScreenState extends State<GameScreen> {
 // EVENT BOX
 class EventBox extends StatefulWidget {
   final Function() notifyParent;
-  const EventBox({Key? key, required this.notifyParent}) : super(key: key);
+  const EventBox({super.key, required this.notifyParent});
 
   @override
   State<EventBox> createState() => _EventBoxState();
@@ -171,11 +171,11 @@ class CharStateBox extends StatefulWidget {
   final Function() notifyParent;
 
   const CharStateBox({
-    Key? key,
+    super.key,
     required this.index,
     required this.char,
     required this.notifyParent,
-  }) : super(key: key);
+  });
 
   @override
   State<CharStateBox> createState() => _CharStateBoxState();
@@ -317,12 +317,12 @@ class StateValueBox extends StatefulWidget {
   var dColor;
   int value;
   StateValueBox({
-    Key? key,
+    super.key,
     required this.text,
     required this.color,
     required this.dColor,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   State<StateValueBox> createState() => _StateValueBoxState();
@@ -369,7 +369,7 @@ class _StateValueBoxState extends State<StateValueBox> {
 // NO SAVED DATA BOX
 class EndGameBox extends StatelessWidget {
   final String message;
-  const EndGameBox({Key? key, required this.message}) : super(key: key);
+  const EndGameBox({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -427,7 +427,7 @@ class EndGameBox extends StatelessWidget {
 
 // MENU BOX
 class MenuBox extends StatelessWidget {
-  const MenuBox({Key? key}) : super(key: key);
+  const MenuBox({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -477,7 +477,7 @@ class MenuBox extends StatelessWidget {
 
 // RESTART BOX
 class RestartBox extends StatelessWidget {
-  const RestartBox({Key? key}) : super(key: key);
+  const RestartBox({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -535,7 +535,7 @@ class RestartBox extends StatelessWidget {
 
 // BUTTONS
 class MenuButton extends StatelessWidget {
-  const MenuButton({Key? key}) : super(key: key);
+  const MenuButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -581,7 +581,7 @@ class MenuButton extends StatelessWidget {
 
 class SkipButton extends StatelessWidget {
   final Function() notifyParent;
-  const SkipButton({Key? key, required this.notifyParent}) : super(key: key);
+  const SkipButton({super.key, required this.notifyParent});
 
   @override
   Widget build(BuildContext context) {
@@ -624,7 +624,7 @@ class SkipButton extends StatelessWidget {
 
 class DoneButton extends StatelessWidget {
   final Function() notifyParent;
-  const DoneButton({Key? key, required this.notifyParent}) : super(key: key);
+  const DoneButton({super.key, required this.notifyParent});
 
   @override
   Widget build(BuildContext context) {
@@ -682,7 +682,7 @@ class DoneButton extends StatelessWidget {
 }
 
 class MenuCloseButton extends StatelessWidget {
-  const MenuCloseButton({Key? key}) : super(key: key);
+  const MenuCloseButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -718,7 +718,7 @@ class MenuCloseButton extends StatelessWidget {
 }
 
 class MainMenuButton extends StatelessWidget {
-  const MainMenuButton({Key? key}) : super(key: key);
+  const MainMenuButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -753,7 +753,7 @@ class MainMenuButton extends StatelessWidget {
 }
 
 class RestartButton extends StatelessWidget {
-  const RestartButton({Key? key}) : super(key: key);
+  const RestartButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -800,7 +800,7 @@ class RestartButton extends StatelessWidget {
 }
 
 class YesButton extends StatelessWidget {
-  const YesButton({Key? key}) : super(key: key);
+  const YesButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -838,7 +838,7 @@ class YesButton extends StatelessWidget {
 }
 
 class NoButton extends StatelessWidget {
-  const NoButton({Key? key}) : super(key: key);
+  const NoButton({super.key});
 
   @override
   Widget build(BuildContext context) {

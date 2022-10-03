@@ -3,7 +3,7 @@ import '../database/variables.dart';
 import '../database/theme.dart';
 
 class StoryScreen extends StatelessWidget {
-  const StoryScreen({Key? key}) : super(key: key);
+  const StoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class StoryScreen extends StatelessWidget {
 
 // TOP BAR
 class TopBar extends StatelessWidget {
-  const TopBar({Key? key}) : super(key: key);
+  const TopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +101,10 @@ class TopBarButton extends StatelessWidget {
   final String text;
   final VoidCallback onTapAction;
   const TopBarButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapAction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

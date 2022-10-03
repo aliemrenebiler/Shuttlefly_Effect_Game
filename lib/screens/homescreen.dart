@@ -9,7 +9,7 @@ import '../database/theme.dart';
 Timer? animationTimer;
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -235,12 +235,12 @@ class PopUpAlertBox extends StatelessWidget {
   final bool closeButtonActive;
   final List<Widget>? buttons;
   const PopUpAlertBox({
-    Key? key,
+    super.key,
     required this.alertTitle,
     this.alertDesc,
     required this.closeButtonActive,
     this.buttons,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -340,13 +340,13 @@ class FixedHeightButton extends StatelessWidget {
   final int buttonColor;
   final int borderColor;
   const FixedHeightButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapAction,
     required this.textColor,
     required this.buttonColor,
     required this.borderColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -384,13 +384,13 @@ class SquareButton extends StatelessWidget {
   final int buttonColor;
   final int borderColor;
   const SquareButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapAction,
     required this.textColor,
     required this.buttonColor,
     required this.borderColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import '../database/variables.dart';
 import '../database/theme.dart';
 
 class ChooseScreen extends StatelessWidget {
-  const ChooseScreen({Key? key}) : super(key: key);
+  const ChooseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class ChooseScreen extends StatelessWidget {
 
 // TOP BAR
 class TopBar extends StatelessWidget {
-  const TopBar({Key? key}) : super(key: key);
+  const TopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +173,9 @@ class CharSelectionBox extends StatefulWidget {
   final int index;
 
   const CharSelectionBox({
-    Key? key,
+    super.key,
     required this.index,
-  }) : super(key: key);
+  });
   @override
   State<CharSelectionBox> createState() => _CharSelectionBoxState();
 }
@@ -307,9 +307,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
 class SkillSelectionBox extends StatefulWidget {
   final int index;
   const SkillSelectionBox({
-    Key? key,
+    super.key,
     required this.index,
-  }) : super(key: key);
+  });
   @override
   State<SkillSelectionBox> createState() => _SkillSelectionBoxState();
 }
@@ -419,12 +419,12 @@ class PopUpAlertBox extends StatelessWidget {
   final bool closeButtonActive;
   final List<Widget>? buttons;
   const PopUpAlertBox({
-    Key? key,
+    super.key,
     required this.alertTitle,
     this.alertDesc,
     required this.closeButtonActive,
     this.buttons,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -524,13 +524,13 @@ class ArrowButton extends StatelessWidget {
   final int buttonColor;
   final int borderColor;
   const ArrowButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapAction,
     required this.textColor,
     required this.buttonColor,
     required this.borderColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -568,13 +568,13 @@ class SquareButton extends StatelessWidget {
   final int buttonColor;
   final int borderColor;
   const SquareButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTapAction,
     required this.textColor,
     required this.buttonColor,
     required this.borderColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
