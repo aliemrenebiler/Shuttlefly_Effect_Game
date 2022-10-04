@@ -76,8 +76,8 @@ class HomeScreen extends StatelessWidget {
                                     },
                                     height: 50,
                                     textColor: seWhite,
-                                    buttonColor: sePinkyRed,
-                                    borderColor: seDarkPinkyRed,
+                                    buttonColor: seLightPinkyRed,
+                                    borderColor: sePinkyRed,
                                   ),
                                 ],
                               );
@@ -113,10 +113,10 @@ class HomeScreen extends StatelessWidget {
                           selectedChars[2] =
                               await SharedPrefsService().getCharFromLocal(2);
 
-                          currentEvent!.eventID =
+                          currentEvent.eventID =
                               await SharedPrefsService().getEventIDFromLocal();
                           currentEvent = await DatabaseService()
-                              .getEvent(currentEvent!.eventID!);
+                              .getEvent(currentEvent.eventID!);
                         } else {
                           showDialog(
                             context: context,
@@ -133,8 +133,8 @@ class HomeScreen extends StatelessWidget {
                       },
                       height: 50,
                       textColor: seWhite,
-                      buttonColor: sePinkyRed,
-                      borderColor: seDarkPinkyRed,
+                      buttonColor: seLightPinkyRed,
+                      borderColor: sePinkyRed,
                     ),
                   ),
                   Container(
@@ -167,8 +167,8 @@ class HomeScreen extends StatelessWidget {
                                   },
                                   height: 50,
                                   textColor: seWhite,
-                                  buttonColor: sePinkyRed,
-                                  borderColor: seDarkPinkyRed,
+                                  buttonColor: seLightPinkyRed,
+                                  borderColor: sePinkyRed,
                                 ),
                               ],
                             );
@@ -310,7 +310,7 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: seDarkPinkyRed,
+                      textColor: sePinkyRed,
                       buttonColor: seLightGrey,
                       borderColor: seGrey,
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../database/methods.dart';
 import '../database/variables.dart';
 import '../database/theme.dart';
@@ -15,12 +16,6 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
-  void initState() async {
-    super.initState();
-    currentEvent = await DatabaseService().getRandomEvent();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(seDarkBlue),
@@ -33,8 +28,8 @@ class _GameScreenState extends State<GameScreen> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: EventBox(
-                  title: currentEvent!.title!,
-                  desc: currentEvent!.desc!,
+                  title: currentEvent.title!,
+                  desc: currentEvent.desc!,
                   titleColor: seDarkBlue,
                   descColor: seBlack,
                   boxColor: seWhite,
@@ -102,8 +97,8 @@ class _GameScreenState extends State<GameScreen> {
                                               },
                                               height: 50,
                                               textColor: seWhite,
-                                              buttonColor: sePinkyRed,
-                                              borderColor: seDarkPinkyRed,
+                                              buttonColor: seLightPinkyRed,
+                                              borderColor: sePinkyRed,
                                             ),
                                           ],
                                         );
@@ -112,8 +107,8 @@ class _GameScreenState extends State<GameScreen> {
                                   },
                                   height: 50,
                                   textColor: seWhite,
-                                  buttonColor: sePinkyRed,
-                                  borderColor: seDarkPinkyRed,
+                                  buttonColor: seLightPinkyRed,
+                                  borderColor: sePinkyRed,
                                 ),
                               ],
                             );
@@ -139,10 +134,11 @@ class _GameScreenState extends State<GameScreen> {
                                   index: i,
                                   onTapAction: () async {
                                     if (eventPageIndex != 1) {
-                                      currentSelection = await DatabaseService()
-                                          .getSelection(selectedChars[i]
-                                              .skillID
-                                              .toString());
+                                      currentSelection =
+                                          await DatabaseService().getSelection(
+                                        selectedChars[i].skillID!,
+                                        selectedChars[i].charName,
+                                      );
                                       manageStates();
                                       eventPageIndex = 1;
                                       await SharedPrefsService().saveStates();
@@ -158,8 +154,11 @@ class _GameScreenState extends State<GameScreen> {
                                 ? AnyButton(
                                     text: 'SKIP',
                                     onTapAction: () async {
-                                      currentSelection = await DatabaseService()
-                                          .getSelection('skip');
+                                      currentSelection =
+                                          await DatabaseService().getSelection(
+                                        -1,
+                                        null,
+                                      );
                                       manageStates();
                                       eventPageIndex = 1;
                                       SharedPrefsService().saveStates();
@@ -167,8 +166,8 @@ class _GameScreenState extends State<GameScreen> {
                                     },
                                     height: 50,
                                     textColor: seWhite,
-                                    buttonColor: sePinkyRed,
-                                    borderColor: seDarkPinkyRed,
+                                    buttonColor: seLightPinkyRed,
+                                    borderColor: sePinkyRed,
                                   )
                                 : AnyButton(
                                     text: 'DONE',
@@ -213,7 +212,7 @@ class _GameScreenState extends State<GameScreen> {
                                       }
                                     },
                                     height: 50,
-                                    textColor: seDarkPinkyRed,
+                                    textColor: sePinkyRed,
                                     buttonColor: seLightGrey,
                                     borderColor: seGrey,
                                   ),
@@ -240,6 +239,7 @@ class StateValueBox extends StatefulWidget {
   final double? height;
   final int textColor;
   final int boxColor;
+  final int bgColor;
   final int borderColor;
   const StateValueBox({
     super.key,
@@ -249,6 +249,7 @@ class StateValueBox extends StatefulWidget {
     this.height,
     required this.textColor,
     required this.boxColor,
+    required this.bgColor,
     required this.borderColor,
   });
 
@@ -262,38 +263,56 @@ class _StateValueBoxState extends State<StateValueBox> {
     return Container(
       height: (widget.height != null) ? widget.height : null,
       width: (widget.width != null) ? widget.width : null,
-      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Color(widget.boxColor),
+        color: Color(widget.bgColor),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
           color: Color(widget.borderColor),
         ),
       ),
-      child: Column(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            child: Text(
-              widget.text,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Color(widget.textColor),
-                fontSize: 20,
+          Expanded(
+            child: Container(
+              height: 10,
+              decoration: BoxDecoration(
+                color: Color(widget.boxColor),
+                borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(3),
-            child: Text(
-              '${widget.value}',
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Color(widget.textColor),
-                fontSize: 20,
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: Text(
+                      widget.text,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Color(widget.textColor),
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: Text(
+                      '${widget.value}',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Color(widget.textColor),
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -346,7 +365,7 @@ class _EventBoxState extends State<EventBox> {
                   margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
                   child: Text(
                     (eventPageIndex != 1)
-                        ? currentEvent!.title!
+                        ? currentEvent.title!
                         : 'WHAT HAPPENED?',
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
@@ -363,7 +382,7 @@ class _EventBoxState extends State<EventBox> {
                       margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       child: Text(
                         (eventPageIndex != 1)
-                            ? currentEvent!.desc!
+                            ? currentEvent.desc!
                             : currentSelection!.desc,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.fade,
@@ -384,10 +403,11 @@ class _EventBoxState extends State<EventBox> {
                           padding: const EdgeInsets.all(3),
                           child: StateValueBox(
                             text: 'Health',
-                            value: 5,
+                            value: currentStates.health!,
                             textColor: seWhite,
-                            boxColor: sePinkyRed,
-                            borderColor: seDarkPinkyRed,
+                            boxColor: seLightPinkyRed,
+                            bgColor: seDarkPinkyRed,
+                            borderColor: sePinkyRed,
                           ),
                         ),
                       ),
@@ -396,9 +416,10 @@ class _EventBoxState extends State<EventBox> {
                           padding: const EdgeInsets.all(3),
                           child: StateValueBox(
                             text: 'Oxygen',
-                            value: 100,
+                            value: currentStates.oxygen!,
                             textColor: seWhite,
                             boxColor: seLightBlue,
+                            bgColor: seDarkBlue,
                             borderColor: seBlue,
                           ),
                         ),
@@ -408,10 +429,11 @@ class _EventBoxState extends State<EventBox> {
                           padding: const EdgeInsets.all(3),
                           child: StateValueBox(
                             text: 'Morale',
-                            value: 5,
+                            value: currentStates.morale!,
                             textColor: seWhite,
-                            boxColor: sePurple,
-                            borderColor: seDarkPurple,
+                            boxColor: seLightPurple,
+                            bgColor: seDarkPurple,
+                            borderColor: sePurple,
                           ),
                         ),
                       ),
@@ -420,10 +442,11 @@ class _EventBoxState extends State<EventBox> {
                           padding: const EdgeInsets.all(3),
                           child: StateValueBox(
                             text: 'Energy',
-                            value: 5,
+                            value: currentStates.energy!,
                             textColor: seWhite,
-                            boxColor: seYellow,
-                            borderColor: seDarkYellow,
+                            boxColor: seLightYellow,
+                            bgColor: seDarkYellow,
+                            borderColor: seYellow,
                           ),
                         ),
                       ),
@@ -506,7 +529,7 @@ class CharBox extends StatelessWidget {
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Color(seDarkPinkyRed),
+                        color: Color(sePinkyRed),
                         fontSize: 20,
                       ),
                     ),
@@ -599,7 +622,7 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: seDarkPinkyRed,
+                      textColor: sePinkyRed,
                       buttonColor: seLightGrey,
                       borderColor: seGrey,
                     ),

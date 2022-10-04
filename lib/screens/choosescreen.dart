@@ -214,7 +214,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = characterTypesAmount;
+                      counter = characterTypesAmount - 1;
                     } else {
                       counter--;
                     }
@@ -222,8 +222,8 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   },
                   width: 35,
                   textColor: seWhite,
-                  buttonColor: sePinkyRed,
-                  borderColor: seDarkPinkyRed,
+                  buttonColor: seLightPinkyRed,
+                  borderColor: sePinkyRed,
                 ),
               ),
               Expanded(
@@ -272,7 +272,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Color(seDarkPinkyRed),
+                            color: Color(sePinkyRed),
                             fontSize: 20,
                           ),
                         ),
@@ -286,7 +286,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == characterTypesAmount) {
+                    if (counter == characterTypesAmount - 1) {
                       counter = 0;
                     } else {
                       counter++;
@@ -295,8 +295,8 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   },
                   width: 35,
                   textColor: seWhite,
-                  buttonColor: sePinkyRed,
-                  borderColor: seDarkPinkyRed,
+                  buttonColor: seLightPinkyRed,
+                  borderColor: sePinkyRed,
                 ),
               ),
             ],
@@ -341,7 +341,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = skillTypesAmount;
+                      counter = skillTypesAmount - 1;
                     } else {
                       counter--;
                     }
@@ -397,7 +397,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == skillTypesAmount) {
+                    if (counter == skillTypesAmount - 1) {
                       counter = 0;
                     } else {
                       counter++;
@@ -487,7 +487,7 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: seDarkPinkyRed,
+                      textColor: sePinkyRed,
                       buttonColor: seLightGrey,
                       borderColor: seGrey,
                     ),

@@ -55,19 +55,21 @@ class DatabaseService {
     return await DatabaseService().getEvent(randomNumber);
   }
 
-  getSelection(String id) async {
+  getSelection(int id, String? charName) async {
     var selection = await db
         .collection('events')
-        .doc(currentEvent!.eventID.toString())
+        .doc(currentEvent.eventID.toString())
         .collection('selections')
-        .doc(id)
+        .doc(id.toString())
         .get();
     if (selection.data() == null) {
       return null;
     } else {
       return Selection(
         selID: int.parse(selection.id),
-        desc: selection.get('desc'),
+        desc: (charName != null)
+            ? "$charName ${selection.get('desc')}"
+            : selection.get('desc'),
         healthChange: selection.get('healthChange'),
         oxygenChange: selection.get('oxygenChange'),
         energyChange: selection.get('energyChange'),
@@ -109,7 +111,7 @@ class SharedPrefsService {
   Future saveEventID() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt('currentEventID', currentEvent!.eventID!);
+    prefs.setInt('currentEventID', currentEvent.eventID!);
   }
 
   Future<bool> get dataExists async {
@@ -166,10 +168,33 @@ void saveSelectedChars() async {
 }
 
 void manageStates() {
-  currentStates.energy = currentStates.energy! + currentSelection!.energyChange;
-  currentStates.health = currentStates.health! + currentSelection!.healthChange;
-  currentStates.oxygen = currentStates.oxygen! + currentSelection!.oxygenChange;
-  currentStates.morale = currentStates.morale! + currentSelection!.moraleChange;
+  if (currentStates.energy! + currentSelection!.energyChange > 100) {
+    currentStates.energy = 100;
+  } else {
+    currentStates.energy =
+        currentStates.energy! + currentSelection!.energyChange;
+  }
+
+  if (currentStates.health! + currentSelection!.healthChange > 100) {
+    currentStates.health = 100;
+  } else {
+    currentStates.health =
+        currentStates.health! + currentSelection!.healthChange;
+  }
+
+  if (currentStates.oxygen! + currentSelection!.oxygenChange > 100) {
+    currentStates.oxygen = 100;
+  } else {
+    currentStates.oxygen =
+        currentStates.oxygen! + currentSelection!.oxygenChange;
+  }
+
+  if (currentStates.morale! + currentSelection!.moraleChange > 100) {
+    currentStates.morale = 100;
+  } else {
+    currentStates.morale =
+        currentStates.morale! + currentSelection!.moraleChange;
+  }
 }
 
 checkStates() {
