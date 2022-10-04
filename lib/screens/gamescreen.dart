@@ -19,221 +19,209 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       backgroundColor: Color(seDarkBlue),
       body: Container(
-        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Row(
           children: [
             Expanded(
               flex: 2,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: EventBox(
-                      notifyParent: refresh,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: StateValueBox(
-                            text: 'Health',
-                            value: 5,
-                            textColor: seWhite,
-                            boxColor: sePinkyRed,
-                            borderColor: seDarkPinkyRed,
-                          ),
-                        ),
-                        Expanded(
-                          child: StateValueBox(
-                            text: 'Oxygen',
-                            value: 100,
-                            textColor: seWhite,
-                            boxColor: seLightBlue,
-                            borderColor: seBlue,
-                          ),
-                        ),
-                        Expanded(
-                          child: StateValueBox(
-                            text: 'Morale',
-                            value: 5,
-                            textColor: seWhite,
-                            boxColor: sePurple,
-                            borderColor: seDarkPurple,
-                          ),
-                        ),
-                        Expanded(
-                          child: StateValueBox(
-                            text: 'Energy',
-                            value: 5,
-                            textColor: seWhite,
-                            boxColor: seYellow,
-                            borderColor: seDarkYellow,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: EventBox(
+                  title: currentEvent.title!,
+                  desc: currentEvent.desc!,
+                  titleColor: seDarkBlue,
+                  descColor: seBlack,
+                  boxColor: seWhite,
+                  borderColor: seLightGrey,
+                ),
               ),
             ),
             Expanded(
               flex: 1,
               child: Column(
                 children: [
-                  AnyButton(
-                    text: 'PAUSE',
-                    onTapAction: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return PopUpAlertBox(
-                            alertTitle: 'PAUSED',
-                            closeButtonActive: true,
-                            buttons: [
-                              AnyButton(
-                                text: 'MAIN MENU',
-                                onTapAction: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/homescreen');
-                                },
-                                height: 50,
-                                textColor: seWhite,
-                                buttonColor: seLightBlue,
-                                borderColor: seBlue,
-                              ),
-                              AnyButton(
-                                text: 'RESTART',
-                                onTapAction: () {
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return PopUpAlertBox(
-                                        alertTitle: 'ARE YOU SURE?',
-                                        alertDesc:
-                                            'Your previous progress will be deleted.',
-                                        closeButtonActive: false,
-                                        buttons: [
-                                          AnyButton(
-                                            text: 'NO',
-                                            onTapAction: () {
-                                              Navigator.pop(context);
-                                            },
-                                            height: 50,
-                                            textColor: seWhite,
-                                            buttonColor: seLightBlue,
-                                            borderColor: seBlue,
-                                          ),
-                                          AnyButton(
-                                            text: 'YES',
-                                            onTapAction: () async {
-                                              Navigator.pushReplacementNamed(
-                                                  context, '/choosescreen');
-                                              await DatabaseService()
-                                                  .eraseSavedData();
-                                            },
-                                            height: 50,
-                                            textColor: seWhite,
-                                            buttonColor: sePinkyRed,
-                                            borderColor: seDarkPinkyRed,
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                height: 50,
-                                textColor: seWhite,
-                                buttonColor: sePinkyRed,
-                                borderColor: seDarkPinkyRed,
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    height: 50,
-                    textColor: seWhite,
-                    buttonColor: seLightBlue,
-                    borderColor: seBlue,
-                  ),
-                  Expanded(
-                    child: CharBox(
-                      index: 0,
-                      notifyParent: refresh,
-                    ),
-                  ),
-                  Expanded(
-                    child: CharBox(
-                      index: 1,
-                      notifyParent: refresh,
-                    ),
-                  ),
-                  Expanded(
-                    child: CharBox(
-                      index: 2,
-                      notifyParent: refresh,
-                    ),
-                  ),
-                  if (eventPageIndex == 0)
-                    AnyButton(
-                      text: 'SKIP',
-                      onTapAction: () async {
-                        selection = await DatabaseService().getSelection(10);
-                        skipManageStates();
-                        eventPageIndex = 1;
-                        DatabaseService().saveStates();
-                        refresh(); // SET STATE FULL PAGE
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: AnyButton(
+                      text: 'PAUSE',
+                      onTapAction: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return PopUpAlertBox(
+                              alertTitle: 'PAUSED',
+                              closeButtonActive: true,
+                              buttons: [
+                                AnyButton(
+                                  text: 'MAIN MENU',
+                                  onTapAction: () {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/homescreen');
+                                  },
+                                  height: 50,
+                                  textColor: seWhite,
+                                  buttonColor: seLightBlue,
+                                  borderColor: seBlue,
+                                ),
+                                AnyButton(
+                                  text: 'RESTART',
+                                  onTapAction: () {
+                                    Navigator.pop(context);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return PopUpAlertBox(
+                                          alertTitle: 'ARE YOU SURE?',
+                                          alertDesc:
+                                              'Your previous progress will be deleted.',
+                                          closeButtonActive: false,
+                                          buttons: [
+                                            AnyButton(
+                                              text: 'NO',
+                                              onTapAction: () {
+                                                Navigator.pop(context);
+                                              },
+                                              height: 50,
+                                              textColor: seWhite,
+                                              buttonColor: seLightBlue,
+                                              borderColor: seBlue,
+                                            ),
+                                            AnyButton(
+                                              text: 'YES',
+                                              onTapAction: () async {
+                                                Navigator.pushReplacementNamed(
+                                                    context, '/choosescreen');
+                                                await DatabaseService()
+                                                    .eraseSavedData();
+                                              },
+                                              height: 50,
+                                              textColor: seWhite,
+                                              buttonColor: sePinkyRed,
+                                              borderColor: seDarkPinkyRed,
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  height: 50,
+                                  textColor: seWhite,
+                                  buttonColor: sePinkyRed,
+                                  borderColor: seDarkPinkyRed,
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       height: 50,
                       textColor: seWhite,
-                      buttonColor: sePinkyRed,
-                      borderColor: seDarkPinkyRed,
-                    )
-                  else
-                    AnyButton(
-                      text: 'DONE',
-                      onTapAction: () async {
-                        var message = checkStates();
-                        if (message == '') {
-                          eventPageIndex = 0;
-                          event = await DatabaseService().getRandomEvent();
-                          await DatabaseService().saveEventID();
-                          // SET STATE FULL PAGE
-                          refresh();
-                        } else {
-                          await DatabaseService().eraseSavedData();
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return PopUpAlertBox(
-                                alertTitle: 'THE END',
-                                alertDesc: message,
-                                closeButtonActive: false,
-                                buttons: [
-                                  AnyButton(
-                                    text: 'MAIN MENU',
-                                    onTapAction: () {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/homescreen');
+                      buttonColor: seLightBlue,
+                      borderColor: seBlue,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              child: CharBox(
+                                index: 0,
+                                notifyParent: refresh,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              child: CharBox(
+                                index: 1,
+                                notifyParent: refresh,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              child: CharBox(
+                                index: 2,
+                                notifyParent: refresh,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: (eventPageIndex == 0)
+                                ? AnyButton(
+                                    text: 'SKIP',
+                                    onTapAction: () async {
+                                      currentSelection = await DatabaseService()
+                                          .getSelection(10);
+                                      skipManageStates();
+                                      eventPageIndex = 1;
+                                      DatabaseService().saveStates();
+                                      refresh(); // SET STATE FULL PAGE
                                     },
                                     height: 50,
                                     textColor: seWhite,
-                                    buttonColor: seLightBlue,
-                                    borderColor: seBlue,
+                                    buttonColor: sePinkyRed,
+                                    borderColor: seDarkPinkyRed,
+                                  )
+                                : AnyButton(
+                                    text: 'DONE',
+                                    onTapAction: () async {
+                                      var message = checkStates();
+                                      if (message == '') {
+                                        eventPageIndex = 0;
+                                        currentEvent = await DatabaseService()
+                                            .getRandomEvent();
+                                        await DatabaseService().saveEventID();
+                                        // SET STATE FULL PAGE
+                                        refresh();
+                                      } else {
+                                        await DatabaseService()
+                                            .eraseSavedData();
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return PopUpAlertBox(
+                                              alertTitle: 'THE END',
+                                              alertDesc: message,
+                                              closeButtonActive: false,
+                                              buttons: [
+                                                AnyButton(
+                                                  text: 'MAIN MENU',
+                                                  onTapAction: () {
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                            context,
+                                                            '/homescreen');
+                                                  },
+                                                  height: 50,
+                                                  textColor: seWhite,
+                                                  buttonColor: seLightBlue,
+                                                  borderColor: seBlue,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    height: 50,
+                                    textColor: seDarkPinkyRed,
+                                    buttonColor: seLightGrey,
+                                    borderColor: seGrey,
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      height: 50,
-                      textColor: seDarkPinkyRed,
-                      buttonColor: seLightGrey,
-                      borderColor: seGrey,
+                          ),
+                        ],
+                      ),
                     ),
+                  )
                 ],
               ),
             ),
@@ -285,17 +273,15 @@ class _StateValueBoxState extends State<StateValueBox> {
       ),
       child: Column(
         children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(3),
-              child: Text(
-                widget.text,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.clip,
-                style: TextStyle(
-                  color: Color(widget.textColor),
-                  fontSize: 20,
-                ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            child: Text(
+              widget.text,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Color(widget.textColor),
+                fontSize: 20,
               ),
             ),
           ),
@@ -304,11 +290,139 @@ class _StateValueBoxState extends State<StateValueBox> {
             child: Text(
               '${widget.value}',
               textAlign: TextAlign.center,
-              overflow: TextOverflow.clip,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Color(widget.textColor),
                 fontSize: 20,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// EVENT BOX
+class EventBox extends StatefulWidget {
+  final String title;
+  final String desc;
+  final int titleColor;
+  final int descColor;
+  final int boxColor;
+  final int borderColor;
+  const EventBox({
+    super.key,
+    required this.title,
+    required this.desc,
+    required this.titleColor,
+    required this.descColor,
+    required this.boxColor,
+    required this.borderColor,
+  });
+
+  @override
+  State<EventBox> createState() => _EventBoxState();
+}
+
+class _EventBoxState extends State<EventBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(widget.boxColor),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          width: seBorderWidth,
+          color: Color(widget.borderColor),
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
+            child: Text(
+              (eventPageIndex != 1) ? currentEvent.title! : 'WHAT HAPPENED?',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Color(widget.titleColor),
+                fontSize: 25,
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                child: Text(
+                  (eventPageIndex != 1)
+                      ? currentEvent.desc!
+                      : currentSelection.desc!,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    color: Color(widget.descColor),
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Health',
+                      value: 5,
+                      textColor: seWhite,
+                      boxColor: sePinkyRed,
+                      borderColor: seDarkPinkyRed,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Oxygen',
+                      value: 100,
+                      textColor: seWhite,
+                      boxColor: seLightBlue,
+                      borderColor: seBlue,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Morale',
+                      value: 5,
+                      textColor: seWhite,
+                      boxColor: sePurple,
+                      borderColor: seDarkPurple,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Energy',
+                      value: 5,
+                      textColor: seWhite,
+                      boxColor: seYellow,
+                      borderColor: seDarkYellow,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -337,7 +451,7 @@ class CharBox extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (eventPageIndex != 1) {
-          selection = await DatabaseService()
+          currentSelection = await DatabaseService()
               .getSelection(selectedChars[index].skillID!);
           switch (index) {
             case 0:
@@ -585,80 +699,6 @@ class AnyButton extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-      ),
-    );
-  }
-}
-
-// --------------- OLDS -----------------
-// EVENT BOX
-class EventBox extends StatefulWidget {
-  final Function() notifyParent;
-  const EventBox({super.key, required this.notifyParent});
-
-  @override
-  State<EventBox> createState() => _EventBoxState();
-}
-
-class _EventBoxState extends State<EventBox> {
-  @override
-  Widget build(BuildContext context) {
-    widget.notifyParent;
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(seWhite),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: Color(seBlue),
-        ),
-      ),
-      margin: const EdgeInsets.all(5),
-      child: Column(
-        children: [
-          eventPageIndex != 1
-              ? Container(
-                  margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-                  child: Text(
-                    event.title!,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(seDarkBlue),
-                      fontSize: 25,
-                    ),
-                  ),
-                )
-              : Container(
-                  margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-                  child: Text(
-                    'WHAT HAPPENED?',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(seDarkPinkyRed),
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                child: Text(
-                  eventPageIndex != 1 ? event.desc! : selection.desc!,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.fade,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

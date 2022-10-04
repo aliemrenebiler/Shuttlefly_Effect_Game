@@ -3,40 +3,28 @@ class Event {
   String? title; // events title
   String? desc; // event description
 
-  bool? chosenH;
-  bool? chosenO;
-  bool? chosenP;
-  bool? chosenE;
-
-  bool? otherH;
-  bool? otherO;
-  bool? otherP;
-  bool? otherE;
-
   Event({
     this.eventID,
     this.title,
     this.desc,
-    this.chosenH,
-    this.chosenO,
-    this.chosenP,
-    this.chosenE,
-    this.otherH,
-    this.otherO,
-    this.otherP,
-    this.otherE,
   });
 }
 
 class Selection {
-  int? selID; // selection database ID
-  String? desc; // selection description
-  bool? success; // selection description
+  int selID; // selection database ID
+  String desc; // selection description
+  int healthChange;
+  int oxygenChange;
+  int energyChange;
+  int moraleChange;
 
   Selection({
-    this.selID,
-    this.desc,
-    this.success,
+    required this.selID,
+    required this.desc,
+    required this.healthChange,
+    required this.oxygenChange,
+    required this.energyChange,
+    required this.moraleChange,
   });
 }
 
@@ -49,12 +37,6 @@ class Character {
   String? skillName; // skill name
   String? skillDesc; // skill description
 
-  // STATES
-  int? health = 100;
-  int? oxygen = 100;
-  int? psycho = 100;
-  int? energy = 100;
-
   Character({
     this.charID,
     this.charName,
@@ -62,10 +44,6 @@ class Character {
     this.skillID,
     this.skillName,
     this.skillDesc,
-    this.health,
-    this.oxygen,
-    this.psycho,
-    this.energy,
   });
 }
 
@@ -76,5 +54,19 @@ class Story {
   Story({
     this.title,
     this.desc,
+  });
+}
+
+class States {
+  int? health;
+  int? oxygen;
+  int? energy;
+  int? morale;
+
+  States({
+    this.health,
+    this.oxygen,
+    this.energy,
+    this.morale,
   });
 }

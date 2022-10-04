@@ -185,7 +185,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
-      future: DatabaseService().getOnlyChar((widget.index) * 5 + counter),
+      future: DatabaseService().getCharInfo((widget.index) * 5 + counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -321,7 +321,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
-      future: DatabaseService().getOnlySkill(counter),
+      future: DatabaseService().getSkillInfo(counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
