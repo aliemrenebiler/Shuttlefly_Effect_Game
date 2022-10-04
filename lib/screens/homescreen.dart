@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                     child: AnyButton(
                       text: 'NEW GAME',
                       onTapAction: () async {
-                        if (await DatabaseService().dataExists) {
+                        if (await SharedPrefsService().dataExists) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -66,10 +66,13 @@ class HomeScreen extends StatelessWidget {
                                   AnyButton(
                                     text: 'YES',
                                     onTapAction: () async {
-                                      Navigator.popAndPushNamed(
+                                      Navigator.pushReplacementNamed(
                                           context, '/storyscreen');
                                       animationTimer!.cancel();
-                                      await DatabaseService().eraseSavedData();
+                                      await SharedPrefsService()
+                                          .eraseSavedData();
+                                      await DatabaseService()
+                                          .getDatabaseLimits();
                                     },
                                     height: 50,
                                     textColor: seWhite,
@@ -81,8 +84,11 @@ class HomeScreen extends StatelessWidget {
                             },
                           );
                         } else {
-                          Navigator.pushNamed(context, '/storyscreen');
+                          Navigator.pushReplacementNamed(
+                              context, '/storyscreen');
                           animationTimer!.cancel();
+                          await SharedPrefsService().eraseSavedData();
+                          await DatabaseService().getDatabaseLimits();
                         }
                       },
                       height: 50,
@@ -96,21 +102,21 @@ class HomeScreen extends StatelessWidget {
                     child: AnyButton(
                       text: 'CONTINUE',
                       onTapAction: () async {
-                        if (await DatabaseService().dataExists) {
+                        if (await SharedPrefsService().dataExists) {
                           Navigator.pushReplacementNamed(
                               context, '/gamescreen');
                           animationTimer!.cancel();
                           selectedChars[0] =
-                              await DatabaseService().getCharFromLocal(1);
+                              await SharedPrefsService().getCharFromLocal(0);
                           selectedChars[1] =
-                              await DatabaseService().getCharFromLocal(2);
+                              await SharedPrefsService().getCharFromLocal(1);
                           selectedChars[2] =
-                              await DatabaseService().getCharFromLocal(3);
+                              await SharedPrefsService().getCharFromLocal(2);
 
-                          currentEvent.eventID =
-                              await DatabaseService().getEventIDFromLocal();
+                          currentEvent!.eventID =
+                              await SharedPrefsService().getEventIDFromLocal();
                           currentEvent = await DatabaseService()
-                              .getEvent(currentEvent.eventID!);
+                              .getEvent(currentEvent!.eventID!);
                         } else {
                           showDialog(
                             context: context,

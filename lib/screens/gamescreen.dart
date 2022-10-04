@@ -15,6 +15,12 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
+  void initState() async {
+    super.initState();
+    currentEvent = await DatabaseService().getRandomEvent();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(seDarkBlue),
@@ -27,8 +33,8 @@ class _GameScreenState extends State<GameScreen> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: EventBox(
-                  title: currentEvent.title!,
-                  desc: currentEvent.desc!,
+                  title: currentEvent!.title!,
+                  desc: currentEvent!.desc!,
                   titleColor: seDarkBlue,
                   descColor: seBlack,
                   boxColor: seWhite,
@@ -91,7 +97,7 @@ class _GameScreenState extends State<GameScreen> {
                                               onTapAction: () async {
                                                 Navigator.pushReplacementNamed(
                                                     context, '/choosescreen');
-                                                await DatabaseService()
+                                                await SharedPrefsService()
                                                     .eraseSavedData();
                                               },
                                               height: 50,
@@ -125,33 +131,27 @@ class _GameScreenState extends State<GameScreen> {
                       padding: const EdgeInsets.all(5),
                       child: Column(
                         children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: CharBox(
-                                index: 0,
-                                notifyParent: refresh,
+                          for (int i = 0; i < 3; i++)
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                child: CharBox(
+                                  index: i,
+                                  onTapAction: () async {
+                                    if (eventPageIndex != 1) {
+                                      currentSelection = await DatabaseService()
+                                          .getSelection(selectedChars[i]
+                                              .skillID
+                                              .toString());
+                                      manageStates();
+                                      eventPageIndex = 1;
+                                      await SharedPrefsService().saveStates();
+                                      refresh();
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: CharBox(
-                                index: 1,
-                                notifyParent: refresh,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: CharBox(
-                                index: 2,
-                                notifyParent: refresh,
-                              ),
-                            ),
-                          ),
                           Container(
                             padding: const EdgeInsets.all(5),
                             child: (eventPageIndex == 0)
@@ -159,10 +159,10 @@ class _GameScreenState extends State<GameScreen> {
                                     text: 'SKIP',
                                     onTapAction: () async {
                                       currentSelection = await DatabaseService()
-                                          .getSelection(10);
-                                      skipManageStates();
+                                          .getSelection('skip');
+                                      manageStates();
                                       eventPageIndex = 1;
-                                      DatabaseService().saveStates();
+                                      SharedPrefsService().saveStates();
                                       refresh(); // SET STATE FULL PAGE
                                     },
                                     height: 50,
@@ -174,15 +174,15 @@ class _GameScreenState extends State<GameScreen> {
                                     text: 'DONE',
                                     onTapAction: () async {
                                       var message = checkStates();
-                                      if (message == '') {
-                                        eventPageIndex = 0;
+                                      if (message == null) {
                                         currentEvent = await DatabaseService()
                                             .getRandomEvent();
-                                        await DatabaseService().saveEventID();
-                                        // SET STATE FULL PAGE
+                                        await SharedPrefsService()
+                                            .saveEventID();
+                                        eventPageIndex = 0;
                                         refresh();
                                       } else {
-                                        await DatabaseService()
+                                        await SharedPrefsService()
                                             .eraseSavedData();
                                         showDialog(
                                           context: context,
@@ -328,106 +328,112 @@ class EventBox extends StatefulWidget {
 class _EventBoxState extends State<EventBox> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(widget.boxColor),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: Color(widget.borderColor),
-        ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-            child: Text(
-              (eventPageIndex != 1) ? currentEvent.title! : 'WHAT HAPPENED?',
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Color(widget.titleColor),
-                fontSize: 25,
+    return FutureBuilder<Object>(
+        future: DatabaseService().getRandomEvent(),
+        builder: (context, snapshot) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Color(widget.boxColor),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              border: Border.all(
+                width: seBorderWidth,
+                color: Color(widget.borderColor),
               ),
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                child: Text(
-                  (eventPageIndex != 1)
-                      ? currentEvent.desc!
-                      : currentSelection.desc!,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(
-                    color: Color(widget.descColor),
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(3),
-            child: Row(
+            child: Column(
               children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Health',
-                      value: 5,
-                      textColor: seWhite,
-                      boxColor: sePinkyRed,
-                      borderColor: seDarkPinkyRed,
+                Container(
+                  margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
+                  child: Text(
+                    (eventPageIndex != 1)
+                        ? currentEvent!.title!
+                        : 'WHAT HAPPENED?',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(widget.titleColor),
+                      fontSize: 25,
                     ),
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Oxygen',
-                      value: 100,
-                      textColor: seWhite,
-                      boxColor: seLightBlue,
-                      borderColor: seBlue,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Text(
+                        (eventPageIndex != 1)
+                            ? currentEvent!.desc!
+                            : currentSelection!.desc,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.fade,
+                        style: TextStyle(
+                          color: Color(widget.descColor),
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Morale',
-                      value: 5,
-                      textColor: seWhite,
-                      boxColor: sePurple,
-                      borderColor: seDarkPurple,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Energy',
-                      value: 5,
-                      textColor: seWhite,
-                      boxColor: seYellow,
-                      borderColor: seDarkYellow,
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          child: StateValueBox(
+                            text: 'Health',
+                            value: 5,
+                            textColor: seWhite,
+                            boxColor: sePinkyRed,
+                            borderColor: seDarkPinkyRed,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          child: StateValueBox(
+                            text: 'Oxygen',
+                            value: 100,
+                            textColor: seWhite,
+                            boxColor: seLightBlue,
+                            borderColor: seBlue,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          child: StateValueBox(
+                            text: 'Morale',
+                            value: 5,
+                            textColor: seWhite,
+                            boxColor: sePurple,
+                            borderColor: seDarkPurple,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          child: StateValueBox(
+                            text: 'Energy',
+                            value: 5,
+                            textColor: seWhite,
+                            boxColor: seYellow,
+                            borderColor: seDarkYellow,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 
@@ -436,42 +442,20 @@ class CharBox extends StatelessWidget {
   final int index;
   final double? height;
   final double? width;
-  final Function() notifyParent;
+  final Function() onTapAction;
 
   const CharBox({
     super.key,
     required this.index,
     this.height,
     this.width,
-    required this.notifyParent,
+    required this.onTapAction,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        if (eventPageIndex != 1) {
-          currentSelection = await DatabaseService()
-              .getSelection(selectedChars[index].skillID!);
-          switch (index) {
-            case 0:
-              manageStates(
-                  selectedChars[0], selectedChars[1], selectedChars[2]);
-              break;
-            case 1:
-              manageStates(
-                  selectedChars[1], selectedChars[0], selectedChars[2]);
-              break;
-            case 2:
-              manageStates(
-                  selectedChars[2], selectedChars[0], selectedChars[1]);
-              break;
-          }
-          eventPageIndex = 1;
-          DatabaseService().saveStates();
-          notifyParent(); // SET STATE FULL PAGE
-        }
-      },
+      onTap: onTapAction,
       child: Container(
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,

@@ -185,7 +185,8 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
-      future: DatabaseService().getCharInfo((widget.index) * 5 + counter),
+      future:
+          DatabaseService().getCharInfo(selectedChars[widget.index], counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -213,7 +214,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = 4;
+                      counter = characterTypesAmount;
                     } else {
                       counter--;
                     }
@@ -285,7 +286,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == 4) {
+                    if (counter == characterTypesAmount) {
                       counter = 0;
                     } else {
                       counter++;
@@ -321,7 +322,8 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
-      future: DatabaseService().getSkillInfo(counter),
+      future:
+          DatabaseService().getSkillInfo(selectedChars[widget.index], counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
@@ -339,7 +341,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = 9;
+                      counter = skillTypesAmount;
                     } else {
                       counter--;
                     }
@@ -395,7 +397,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == 9) {
+                    if (counter == skillTypesAmount) {
                       counter = 0;
                     } else {
                       counter++;

@@ -1,8 +1,12 @@
 import 'classes.dart';
 
-var eventPageIndex = 0;
+int eventPageIndex = 0;
 
-Event currentEvent = Event();
+int characterTypesAmount = 0;
+int eventTypesAmount = 0;
+int skillTypesAmount = 0;
+
+Event? currentEvent;
 Selection? currentSelection;
 
 List<Character> selectedChars = [
