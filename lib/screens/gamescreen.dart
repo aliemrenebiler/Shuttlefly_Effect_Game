@@ -174,8 +174,7 @@ class _GameScreenState extends State<GameScreen> {
                                     onTapAction: () async {
                                       var message = checkStates();
                                       if (message == null) {
-                                        currentEvent = await DatabaseService()
-                                            .getRandomEvent();
+                                        currentEvent = await getRandomEvent();
                                         await SharedPrefsService()
                                             .saveEventID();
                                         eventPageIndex = 0;
@@ -274,46 +273,47 @@ class _StateValueBoxState extends State<StateValueBox> {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Expanded(
-            child: Container(
-              height: 10,
-              decoration: BoxDecoration(
-                color: Color(widget.boxColor),
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
-              ),
+          Container(
+            height: (widget.height != null)
+                ? (widget.height! - 10) *
+                    (widget.value - minStateValue) /
+                    (maxtStateValue - minStateValue)
+                : null,
+            decoration: BoxDecoration(
+              color: Color(widget.boxColor),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(3),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: Text(
-                      widget.text,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Color(widget.textColor),
-                        fontSize: 20,
-                      ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: Text(
+                    widget.text,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(widget.textColor),
+                      fontSize: 20,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: Text(
-                      '${widget.value}',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Color(widget.textColor),
-                        fontSize: 20,
-                      ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: Text(
+                    '${widget.value}',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(widget.textColor),
+                      fontSize: 20,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -346,117 +346,120 @@ class EventBox extends StatefulWidget {
 
 class _EventBoxState extends State<EventBox> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
-        future: DatabaseService().getRandomEvent(),
-        builder: (context, snapshot) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Color(widget.boxColor),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(
-                width: seBorderWidth,
-                color: Color(widget.borderColor),
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(widget.boxColor),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          width: seBorderWidth,
+          color: Color(widget.borderColor),
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
+            child: Text(
+              (eventPageIndex != 1) ? currentEvent.title! : 'WHAT HAPPENED?',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Color(widget.titleColor),
+                fontSize: 25,
               ),
             ),
-            child: Column(
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                child: Text(
+                  (eventPageIndex != 1)
+                      ? currentEvent.desc!
+                      : currentSelection!.desc,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    color: Color(widget.descColor),
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            child: Row(
               children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-                  child: Text(
-                    (eventPageIndex != 1)
-                        ? currentEvent.title!
-                        : 'WHAT HAPPENED?',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(widget.titleColor),
-                      fontSize: 25,
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Health',
+                      value: currentStates.health!,
+                      height: 80,
+                      textColor: seWhite,
+                      boxColor: seLightPinkyRed,
+                      bgColor: seDarkPinkyRed,
+                      borderColor: sePinkyRed,
                     ),
                   ),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                      child: Text(
-                        (eventPageIndex != 1)
-                            ? currentEvent.desc!
-                            : currentSelection!.desc,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(
-                          color: Color(widget.descColor),
-                          fontSize: 18,
-                        ),
-                      ),
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Oxygen',
+                      value: currentStates.oxygen!,
+                      height: 80,
+                      textColor: seWhite,
+                      boxColor: seLightBlue,
+                      bgColor: seDarkBlue,
+                      borderColor: seBlue,
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          child: StateValueBox(
-                            text: 'Health',
-                            value: currentStates.health!,
-                            textColor: seWhite,
-                            boxColor: seLightPinkyRed,
-                            bgColor: seDarkPinkyRed,
-                            borderColor: sePinkyRed,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          child: StateValueBox(
-                            text: 'Oxygen',
-                            value: currentStates.oxygen!,
-                            textColor: seWhite,
-                            boxColor: seLightBlue,
-                            bgColor: seDarkBlue,
-                            borderColor: seBlue,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          child: StateValueBox(
-                            text: 'Morale',
-                            value: currentStates.morale!,
-                            textColor: seWhite,
-                            boxColor: seLightPurple,
-                            bgColor: seDarkPurple,
-                            borderColor: sePurple,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          child: StateValueBox(
-                            text: 'Energy',
-                            value: currentStates.energy!,
-                            textColor: seWhite,
-                            boxColor: seLightYellow,
-                            bgColor: seDarkYellow,
-                            borderColor: seYellow,
-                          ),
-                        ),
-                      ),
-                    ],
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Morale',
+                      value: currentStates.morale!,
+                      height: 80,
+                      textColor: seWhite,
+                      boxColor: seLightPurple,
+                      bgColor: seDarkPurple,
+                      borderColor: sePurple,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Energy',
+                      value: currentStates.energy!,
+                      height: 80,
+                      textColor: seWhite,
+                      boxColor: seLightYellow,
+                      bgColor: seDarkYellow,
+                      borderColor: seYellow,
+                    ),
                   ),
                 ),
               ],
             ),
-          );
-        });
+          ),
+        ],
+      ),
+    );
   }
 }
 

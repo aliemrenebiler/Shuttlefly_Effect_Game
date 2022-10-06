@@ -49,12 +49,6 @@ class DatabaseService {
     );
   }
 
-  Future<Event> getRandomEvent() async {
-    Random random = Random();
-    int randomNumber = random.nextInt(eventTypesAmount);
-    return await DatabaseService().getEvent(randomNumber);
-  }
-
   getSelection(int id, String? charName) async {
     var selection = await db
         .collection('events')
@@ -163,7 +157,7 @@ void saveSelectedChars() async {
 
   eventPageIndex = 0;
   await SharedPrefsService().saveCharacters();
-  currentEvent = await DatabaseService().getRandomEvent();
+  currentEvent = await getRandomEvent();
   await SharedPrefsService().saveEventID();
 }
 
@@ -195,6 +189,12 @@ void manageStates() {
     currentStates.morale =
         currentStates.morale! + currentSelection!.moraleChange;
   }
+}
+
+getRandomEvent() async {
+  Random random = Random();
+  int randomNumber = random.nextInt(eventTypesAmount);
+  return await DatabaseService().getEvent(randomNumber);
 }
 
 checkStates() {

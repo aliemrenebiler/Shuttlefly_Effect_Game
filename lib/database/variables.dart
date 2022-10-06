@@ -29,4 +29,4 @@ var story = Story(
 
 int defaultStateValue = 50;
 int maxtStateValue = 100;
-int minStateValue = 100;
+int minStateValue = 0;
