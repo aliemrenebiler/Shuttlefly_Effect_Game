@@ -31,7 +31,7 @@ class StoryScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    story.desc!,
+                    story.desc,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: const TextStyle(
@@ -76,7 +76,7 @@ class TopBar extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              story.title!,
+              story.title,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(

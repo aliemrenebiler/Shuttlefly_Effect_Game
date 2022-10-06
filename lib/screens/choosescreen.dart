@@ -79,8 +79,11 @@ class TopBar extends StatelessWidget {
           ),
           TopBarButton(
             text: "DONE",
-            onTapAction: () {
-              saveSelectedChars();
+            onTapAction: () async {
+              await SharedPrefsService().saveCharacters();
+              currentEvent = await getRandomEvent();
+              await SharedPrefsService().saveEventID();
+              // ignore: use_build_context_synchronously
               Navigator.pushReplacementNamed(context, '/gamescreen');
             },
           ),

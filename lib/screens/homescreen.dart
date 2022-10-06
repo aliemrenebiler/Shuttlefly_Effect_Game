@@ -113,10 +113,10 @@ class HomeScreen extends StatelessWidget {
                           selectedChars[2] =
                               await SharedPrefsService().getCharFromLocal(2);
 
-                          currentEvent.eventID =
+                          currentEvent!.eventID =
                               await SharedPrefsService().getEventIDFromLocal();
                           currentEvent = await DatabaseService()
-                              .getEvent(currentEvent.eventID!);
+                              .getEvent(currentEvent!.eventID);
                         } else {
                           showDialog(
                             context: context,

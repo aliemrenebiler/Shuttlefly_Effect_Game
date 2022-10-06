@@ -28,8 +28,8 @@ class _GameScreenState extends State<GameScreen> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 child: EventBox(
-                  title: currentEvent.title!,
-                  desc: currentEvent.desc!,
+                  title: currentEvent!.title,
+                  desc: currentEvent!.desc,
                   titleColor: seDarkBlue,
                   descColor: seBlack,
                   boxColor: seWhite,
@@ -366,7 +366,7 @@ class _EventBoxState extends State<EventBox> {
           Container(
             margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
             child: Text(
-              (eventPageIndex != 1) ? currentEvent.title! : 'WHAT HAPPENED?',
+              (eventPageIndex != 1) ? currentEvent!.title : 'WHAT HAPPENED?',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -382,7 +382,7 @@ class _EventBoxState extends State<EventBox> {
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Text(
                   (eventPageIndex != 1)
-                      ? currentEvent.desc!
+                      ? currentEvent!.desc
                       : currentSelection!.desc,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.fade,
@@ -403,7 +403,7 @@ class _EventBoxState extends State<EventBox> {
                     padding: const EdgeInsets.all(3),
                     child: StateValueBox(
                       text: 'Health',
-                      value: currentStates.health!,
+                      value: currentStates.health,
                       height: 80,
                       textColor: seWhite,
                       boxColor: seLightPinkyRed,
@@ -417,7 +417,7 @@ class _EventBoxState extends State<EventBox> {
                     padding: const EdgeInsets.all(3),
                     child: StateValueBox(
                       text: 'Oxygen',
-                      value: currentStates.oxygen!,
+                      value: currentStates.oxygen,
                       height: 80,
                       textColor: seWhite,
                       boxColor: seLightBlue,
@@ -431,7 +431,7 @@ class _EventBoxState extends State<EventBox> {
                     padding: const EdgeInsets.all(3),
                     child: StateValueBox(
                       text: 'Morale',
-                      value: currentStates.morale!,
+                      value: currentStates.morale,
                       height: 80,
                       textColor: seWhite,
                       boxColor: seLightPurple,
@@ -445,7 +445,7 @@ class _EventBoxState extends State<EventBox> {
                     padding: const EdgeInsets.all(3),
                     child: StateValueBox(
                       text: 'Energy',
-                      value: currentStates.energy!,
+                      value: currentStates.energy,
                       height: 80,
                       textColor: seWhite,
                       boxColor: seLightYellow,

@@ -52,7 +52,7 @@ class DatabaseService {
   getSelection(int id, String? charName) async {
     var selection = await db
         .collection('events')
-        .doc(currentEvent.eventID.toString())
+        .doc(currentEvent!.eventID.toString())
         .collection('selections')
         .doc(id.toString())
         .get();
@@ -87,25 +87,25 @@ class SharedPrefsService {
     prefs.setInt('char2_charID', selectedChars[2].charID!);
     prefs.setInt('char2_skillID', selectedChars[2].skillID!);
 
-    prefs.setInt('currentHealth', currentStates.health!);
-    prefs.setInt('currentOxygen', currentStates.oxygen!);
-    prefs.setInt('currentPsycho', currentStates.morale!);
-    prefs.setInt('currentEnergy', currentStates.energy!);
+    prefs.setInt('currentHealth', currentStates.health);
+    prefs.setInt('currentOxygen', currentStates.oxygen);
+    prefs.setInt('currentMorale', currentStates.morale);
+    prefs.setInt('currentEnergy', currentStates.energy);
   }
 
   Future saveStates() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt('currentHealth', currentStates.health!);
-    prefs.setInt('currentOxygen', currentStates.oxygen!);
-    prefs.setInt('currentPsycho', currentStates.morale!);
-    prefs.setInt('currentEnergy', currentStates.energy!);
+    prefs.setInt('currentHealth', currentStates.health);
+    prefs.setInt('currentOxygen', currentStates.oxygen);
+    prefs.setInt('currentMorale', currentStates.morale);
+    prefs.setInt('currentEnergy', currentStates.energy);
   }
 
   Future saveEventID() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt('currentEventID', currentEvent.eventID!);
+    prefs.setInt('currentEventID', currentEvent!.eventID);
   }
 
   Future<bool> get dataExists async {
@@ -128,11 +128,12 @@ class SharedPrefsService {
   Future<States> getStatesFromLocal() async {
     final prefs = await SharedPreferences.getInstance();
 
-    States states = States();
-    states.health = prefs.getInt('currentHealth');
-    states.oxygen = prefs.getInt('currentOxygen');
-    states.morale = prefs.getInt('currentPsycho');
-    states.energy = prefs.getInt('currentEnergy');
+    States states = States(
+      health: prefs.getInt('currentHealth')!,
+      oxygen: prefs.getInt('currentOxygen')!,
+      energy: prefs.getInt('currentEnergy')!,
+      morale: prefs.getInt('currentMorale')!,
+    );
 
     return states;
   }
@@ -149,45 +150,33 @@ class SharedPrefsService {
   }
 }
 
-void saveSelectedChars() async {
-  currentStates.health = defaultStateValue;
-  currentStates.oxygen = defaultStateValue;
-  currentStates.morale = defaultStateValue;
-  currentStates.energy = defaultStateValue;
-
-  eventPageIndex = 0;
-  await SharedPrefsService().saveCharacters();
-  currentEvent = await getRandomEvent();
-  await SharedPrefsService().saveEventID();
-}
-
 void manageStates() {
-  if (currentStates.energy! + currentSelection!.energyChange > 100) {
+  if (currentStates.energy + currentSelection!.energyChange > 100) {
     currentStates.energy = 100;
   } else {
     currentStates.energy =
-        currentStates.energy! + currentSelection!.energyChange;
+        currentStates.energy + currentSelection!.energyChange;
   }
 
-  if (currentStates.health! + currentSelection!.healthChange > 100) {
+  if (currentStates.health + currentSelection!.healthChange > 100) {
     currentStates.health = 100;
   } else {
     currentStates.health =
-        currentStates.health! + currentSelection!.healthChange;
+        currentStates.health + currentSelection!.healthChange;
   }
 
-  if (currentStates.oxygen! + currentSelection!.oxygenChange > 100) {
+  if (currentStates.oxygen + currentSelection!.oxygenChange > 100) {
     currentStates.oxygen = 100;
   } else {
     currentStates.oxygen =
-        currentStates.oxygen! + currentSelection!.oxygenChange;
+        currentStates.oxygen + currentSelection!.oxygenChange;
   }
 
-  if (currentStates.morale! + currentSelection!.moraleChange > 100) {
+  if (currentStates.morale + currentSelection!.moraleChange > 100) {
     currentStates.morale = 100;
   } else {
     currentStates.morale =
-        currentStates.morale! + currentSelection!.moraleChange;
+        currentStates.morale + currentSelection!.moraleChange;
   }
 }
 
@@ -198,13 +187,13 @@ getRandomEvent() async {
 }
 
 checkStates() {
-  if (currentStates.health! <= 0) {
+  if (currentStates.health <= 0) {
     return 'The crew bled to death.';
-  } else if (currentStates.oxygen! <= 0) {
+  } else if (currentStates.oxygen <= 0) {
     return 'The crew is out of oxygen.';
-  } else if (currentStates.morale! <= 0) {
+  } else if (currentStates.morale <= 0) {
     return 'The crew got crazy.';
-  } else if (currentStates.energy! <= 0) {
+  } else if (currentStates.energy <= 0) {
     return "The crew can't make any move.";
   } else {
     return null;

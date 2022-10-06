@@ -1,12 +1,12 @@
 class Event {
-  int? eventID; // event database ID
-  String? title; // events title
-  String? desc; // event description
+  int eventID; // event database ID
+  String title; // events title
+  String desc; // event description
 
   Event({
-    this.eventID,
-    this.title,
-    this.desc,
+    required this.eventID,
+    required this.title,
+    required this.desc,
   });
 }
 
@@ -48,25 +48,25 @@ class Character {
 }
 
 class Story {
-  String? title; // skill name
-  String? desc; // skill description
+  String title; // skill name
+  String desc; // skill description
 
   Story({
-    this.title,
-    this.desc,
+    required this.title,
+    required this.desc,
   });
 }
 
 class States {
-  int? health;
-  int? oxygen;
-  int? energy;
-  int? morale;
+  int health;
+  int oxygen;
+  int energy;
+  int morale;
 
   States({
-    this.health,
-    this.oxygen,
-    this.energy,
-    this.morale,
+    required this.health,
+    required this.oxygen,
+    required this.energy,
+    required this.morale,
   });
 }

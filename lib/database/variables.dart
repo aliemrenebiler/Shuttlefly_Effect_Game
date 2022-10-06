@@ -6,7 +6,7 @@ int characterTypesAmount = 0;
 int eventTypesAmount = 0;
 int skillTypesAmount = 0;
 
-Event currentEvent = Event();
+Event? currentEvent;
 Selection? currentSelection;
 
 List<Character> selectedChars = [
