@@ -184,7 +184,14 @@ class CharSelectionBox extends StatefulWidget {
 }
 
 class _CharSelectionBoxState extends State<CharSelectionBox> {
-  var counter = 0;
+  int counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    counter = widget.index % characterTypesAmount;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
@@ -321,7 +328,14 @@ class SkillSelectionBox extends StatefulWidget {
 }
 
 class _SkillSelectionBoxState extends State<SkillSelectionBox> {
-  var counter = 0;
+  int counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    counter = widget.index % skillTypesAmount;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(

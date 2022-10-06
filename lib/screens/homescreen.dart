@@ -65,15 +65,11 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   AnyButton(
                                     text: 'YES',
-                                    onTapAction: () async {
+                                    onTapAction: () {
                                       Navigator.pushReplacementNamed(
                                           context, '/storyscreen');
                                       animationTimer!.cancel();
-                                      await SharedPrefsService()
-                                          .eraseSavedData();
-                                      resetStates();
-                                      await DatabaseService()
-                                          .getDatabaseLimits();
+                                      restartTheGame();
                                     },
                                     height: 50,
                                     textColor: seWhite,
@@ -88,9 +84,7 @@ class HomeScreen extends StatelessWidget {
                           Navigator.pushReplacementNamed(
                               context, '/storyscreen');
                           animationTimer!.cancel();
-                          await SharedPrefsService().eraseSavedData();
-                          resetStates();
-                          await DatabaseService().getDatabaseLimits();
+                          restartTheGame();
                         }
                       },
                       height: 50,

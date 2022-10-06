@@ -150,6 +150,12 @@ class SharedPrefsService {
   }
 }
 
+getRandomEvent() async {
+  Random random = Random();
+  int randomNumber = random.nextInt(eventTypesAmount);
+  return await DatabaseService().getEvent(randomNumber);
+}
+
 void manageStates() {
   if (currentStates.energy + currentSelection!.energyChange > 100) {
     currentStates.energy = 100;
@@ -188,19 +194,6 @@ void manageStates() {
   }
 }
 
-void resetStates() {
-  currentStates.energy = defaultStateValue;
-  currentStates.health = defaultStateValue;
-  currentStates.morale = defaultStateValue;
-  currentStates.oxygen = defaultStateValue;
-}
-
-getRandomEvent() async {
-  Random random = Random();
-  int randomNumber = random.nextInt(eventTypesAmount);
-  return await DatabaseService().getEvent(randomNumber);
-}
-
 checkStates() {
   if (currentStates.health <= 0) {
     SharedPrefsService().eraseSavedData();
@@ -217,4 +210,14 @@ checkStates() {
   } else {
     return null;
   }
+}
+
+void restartTheGame() async {
+  currentStates.energy = defaultStateValue;
+  currentStates.health = defaultStateValue;
+  currentStates.morale = defaultStateValue;
+  currentStates.oxygen = defaultStateValue;
+  eventPageIndex = 0;
+  await SharedPrefsService().eraseSavedData();
+  await DatabaseService().getDatabaseLimits();
 }

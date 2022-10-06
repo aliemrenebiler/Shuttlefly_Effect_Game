@@ -92,8 +92,7 @@ class _GameScreenState extends State<GameScreen> {
                                               onTapAction: () async {
                                                 Navigator.pushReplacementNamed(
                                                     context, '/choosescreen');
-                                                await SharedPrefsService()
-                                                    .eraseSavedData();
+                                                restartTheGame();
                                               },
                                               height: 50,
                                               textColor: seWhite,
@@ -154,15 +153,12 @@ class _GameScreenState extends State<GameScreen> {
                                 ? AnyButton(
                                     text: 'SKIP',
                                     onTapAction: () async {
-                                      currentSelection =
-                                          await DatabaseService().getSelection(
-                                        -1,
-                                        null,
-                                      );
+                                      currentSelection = await DatabaseService()
+                                          .getSelection(-1, null);
                                       manageStates();
                                       eventPageIndex = 1;
                                       SharedPrefsService().saveStates();
-                                      refresh(); // SET STATE FULL PAGE
+                                      refresh();
                                     },
                                     height: 50,
                                     textColor: seWhite,
@@ -271,7 +267,7 @@ class _StateValueBoxState extends State<StateValueBox> {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
+          AnimatedContainer(
             height: (widget.height != null)
                 ? (widget.height! - 10) *
                     (widget.value - minStateValue) /
@@ -281,6 +277,8 @@ class _StateValueBoxState extends State<StateValueBox> {
               color: Color(widget.boxColor),
               borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeOutCirc,
           ),
           Container(
             padding: const EdgeInsets.all(3),
