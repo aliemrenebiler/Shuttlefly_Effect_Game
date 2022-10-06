@@ -153,6 +153,8 @@ class SharedPrefsService {
 void manageStates() {
   if (currentStates.energy + currentSelection!.energyChange > 100) {
     currentStates.energy = 100;
+  } else if (currentStates.energy + currentSelection!.energyChange < 0) {
+    currentStates.energy = 0;
   } else {
     currentStates.energy =
         currentStates.energy + currentSelection!.energyChange;
@@ -160,6 +162,8 @@ void manageStates() {
 
   if (currentStates.health + currentSelection!.healthChange > 100) {
     currentStates.health = 100;
+  } else if (currentStates.health + currentSelection!.healthChange < 0) {
+    currentStates.health = 0;
   } else {
     currentStates.health =
         currentStates.health + currentSelection!.healthChange;
@@ -167,6 +171,8 @@ void manageStates() {
 
   if (currentStates.oxygen + currentSelection!.oxygenChange > 100) {
     currentStates.oxygen = 100;
+  } else if (currentStates.oxygen + currentSelection!.oxygenChange < 0) {
+    currentStates.oxygen = 0;
   } else {
     currentStates.oxygen =
         currentStates.oxygen + currentSelection!.oxygenChange;
@@ -174,10 +180,19 @@ void manageStates() {
 
   if (currentStates.morale + currentSelection!.moraleChange > 100) {
     currentStates.morale = 100;
+  } else if (currentStates.morale + currentSelection!.moraleChange < 0) {
+    currentStates.morale = 0;
   } else {
     currentStates.morale =
         currentStates.morale + currentSelection!.moraleChange;
   }
+}
+
+void resetStates() {
+  currentStates.energy = defaultStateValue;
+  currentStates.health = defaultStateValue;
+  currentStates.morale = defaultStateValue;
+  currentStates.oxygen = defaultStateValue;
 }
 
 getRandomEvent() async {
@@ -188,12 +203,16 @@ getRandomEvent() async {
 
 checkStates() {
   if (currentStates.health <= 0) {
+    SharedPrefsService().eraseSavedData();
     return 'The crew bled to death.';
   } else if (currentStates.oxygen <= 0) {
+    SharedPrefsService().eraseSavedData();
     return 'The crew is out of oxygen.';
   } else if (currentStates.morale <= 0) {
+    SharedPrefsService().eraseSavedData();
     return 'The crew got crazy.';
   } else if (currentStates.energy <= 0) {
+    SharedPrefsService().eraseSavedData();
     return "The crew can't make any move.";
   } else {
     return null;

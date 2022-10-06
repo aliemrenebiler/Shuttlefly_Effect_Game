@@ -71,6 +71,7 @@ class HomeScreen extends StatelessWidget {
                                       animationTimer!.cancel();
                                       await SharedPrefsService()
                                           .eraseSavedData();
+                                      resetStates();
                                       await DatabaseService()
                                           .getDatabaseLimits();
                                     },
@@ -88,6 +89,7 @@ class HomeScreen extends StatelessWidget {
                               context, '/storyscreen');
                           animationTimer!.cancel();
                           await SharedPrefsService().eraseSavedData();
+                          resetStates();
                           await DatabaseService().getDatabaseLimits();
                         }
                       },

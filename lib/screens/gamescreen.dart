@@ -44,7 +44,7 @@ class _GameScreenState extends State<GameScreen> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: AnyButton(
-                      text: 'PAUSE',
+                      text: 'MENU',
                       onTapAction: () {
                         showDialog(
                           context: context,
@@ -172,7 +172,7 @@ class _GameScreenState extends State<GameScreen> {
                                 : AnyButton(
                                     text: 'DONE',
                                     onTapAction: () async {
-                                      var message = checkStates();
+                                      String? message = checkStates();
                                       if (message == null) {
                                         currentEvent = await getRandomEvent();
                                         await SharedPrefsService()
@@ -180,8 +180,6 @@ class _GameScreenState extends State<GameScreen> {
                                         eventPageIndex = 0;
                                         refresh();
                                       } else {
-                                        await SharedPrefsService()
-                                            .eraseSavedData();
                                         showDialog(
                                           context: context,
                                           barrierDismissible: false,
