@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'classes.dart';
 import 'variables.dart';
 
-class DatabaseService {
+class FirebaseServices {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   getDatabaseLimits() async {
@@ -119,8 +119,8 @@ class SharedPrefsService {
     var charID = prefs.getInt('char${id}_charID');
     var skillID = prefs.getInt('char${id}_skillID');
     Character char = Character();
-    char = await DatabaseService().getCharInfo(char, charID!);
-    char = await DatabaseService().getSkillInfo(char, skillID!);
+    char = await FirebaseServices().getCharInfo(char, charID!);
+    char = await FirebaseServices().getSkillInfo(char, skillID!);
 
     return char;
   }
@@ -153,7 +153,7 @@ class SharedPrefsService {
 getRandomEvent() async {
   Random random = Random();
   int randomNumber = random.nextInt(eventTypesAmount);
-  return await DatabaseService().getEvent(randomNumber);
+  return await FirebaseServices().getEvent(randomNumber);
 }
 
 void manageStates() {
@@ -219,5 +219,74 @@ void restartTheGame() async {
   currentStates.oxygen = defaultStateValue;
   eventPageIndex = 0;
   await SharedPrefsService().eraseSavedData();
-  await DatabaseService().getDatabaseLimits();
+  await FirebaseServices().getDatabaseLimits();
+}
+
+class SQLiteServices {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  getDatabaseLimits() async {
+    var characters =
+        await db.collection('characters').doc('characterCount').get();
+    characterTypesAmount = characters.get('count');
+
+    var events = await db.collection('events').doc('eventCount').get();
+    eventTypesAmount = events.get('count');
+
+    var skills = await db.collection('skills').doc('skillCount').get();
+    skillTypesAmount = skills.get('count');
+  }
+
+  Future<Character> getCharInfo(Character char, int id) async {
+    var newChar = await db.collection('characters').doc(id.toString()).get();
+
+    char.charID = int.parse(newChar.id);
+    char.charName = newChar.get('name');
+    char.imgURL = newChar.get('imgURL');
+
+    return char;
+  }
+
+  Future<Character> getSkillInfo(Character char, int id) async {
+    var newSkill = await db.collection('skills').doc(id.toString()).get();
+
+    char.skillID = int.parse(newSkill.id);
+    char.skillName = newSkill.get('title');
+    char.skillDesc = newSkill.get('desc');
+
+    return char;
+  }
+
+  Future<Event> getEvent(int id) async {
+    var evt = await db.collection('events').doc(id.toString()).get();
+
+    return Event(
+      eventID: int.parse(evt.id),
+      title: evt.get('title'),
+      desc: evt.get('desc'),
+    );
+  }
+
+  getSelection(int id, String? charName) async {
+    var selection = await db
+        .collection('events')
+        .doc(currentEvent!.eventID.toString())
+        .collection('selections')
+        .doc(id.toString())
+        .get();
+    if (selection.data() == null) {
+      return null;
+    } else {
+      return Selection(
+        selID: int.parse(selection.id),
+        desc: (charName != null)
+            ? "$charName ${selection.get('desc')}"
+            : selection.get('desc'),
+        healthChange: selection.get('healthChange'),
+        oxygenChange: selection.get('oxygenChange'),
+        energyChange: selection.get('energyChange'),
+        moraleChange: selection.get('moraleChange'),
+      );
+    }
+  }
 }

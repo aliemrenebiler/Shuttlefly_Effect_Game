@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
 
                           currentEvent!.eventID =
                               await SharedPrefsService().getEventIDFromLocal();
-                          currentEvent = await DatabaseService()
+                          currentEvent = await FirebaseServices()
                               .getEvent(currentEvent!.eventID);
                         } else {
                           showDialog(

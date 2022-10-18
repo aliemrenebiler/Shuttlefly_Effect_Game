@@ -196,7 +196,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
       future:
-          DatabaseService().getCharInfo(selectedChars[widget.index], counter),
+          FirebaseServices().getCharInfo(selectedChars[widget.index], counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -340,7 +340,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
       future:
-          DatabaseService().getSkillInfo(selectedChars[widget.index], counter),
+          FirebaseServices().getSkillInfo(selectedChars[widget.index], counter),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();

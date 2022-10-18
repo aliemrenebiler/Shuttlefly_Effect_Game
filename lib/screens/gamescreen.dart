@@ -134,7 +134,7 @@ class _GameScreenState extends State<GameScreen> {
                                   onTapAction: () async {
                                     if (eventPageIndex != 1) {
                                       currentSelection =
-                                          await DatabaseService().getSelection(
+                                          await FirebaseServices().getSelection(
                                         selectedChars[i].skillID!,
                                         selectedChars[i].charName,
                                       );
@@ -153,8 +153,9 @@ class _GameScreenState extends State<GameScreen> {
                                 ? AnyButton(
                                     text: 'SKIP',
                                     onTapAction: () async {
-                                      currentSelection = await DatabaseService()
-                                          .getSelection(-1, null);
+                                      currentSelection =
+                                          await FirebaseServices()
+                                              .getSelection(-1, null);
                                       manageStates();
                                       eventPageIndex = 1;
                                       SharedPrefsService().saveStates();
