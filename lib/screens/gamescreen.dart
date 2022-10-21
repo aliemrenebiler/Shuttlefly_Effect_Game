@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../database/methods.dart';
 import '../database/variables.dart';
@@ -134,9 +135,10 @@ class _GameScreenState extends State<GameScreen> {
                                   onTapAction: () async {
                                     if (eventPageIndex != 1) {
                                       currentSelection =
-                                          await FirebaseServices().getSelection(
-                                        selectedChars[i].skillID!,
-                                        selectedChars[i].charName,
+                                          await SQLiteServices().getSelection(
+                                        currentEvent!.id,
+                                        selectedSkills[i]!.id,
+                                        selectedChars[i]!.name,
                                       );
                                       manageStates();
                                       eventPageIndex = 1;
@@ -150,22 +152,7 @@ class _GameScreenState extends State<GameScreen> {
                           Container(
                             padding: const EdgeInsets.all(5),
                             child: (eventPageIndex == 0)
-                                ? AnyButton(
-                                    text: 'SKIP',
-                                    onTapAction: () async {
-                                      currentSelection =
-                                          await FirebaseServices()
-                                              .getSelection(-1, null);
-                                      manageStates();
-                                      eventPageIndex = 1;
-                                      SharedPrefsService().saveStates();
-                                      refresh();
-                                    },
-                                    height: 50,
-                                    textColor: seWhite,
-                                    buttonColor: seLightPinkyRed,
-                                    borderColor: sePinkyRed,
-                                  )
+                                ? Container(height: 50)
                                 : AnyButton(
                                     text: 'DONE',
                                     onTapAction: () async {
@@ -504,8 +491,12 @@ class CharBox extends StatelessWidget {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.contain,
-                      image: NetworkImage(
-                        selectedChars[index].imgURL!,
+                      image: AssetImage(
+                        join(
+                          "assets",
+                          "images",
+                          selectedChars[index]!.imgName,
+                        ),
                       ),
                     ),
                     shape: BoxShape.circle,
@@ -525,7 +516,7 @@ class CharBox extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      selectedChars[index].charName!,
+                      selectedChars[index]!.name,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -534,7 +525,7 @@ class CharBox extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'The ${selectedChars[index].skillName!}',
+                      'The ${selectedSkills[index]!.name}',
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.fade,
                       style: TextStyle(

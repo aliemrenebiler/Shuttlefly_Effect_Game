@@ -1,52 +1,62 @@
+class Character {
+  String id;
+  String name;
+  String imgName;
+
+  Character({
+    required this.id,
+    required this.name,
+    required this.imgName,
+  });
+}
+
+class Skill {
+  String id;
+  String name;
+  String desc;
+
+  Skill({
+    required this.id,
+    required this.name,
+    required this.desc,
+  });
+}
+
 class Event {
-  int eventID; // event database ID
+  String id; // event database ID
   String title; // events title
   String desc; // event description
 
   Event({
-    required this.eventID,
+    required this.id,
     required this.title,
     required this.desc,
   });
 }
 
 class Selection {
-  int selID; // selection database ID
-  String desc; // selection description
+  String eventID;
+  String? skillID;
+  String desc;
   int healthChange;
   int oxygenChange;
   int energyChange;
   int moraleChange;
+  String? nextEventID;
 
   Selection({
-    required this.selID,
+    required this.eventID,
+    this.skillID,
     required this.desc,
     required this.healthChange,
     required this.oxygenChange,
     required this.energyChange,
     required this.moraleChange,
+    this.nextEventID,
   });
 }
 
-class Character {
-  int? charID; // character ID
-  String? charName; // character name
-  String? imgURL; // character's image URL
-
-  int? skillID; // skill ID
-  String? skillName; // skill name
-  String? skillDesc; // skill description
-
-  Character({
-    this.charID,
-    this.charName,
-    this.imgURL,
-    this.skillID,
-    this.skillName,
-    this.skillDesc,
-  });
-}
-
+// OTHERS
 class Story {
   String title; // skill name
   String desc; // skill description

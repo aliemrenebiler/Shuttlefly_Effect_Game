@@ -15,7 +15,7 @@ class StoryScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/shuttlefly_effect_bg.png'),
+            image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -30,11 +30,11 @@ class StoryScreen extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  child: Text(
-                    story.desc,
+                  child: const Text(
+                    storyDesc,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),
@@ -74,12 +74,12 @@ class TopBar extends StatelessWidget {
               Navigator.pushReplacementNamed(context, '/homescreen');
             },
           ),
-          Expanded(
+          const Expanded(
             child: Text(
-              story.title,
+              storyTitle,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 25,
               ),

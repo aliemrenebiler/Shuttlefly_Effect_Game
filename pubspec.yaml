@@ -27,14 +27,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cloud_firestore: ^3.4.9
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.23.0
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.10.0
   page_transition: ^2.0.9
+  path: ^1.8.2
   shared_preferences: ^2.0.15
+  sqflite: ^2.1.0+1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -53,7 +53,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/
+    - assets/database/
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

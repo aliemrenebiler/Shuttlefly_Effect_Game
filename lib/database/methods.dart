@@ -1,75 +1,103 @@
+import 'dart:io';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/utils/utils.dart';
+
 import 'classes.dart';
 import 'variables.dart';
 
-class FirebaseServices {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+class SQLiteServices {
+  Future<Database> copyAndOpenDB(String dbName) async {
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, dbName);
+
+    // Check if the database exists
+    var exists = await databaseExists(path);
+
+    if (!exists) {
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(path)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "database", dbName));
+      List<int> bytes =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(path).writeAsBytes(bytes, flush: true);
+    }
+
+    // open the database
+    Database db = await openDatabase(path);
+    return db;
+  }
 
   getDatabaseLimits() async {
-    var characters =
-        await db.collection('characters').doc('characterCount').get();
-    characterTypesAmount = characters.get('count');
-
-    var events = await db.collection('events').doc('eventCount').get();
-    eventTypesAmount = events.get('count');
-
-    var skills = await db.collection('skills').doc('skillCount').get();
-    skillTypesAmount = skills.get('count');
+    totalCharAmount = firstIntValue(
+        await database!.rawQuery('SELECT COUNT(*) FROM CHARACTERS'))!;
+    totalSkillAmount =
+        firstIntValue(await database!.rawQuery('SELECT COUNT(*) FROM SKILLS'))!;
+    totalEventAmount =
+        firstIntValue(await database!.rawQuery('SELECT COUNT(*) FROM EVENTS'))!;
   }
 
-  Future<Character> getCharInfo(Character char, int id) async {
-    var newChar = await db.collection('characters').doc(id.toString()).get();
+  Future<Character> getChar(String id) async {
+    var newChar =
+        await database!.rawQuery('SELECT * FROM CHARACTERS WHERE ID = $id');
 
-    char.charID = int.parse(newChar.id);
-    char.charName = newChar.get('name');
-    char.imgURL = newChar.get('imgURL');
-
-    return char;
-  }
-
-  Future<Character> getSkillInfo(Character char, int id) async {
-    var newSkill = await db.collection('skills').doc(id.toString()).get();
-
-    char.skillID = int.parse(newSkill.id);
-    char.skillName = newSkill.get('title');
-    char.skillDesc = newSkill.get('desc');
-
-    return char;
-  }
-
-  Future<Event> getEvent(int id) async {
-    var evt = await db.collection('events').doc(id.toString()).get();
-
-    return Event(
-      eventID: int.parse(evt.id),
-      title: evt.get('title'),
-      desc: evt.get('desc'),
+    return Character(
+      id: id,
+      name: newChar[0]["NAME"] as String,
+      imgName: newChar[0]["IMG_NAME"] as String,
     );
   }
 
-  getSelection(int id, String? charName) async {
-    var selection = await db
-        .collection('events')
-        .doc(currentEvent!.eventID.toString())
-        .collection('selections')
-        .doc(id.toString())
-        .get();
-    if (selection.data() == null) {
-      return null;
-    } else {
-      return Selection(
-        selID: int.parse(selection.id),
-        desc: (charName != null)
-            ? "$charName ${selection.get('desc')}"
-            : selection.get('desc'),
-        healthChange: selection.get('healthChange'),
-        oxygenChange: selection.get('oxygenChange'),
-        energyChange: selection.get('energyChange'),
-        moraleChange: selection.get('moraleChange'),
-      );
+  Future<Skill> getSkill(String id) async {
+    var newSkill =
+        await database!.rawQuery('SELECT * FROM SKILLS WHERE ID = $id');
+
+    return Skill(
+      id: id,
+      name: newSkill[0]["NAME"] as String,
+      desc: newSkill[0]["DESC"] as String,
+    );
+  }
+
+  Future<Event> getEvent(String id) async {
+    var newEvent =
+        await database!.rawQuery('SELECT * FROM EVENTS WHERE ID = $id');
+
+    return Event(
+      id: id,
+      title: newEvent[0]["TITLE"] as String,
+      desc: newEvent[0]["DESC"] as String,
+    );
+  }
+
+  getSelection(String eventID, String skillID, String charName) async {
+    var newSelect = await database!.rawQuery(
+        'SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID = $skillID');
+
+    if (newSelect.isEmpty) {
+      newSelect = await database!.rawQuery(
+          "SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID = '-1'");
     }
+
+    return Selection(
+      eventID: eventID,
+      skillID: newSelect[0]["SKILL_ID"] as String,
+      desc: "$charName ${newSelect[0]["DESC"] as String}",
+      energyChange: newSelect[0]["ENERGY_CHANGE"] as int,
+      healthChange: newSelect[0]["HEALTH_CHANGE"] as int,
+      moraleChange: newSelect[0]["MORALE_CHANGE"] as int,
+      oxygenChange: newSelect[0]["OXYGEN_CHANGE"] as int,
+      nextEventID: newSelect[0]["NEXT_EVENT_ID"] as String,
+    );
   }
 }
 
@@ -78,14 +106,14 @@ class SharedPrefsService {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('dataExists', true);
 
-    prefs.setInt('char0_charID', selectedChars[0].charID!);
-    prefs.setInt('char0_skillID', selectedChars[0].skillID!);
+    prefs.setString('char0_charID', selectedChars[0]!.id);
+    prefs.setString('char0_skillID', selectedSkills[0]!.id);
 
-    prefs.setInt('char1_charID', selectedChars[1].charID!);
-    prefs.setInt('char1_skillID', selectedChars[1].skillID!);
+    prefs.setString('char1_charID', selectedChars[1]!.id);
+    prefs.setString('char1_skillID', selectedSkills[1]!.id);
 
-    prefs.setInt('char2_charID', selectedChars[2].charID!);
-    prefs.setInt('char2_skillID', selectedChars[2].skillID!);
+    prefs.setString('char2_charID', selectedChars[2]!.id);
+    prefs.setString('char2_skillID', selectedSkills[2]!.id);
 
     prefs.setInt('currentHealth', currentStates.health);
     prefs.setInt('currentOxygen', currentStates.oxygen);
@@ -104,8 +132,7 @@ class SharedPrefsService {
 
   Future saveEventID() async {
     final prefs = await SharedPreferences.getInstance();
-
-    prefs.setInt('currentEventID', currentEvent!.eventID);
+    prefs.setString('currentEventID', currentEvent!.id);
   }
 
   Future<bool> get dataExists async {
@@ -115,14 +142,23 @@ class SharedPrefsService {
 
   Future<Character> getCharFromLocal(int id) async {
     final prefs = await SharedPreferences.getInstance();
-
-    var charID = prefs.getInt('char${id}_charID');
-    var skillID = prefs.getInt('char${id}_skillID');
-    Character char = Character();
-    char = await FirebaseServices().getCharInfo(char, charID!);
-    char = await FirebaseServices().getSkillInfo(char, skillID!);
-
+    String charID = prefs.getString('char${id}_charID')!;
+    Character char = await SQLiteServices().getChar(charID);
     return char;
+  }
+
+  Future<Skill> getSkillFromLocal(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    String skillID = prefs.getString('char${id}_skillID')!;
+    Skill skill = await SQLiteServices().getSkill(skillID);
+    return skill;
+  }
+
+  Future<Event> getEventFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    String eventID = prefs.getString('currentEventID')!;
+    Event event = await SQLiteServices().getEvent(eventID);
+    return event;
   }
 
   Future<States> getStatesFromLocal() async {
@@ -138,12 +174,6 @@ class SharedPrefsService {
     return states;
   }
 
-  Future<int> getEventIDFromLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getInt('currentEventID')!;
-  }
-
   Future eraseSavedData() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
@@ -152,8 +182,8 @@ class SharedPrefsService {
 
 getRandomEvent() async {
   Random random = Random();
-  int randomNumber = random.nextInt(eventTypesAmount);
-  return await FirebaseServices().getEvent(randomNumber);
+  int randomNumber = random.nextInt(totalEventAmount);
+  return await SQLiteServices().getEvent(randomNumber.toString());
 }
 
 void manageStates() {
@@ -219,74 +249,5 @@ void restartTheGame() async {
   currentStates.oxygen = defaultStateValue;
   eventPageIndex = 0;
   await SharedPrefsService().eraseSavedData();
-  await FirebaseServices().getDatabaseLimits();
-}
-
-class SQLiteServices {
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
-  getDatabaseLimits() async {
-    var characters =
-        await db.collection('characters').doc('characterCount').get();
-    characterTypesAmount = characters.get('count');
-
-    var events = await db.collection('events').doc('eventCount').get();
-    eventTypesAmount = events.get('count');
-
-    var skills = await db.collection('skills').doc('skillCount').get();
-    skillTypesAmount = skills.get('count');
-  }
-
-  Future<Character> getCharInfo(Character char, int id) async {
-    var newChar = await db.collection('characters').doc(id.toString()).get();
-
-    char.charID = int.parse(newChar.id);
-    char.charName = newChar.get('name');
-    char.imgURL = newChar.get('imgURL');
-
-    return char;
-  }
-
-  Future<Character> getSkillInfo(Character char, int id) async {
-    var newSkill = await db.collection('skills').doc(id.toString()).get();
-
-    char.skillID = int.parse(newSkill.id);
-    char.skillName = newSkill.get('title');
-    char.skillDesc = newSkill.get('desc');
-
-    return char;
-  }
-
-  Future<Event> getEvent(int id) async {
-    var evt = await db.collection('events').doc(id.toString()).get();
-
-    return Event(
-      eventID: int.parse(evt.id),
-      title: evt.get('title'),
-      desc: evt.get('desc'),
-    );
-  }
-
-  getSelection(int id, String? charName) async {
-    var selection = await db
-        .collection('events')
-        .doc(currentEvent!.eventID.toString())
-        .collection('selections')
-        .doc(id.toString())
-        .get();
-    if (selection.data() == null) {
-      return null;
-    } else {
-      return Selection(
-        selID: int.parse(selection.id),
-        desc: (charName != null)
-            ? "$charName ${selection.get('desc')}"
-            : selection.get('desc'),
-        healthChange: selection.get('healthChange'),
-        oxygenChange: selection.get('oxygenChange'),
-        energyChange: selection.get('energyChange'),
-        moraleChange: selection.get('moraleChange'),
-      );
-    }
-  }
+  await SQLiteServices().getDatabaseLimits();
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../database/methods.dart';
 import '../database/variables.dart';
@@ -19,168 +20,185 @@ class HomeScreen extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/shuttlefly_effect_bg.png'),
+            image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
             fit: BoxFit.cover,
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: AnimatedLogo(
-                width: MediaQuery.of(context).size.width / 2,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width / 3.5,
-              child: Column(
+        child: FutureBuilder<Database>(
+          future: SQLiteServices().copyAndOpenDB("shuttlefly_db.db"),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                alignment: Alignment.center,
+                child: Text(
+                  'Loading...',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(seWhite),
+                    fontSize: 30,
+                  ),
+                ),
+              );
+            } else {
+              database = snapshot.data;
+              return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(5),
-                    child: AnyButton(
-                      text: 'NEW GAME',
-                      onTapAction: () async {
-                        if (await SharedPrefsService().dataExists) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return PopUpAlertBox(
-                                alertTitle: 'ARE YOU SURE?',
-                                alertDesc:
-                                    'Your previous progress will be deleted.',
-                                closeButtonActive: false,
-                                buttons: [
-                                  AnyButton(
-                                    text: 'NO',
-                                    onTapAction: () {
-                                      Navigator.pop(context);
-                                    },
-                                    height: 50,
-                                    textColor: seWhite,
-                                    buttonColor: seLightBlue,
-                                    borderColor: seBlue,
-                                  ),
-                                  AnyButton(
-                                    text: 'YES',
-                                    onTapAction: () {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/storyscreen');
-                                      animationTimer!.cancel();
-                                      restartTheGame();
-                                    },
-                                    height: 50,
-                                    textColor: seWhite,
-                                    buttonColor: seLightPinkyRed,
-                                    borderColor: sePinkyRed,
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          Navigator.pushReplacementNamed(
-                              context, '/storyscreen');
-                          animationTimer!.cancel();
-                          restartTheGame();
-                        }
-                      },
-                      height: 50,
-                      textColor: seWhite,
-                      buttonColor: seLightBlue,
-                      borderColor: seBlue,
+                    padding: const EdgeInsets.all(10),
+                    child: AnimatedLogo(
+                      width: MediaQuery.of(context).size.width / 2,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(5),
-                    child: AnyButton(
-                      text: 'CONTINUE',
-                      onTapAction: () async {
-                        if (await SharedPrefsService().dataExists) {
-                          Navigator.pushReplacementNamed(
-                              context, '/gamescreen');
-                          animationTimer!.cancel();
-                          selectedChars[0] =
-                              await SharedPrefsService().getCharFromLocal(0);
-                          selectedChars[1] =
-                              await SharedPrefsService().getCharFromLocal(1);
-                          selectedChars[2] =
-                              await SharedPrefsService().getCharFromLocal(2);
-
-                          currentEvent!.eventID =
-                              await SharedPrefsService().getEventIDFromLocal();
-                          currentEvent = await FirebaseServices()
-                              .getEvent(currentEvent!.eventID);
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const PopUpAlertBox(
-                                alertTitle: 'NO DATA!',
-                                alertDesc:
-                                    'There is no progress saved.\nYou should start a new game.',
-                                closeButtonActive: true,
+                    padding: const EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width / 3.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          child: AnyButton(
+                            text: 'NEW GAME',
+                            onTapAction: () async {
+                              if (await SharedPrefsService().dataExists) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return PopUpAlertBox(
+                                      alertTitle: 'ARE YOU SURE?',
+                                      alertDesc:
+                                          'Your previous progress will be deleted.',
+                                      closeButtonActive: false,
+                                      buttons: [
+                                        AnyButton(
+                                          text: 'NO',
+                                          onTapAction: () {
+                                            Navigator.pop(context);
+                                          },
+                                          height: 50,
+                                          textColor: seWhite,
+                                          buttonColor: seLightBlue,
+                                          borderColor: seBlue,
+                                        ),
+                                        AnyButton(
+                                          text: 'YES',
+                                          onTapAction: () {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/storyscreen');
+                                            animationTimer!.cancel();
+                                            restartTheGame();
+                                          },
+                                          height: 50,
+                                          textColor: seWhite,
+                                          buttonColor: seLightPinkyRed,
+                                          borderColor: sePinkyRed,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                    context, '/storyscreen');
+                                animationTimer!.cancel();
+                                restartTheGame();
+                              }
+                            },
+                            height: 50,
+                            textColor: seWhite,
+                            buttonColor: seLightBlue,
+                            borderColor: seBlue,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          child: AnyButton(
+                            text: 'CONTINUE',
+                            onTapAction: () async {
+                              if (await SharedPrefsService().dataExists) {
+                                Navigator.pushReplacementNamed(
+                                    context, '/gamescreen');
+                                animationTimer!.cancel();
+                                selectedChars[0] = await SharedPrefsService()
+                                    .getCharFromLocal(0);
+                                selectedChars[1] = await SharedPrefsService()
+                                    .getCharFromLocal(1);
+                                selectedChars[2] = await SharedPrefsService()
+                                    .getCharFromLocal(2);
+                                currentEvent = await SharedPrefsService()
+                                    .getEventFromLocal();
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const PopUpAlertBox(
+                                      alertTitle: 'NO DATA!',
+                                      alertDesc:
+                                          'There is no progress saved.\nYou should start a new game.',
+                                      closeButtonActive: true,
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            height: 50,
+                            textColor: seWhite,
+                            buttonColor: seLightPinkyRed,
+                            borderColor: sePinkyRed,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          child: AnyButton(
+                            text: 'EXIT',
+                            onTapAction: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return PopUpAlertBox(
+                                    alertTitle: 'LEAVING?',
+                                    closeButtonActive: false,
+                                    buttons: [
+                                      AnyButton(
+                                        text: 'NO',
+                                        onTapAction: () {
+                                          Navigator.pop(context);
+                                        },
+                                        height: 50,
+                                        textColor: seWhite,
+                                        buttonColor: seLightBlue,
+                                        borderColor: seBlue,
+                                      ),
+                                      AnyButton(
+                                        text: 'YES',
+                                        onTapAction: () {
+                                          animationTimer!.cancel();
+                                          SystemNavigator.pop(); // EXIT
+                                        },
+                                        height: 50,
+                                        textColor: seWhite,
+                                        buttonColor: seLightPinkyRed,
+                                        borderColor: sePinkyRed,
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        }
-                      },
-                      height: 50,
-                      textColor: seWhite,
-                      buttonColor: seLightPinkyRed,
-                      borderColor: sePinkyRed,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    child: AnyButton(
-                      text: 'EXIT',
-                      onTapAction: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return PopUpAlertBox(
-                              alertTitle: 'LEAVING?',
-                              closeButtonActive: false,
-                              buttons: [
-                                AnyButton(
-                                  text: 'NO',
-                                  onTapAction: () {
-                                    Navigator.pop(context);
-                                  },
-                                  height: 50,
-                                  textColor: seWhite,
-                                  buttonColor: seLightBlue,
-                                  borderColor: seBlue,
-                                ),
-                                AnyButton(
-                                  text: 'YES',
-                                  onTapAction: () {
-                                    animationTimer!.cancel();
-                                    SystemNavigator.pop(); // EXIT
-                                  },
-                                  height: 50,
-                                  textColor: seWhite,
-                                  buttonColor: seLightPinkyRed,
-                                  borderColor: sePinkyRed,
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      height: 50,
-                      textColor: seWhite,
-                      buttonColor: seGrey,
-                      borderColor: seDarkGrey,
+                            height: 50,
+                            textColor: seWhite,
+                            buttonColor: seGrey,
+                            borderColor: seDarkGrey,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
-            ),
-          ],
+              );
+            }
+          },
         ),
       ),
     );
@@ -229,7 +247,7 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.contain,
-            image: AssetImage('assets/shuttlefly_effect_logo.png'),
+            image: AssetImage('assets/images/shuttlefly_effect_logo.png'),
           ),
         ),
       ),

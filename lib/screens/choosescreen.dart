@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../database/classes.dart';
 import '../database/methods.dart';
@@ -189,14 +190,13 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   @override
   void initState() {
     super.initState();
-    counter = widget.index % characterTypesAmount;
+    counter = widget.index % totalCharAmount;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Character>(
-      future:
-          FirebaseServices().getCharInfo(selectedChars[widget.index], counter),
+      future: SQLiteServices().getChar(counter.toString()),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
@@ -211,10 +211,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
             ),
           );
         } else {
-          var char = snapshot.data!;
-          selectedChars[widget.index].charID = char.charID;
-          selectedChars[widget.index].charName = char.charName;
-          selectedChars[widget.index].imgURL = char.imgURL;
+          selectedChars[widget.index] = snapshot.data!;
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -224,7 +221,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = characterTypesAmount - 1;
+                      counter = totalCharAmount - 1;
                     } else {
                       counter--;
                     }
@@ -266,8 +263,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                                 ),
                                 image: DecorationImage(
                                   fit: BoxFit.contain,
-                                  image: NetworkImage(
-                                    char.imgURL!,
+                                  image: AssetImage(
+                                    join("assets", "images",
+                                        selectedChars[widget.index]!.imgName),
                                   ),
                                 ),
                               ),
@@ -278,7 +276,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                       Container(
                         padding: const EdgeInsets.all(3),
                         child: Text(
-                          char.charName!,
+                          selectedChars[widget.index]!.name,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -296,7 +294,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == characterTypesAmount - 1) {
+                    if (counter == totalCharAmount - 1) {
                       counter = 0;
                     } else {
                       counter++;
@@ -333,22 +331,18 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
   @override
   void initState() {
     super.initState();
-    counter = widget.index % skillTypesAmount;
+    counter = widget.index % totalSkillAmount;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Character>(
-      future:
-          FirebaseServices().getSkillInfo(selectedChars[widget.index], counter),
+    return FutureBuilder<Skill>(
+      future: SQLiteServices().getSkill(counter.toString()),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container();
         } else {
-          var char = snapshot.data!;
-          selectedChars[widget.index].skillID = char.skillID;
-          selectedChars[widget.index].skillName = char.skillName;
-          selectedChars[widget.index].skillDesc = char.skillDesc;
+          selectedSkills[widget.index] = snapshot.data!;
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -358,7 +352,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   text: '<',
                   onTapAction: () {
                     if (counter == 0) {
-                      counter = skillTypesAmount - 1;
+                      counter = totalSkillAmount - 1;
                     } else {
                       counter--;
                     }
@@ -378,8 +372,8 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                       context: context,
                       builder: (BuildContext context) {
                         return PopUpAlertBox(
-                          alertTitle: char.skillName!,
-                          alertDesc: char.skillDesc!,
+                          alertTitle: selectedSkills[widget.index]!.name,
+                          alertDesc: selectedSkills[widget.index]!.desc,
                           closeButtonActive: true,
                         );
                       },
@@ -398,7 +392,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      'The\n${char.skillName!}',
+                      'The\n${selectedSkills[widget.index]!.name}',
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.fade,
                       style: const TextStyle(
@@ -414,7 +408,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                 child: AnyButton(
                   text: '>',
                   onTapAction: () {
-                    if (counter == skillTypesAmount - 1) {
+                    if (counter == totalSkillAmount - 1) {
                       counter = 0;
                     } else {
                       counter++;
