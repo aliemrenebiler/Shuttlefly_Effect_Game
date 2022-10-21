@@ -85,7 +85,7 @@ class SQLiteServices {
 
     if (newSelect.isEmpty) {
       newSelect = await database!.rawQuery(
-          "SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID = '-1'");
+          "SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID IS NULL");
     }
 
     return Selection(
