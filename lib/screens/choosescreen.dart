@@ -249,25 +249,23 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: SEColors().grey,
-                                border: Border.all(
-                                  width: seBorderWidth,
-                                  color: SEColors().dcream,
-                                ),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    join("assets", "images",
-                                        selectedChars[widget.index]!.imgName),
-                                  ),
+                        child: AspectRatio(
+                          aspectRatio: 1.0,
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: SEColors().lcream,
+                              border: Border.all(
+                                width: seBorderWidth,
+                                color: SEColors().dcream,
+                              ),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(
+                                  join("assets", "images",
+                                      selectedChars[widget.index]!.imgName),
                                 ),
                               ),
                             ),
@@ -276,12 +274,13 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                       ),
                       Container(
                         padding: const EdgeInsets.all(3),
+                        alignment: Alignment.center,
                         child: Text(
                           selectedChars[widget.index]!.name,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: SEColors().dcream,
+                            color: SEColors().dcream2,
                             fontSize: 20,
                           ),
                         ),
@@ -396,8 +395,8 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                       'The\n${selectedSkills[widget.index]!.name}',
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.fade,
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: SEColors().black,
                         fontSize: 16,
                       ),
                     ),

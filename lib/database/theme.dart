@@ -15,6 +15,7 @@ class SEColors {
   var lcream = const Color(0xFFFFCDB2);
   var cream = const Color(0xFFFFB4A2);
   var dcream = const Color(0xFFE18A6B);
+  var dcream2 = const Color(0xFFA6563A);
 
   var lgrey = const Color(0xFFE0E0E0);
   var grey = const Color(0xFFBDBDBD);

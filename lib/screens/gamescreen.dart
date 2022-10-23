@@ -488,20 +488,17 @@ class CharBox extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage(
-                        join(
-                          "assets",
-                          "images",
-                          selectedChars[index]!.imgName,
-                        ),
-                      ),
-                    ),
-                    shape: BoxShape.circle,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: SEColors().lcream,
                     border: Border.all(
                       width: seBorderWidth,
                       color: SEColors().dcream,
+                    ),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        join("assets", "images", selectedChars[index]!.imgName),
+                      ),
                     ),
                   ),
                 ),
@@ -515,7 +512,7 @@ class CharBox extends StatelessWidget {
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.fade,
                   style: TextStyle(
-                    color: SEColors().red,
+                    color: SEColors().dcream2,
                     fontSize: 18,
                   ),
                 ),
