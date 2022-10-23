@@ -41,6 +41,7 @@ class _GameScreenState extends State<GameScreen> {
             Expanded(
               flex: 1,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -121,87 +122,85 @@ class _GameScreenState extends State<GameScreen> {
                       borderColor: seBlue,
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          for (int i = 0; i < 3; i++)
-                            Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                child: CharBox(
-                                  index: i,
-                                  onTapAction: () async {
-                                    if (eventPageIndex != 1) {
-                                      currentSelection =
-                                          await SQLiteServices().getSelection(
-                                        currentEvent!.id,
-                                        selectedSkills[i]!.id,
-                                        selectedChars[i]!.name,
-                                      );
-                                      manageStates();
-                                      eventPageIndex = 1;
-                                      await SharedPrefsService().saveStates();
-                                      refresh();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                          Container(
+                  (eventPageIndex == 0)
+                      ? Expanded(
+                          child: Container(
                             padding: const EdgeInsets.all(5),
-                            child: (eventPageIndex == 0)
-                                ? Container(height: 50)
-                                : AnyButton(
-                                    text: 'DONE',
-                                    onTapAction: () async {
-                                      String? message = checkStates();
-                                      if (message == null) {
-                                        currentEvent = await getRandomEvent();
-                                        await SharedPrefsService()
-                                            .saveEventID();
-                                        eventPageIndex = 0;
-                                        refresh();
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return PopUpAlertBox(
-                                              alertTitle: 'THE END',
-                                              alertDesc: message,
-                                              closeButtonActive: false,
-                                              buttons: [
-                                                AnyButton(
-                                                  text: 'MAIN MENU',
-                                                  onTapAction: () {
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                            context,
-                                                            '/homescreen');
-                                                  },
-                                                  height: 50,
-                                                  textColor: seWhite,
-                                                  buttonColor: seLightBlue,
-                                                  borderColor: seBlue,
-                                                ),
-                                              ],
+                            child: Column(
+                              children: [
+                                for (int i = 0; i < 3; i++)
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      child: CharBox(
+                                        index: i,
+                                        onTapAction: () async {
+                                          if (eventPageIndex != 1) {
+                                            currentSelection =
+                                                await SQLiteServices()
+                                                    .getSelection(
+                                              currentEvent!.id,
+                                              selectedSkills[i]!.id,
+                                              selectedChars[i]!.name,
                                             );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    height: 50,
-                                    textColor: sePinkyRed,
-                                    buttonColor: seLightGrey,
-                                    borderColor: seGrey,
+                                            manageStates();
+                                            eventPageIndex = 1;
+                                            await SharedPrefsService()
+                                                .saveStates();
+                                            refresh();
+                                          }
+                                        },
+                                      ),
+                                    ),
                                   ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        )
+                      : Container(
+                          padding: const EdgeInsets.all(10),
+                          child: AnyButton(
+                            text: 'DONE',
+                            onTapAction: () async {
+                              String? message = checkStates();
+                              if (message == null) {
+                                currentEvent = await getRandomEvent();
+                                await SharedPrefsService().saveEventID();
+                                eventPageIndex = 0;
+                                refresh();
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return PopUpAlertBox(
+                                      alertTitle: 'THE END',
+                                      alertDesc: message,
+                                      closeButtonActive: false,
+                                      buttons: [
+                                        AnyButton(
+                                          text: 'MAIN MENU',
+                                          onTapAction: () {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/homescreen');
+                                          },
+                                          height: 50,
+                                          textColor: seWhite,
+                                          buttonColor: seLightBlue,
+                                          borderColor: seBlue,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            height: 50,
+                            textColor: seWhite,
+                            buttonColor: seLightPinkyRed,
+                            borderColor: sePinkyRed,
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -511,29 +510,14 @@ class CharBox extends StatelessWidget {
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(3),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      selectedChars[index]!.name,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Color(sePinkyRed),
-                        fontSize: 20,
-                      ),
-                    ),
-                    Text(
-                      'The ${selectedSkills[index]!.name}',
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        color: Color(seBlack),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  '${selectedChars[index]!.name} The ${selectedSkills[index]!.name}',
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    color: Color(sePinkyRed),
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),
