@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 
-var seWhite = Colors.white.hashCode;
-var seBlack = Colors.black.hashCode;
+class SEColors {
+  var white = const Color(0xFFFFFFFF);
+  var black = const Color(0xFF000000);
 
-var seLightBlue = 0xFF448AFF;
-var seBlue = 0xFF2962FF;
-var seDarkBlue = 0xFF002486;
+  var lblue = const Color(0xFF448AFF);
+  var blue = const Color(0xFF2962FF);
+  var dblue = const Color(0xFF002486);
 
-var seLightPinkyRed = 0xFFFF1744;
-var sePinkyRed = 0xFFD50000;
-var seDarkPinkyRed = 0xFF8E0000;
+  var lred = const Color(0xFFFF1744);
+  var red = const Color(0xFFD50000);
+  var dred = const Color(0xFF8E0000);
 
-var seLightCream = 0xFFFFCDB2;
-var seCream = 0xFFFFB4A2;
-var seDarkCream = 0xFFE18A6B;
+  var lcream = const Color(0xFFFFCDB2);
+  var cream = const Color(0xFFFFB4A2);
+  var dcream = const Color(0xFFE18A6B);
 
-var seLightGrey = 0xFFE0E0E0;
-var seGrey = 0xFFBDBDBD;
-var seDarkGrey = 0xFF9E9E9E;
+  var lgrey = const Color(0xFFE0E0E0);
+  var grey = const Color(0xFFBDBDBD);
+  var dgrey = const Color(0xFF9E9E9E);
 
-var seLightYellow = 0xFFF9A825;
-var seYellow = 0xFFF57F17;
-var seDarkYellow = 0xFF8A470C;
+  var lyellow = const Color(0xFFF9A825);
+  var yellow = const Color(0xFFF57F17);
+  var dyellow = const Color(0xFF8A470C);
 
-var seLightPurple = 0xFF8E24AA;
-var sePurple = 0xFF6A1B9A;
-var seDarkPurple = 0xFF310D47;
+  var lpurple = const Color(0xFF8E24AA);
+  var purple = const Color(0xFF6A1B9A);
+  var dpurple = const Color(0xFF310D47);
+}
 
 var seBorderWidth = 5.0;

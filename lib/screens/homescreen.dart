@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                   'Loading...',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(seWhite),
+                    color: SEColors().white,
                     fontSize: 30,
                   ),
                 ),
@@ -77,9 +77,9 @@ class HomeScreen extends StatelessWidget {
                                             Navigator.pop(context);
                                           },
                                           height: 50,
-                                          textColor: seWhite,
-                                          buttonColor: seLightBlue,
-                                          borderColor: seBlue,
+                                          textColor: SEColors().white,
+                                          buttonColor: SEColors().lblue,
+                                          borderColor: SEColors().blue,
                                         ),
                                         AnyButton(
                                           text: 'YES',
@@ -90,9 +90,9 @@ class HomeScreen extends StatelessWidget {
                                             restartTheGame();
                                           },
                                           height: 50,
-                                          textColor: seWhite,
-                                          buttonColor: seLightPinkyRed,
-                                          borderColor: sePinkyRed,
+                                          textColor: SEColors().white,
+                                          buttonColor: SEColors().lred,
+                                          borderColor: SEColors().red,
                                         ),
                                       ],
                                     );
@@ -106,9 +106,9 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             height: 50,
-                            textColor: seWhite,
-                            buttonColor: seLightBlue,
-                            borderColor: seBlue,
+                            textColor: SEColors().white,
+                            buttonColor: SEColors().lblue,
+                            borderColor: SEColors().blue,
                           ),
                         ),
                         Container(
@@ -143,9 +143,9 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             height: 50,
-                            textColor: seWhite,
-                            buttonColor: seLightPinkyRed,
-                            borderColor: sePinkyRed,
+                            textColor: SEColors().white,
+                            buttonColor: SEColors().lred,
+                            borderColor: SEColors().red,
                           ),
                         ),
                         Container(
@@ -166,9 +166,9 @@ class HomeScreen extends StatelessWidget {
                                           Navigator.pop(context);
                                         },
                                         height: 50,
-                                        textColor: seWhite,
-                                        buttonColor: seLightBlue,
-                                        borderColor: seBlue,
+                                        textColor: SEColors().white,
+                                        buttonColor: SEColors().lblue,
+                                        borderColor: SEColors().blue,
                                       ),
                                       AnyButton(
                                         text: 'YES',
@@ -177,9 +177,9 @@ class HomeScreen extends StatelessWidget {
                                           SystemNavigator.pop(); // EXIT
                                         },
                                         height: 50,
-                                        textColor: seWhite,
-                                        buttonColor: seLightPinkyRed,
-                                        borderColor: sePinkyRed,
+                                        textColor: SEColors().white,
+                                        buttonColor: SEColors().lred,
+                                        borderColor: SEColors().red,
                                       ),
                                     ],
                                   );
@@ -187,9 +187,9 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             height: 50,
-                            textColor: seWhite,
-                            buttonColor: seGrey,
-                            borderColor: seDarkGrey,
+                            textColor: SEColors().white,
+                            buttonColor: SEColors().grey,
+                            borderColor: SEColors().dgrey,
                           ),
                         ),
                       ],
@@ -280,11 +280,11 @@ class PopUpAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(seWhite),
+          color: SEColors().white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seGrey),
+            color: SEColors().grey,
           ),
         ),
         child: Column(
@@ -324,9 +324,9 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: sePinkyRed,
-                      buttonColor: seLightGrey,
-                      borderColor: seGrey,
+                      textColor: SEColors().red,
+                      buttonColor: SEColors().lgrey,
+                      borderColor: SEColors().grey,
                     ),
                   ),
               ],
@@ -369,9 +369,9 @@ class AnyButton extends StatelessWidget {
   final VoidCallback onTapAction;
   final double? width;
   final double? height;
-  final int textColor;
-  final int buttonColor;
-  final int borderColor;
+  final Color textColor;
+  final Color buttonColor;
+  final Color borderColor;
   const AnyButton({
     super.key,
     required this.text,
@@ -392,11 +392,11 @@ class AnyButton extends StatelessWidget {
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,
         decoration: BoxDecoration(
-          color: Color(buttonColor),
+          color: buttonColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(borderColor),
+            color: borderColor,
           ),
         ),
         child: Text(
@@ -404,7 +404,7 @@ class AnyButton extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Color(textColor),
+            color: textColor,
             fontSize: 20,
           ),
         ),

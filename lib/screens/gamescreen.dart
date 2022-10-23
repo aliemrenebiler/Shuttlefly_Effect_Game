@@ -19,7 +19,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(seDarkBlue),
+      backgroundColor: SEColors().dblue,
       body: Container(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -31,10 +31,10 @@ class _GameScreenState extends State<GameScreen> {
                 child: EventBox(
                   title: currentEvent!.title,
                   desc: currentEvent!.desc,
-                  titleColor: seDarkBlue,
-                  descColor: seBlack,
-                  boxColor: seWhite,
-                  borderColor: seLightGrey,
+                  titleColor: SEColors().dblue,
+                  descColor: SEColors().black,
+                  boxColor: SEColors().white,
+                  borderColor: SEColors().lgrey,
                 ),
               ),
             ),
@@ -62,9 +62,9 @@ class _GameScreenState extends State<GameScreen> {
                                         context, '/homescreen');
                                   },
                                   height: 50,
-                                  textColor: seWhite,
-                                  buttonColor: seLightBlue,
-                                  borderColor: seBlue,
+                                  textColor: SEColors().white,
+                                  buttonColor: SEColors().lblue,
+                                  borderColor: SEColors().blue,
                                 ),
                                 AnyButton(
                                   text: 'RESTART',
@@ -85,9 +85,9 @@ class _GameScreenState extends State<GameScreen> {
                                                 Navigator.pop(context);
                                               },
                                               height: 50,
-                                              textColor: seWhite,
-                                              buttonColor: seLightBlue,
-                                              borderColor: seBlue,
+                                              textColor: SEColors().white,
+                                              buttonColor: SEColors().lblue,
+                                              borderColor: SEColors().blue,
                                             ),
                                             AnyButton(
                                               text: 'YES',
@@ -97,9 +97,9 @@ class _GameScreenState extends State<GameScreen> {
                                                 restartTheGame();
                                               },
                                               height: 50,
-                                              textColor: seWhite,
-                                              buttonColor: seLightPinkyRed,
-                                              borderColor: sePinkyRed,
+                                              textColor: SEColors().white,
+                                              buttonColor: SEColors().lred,
+                                              borderColor: SEColors().red,
                                             ),
                                           ],
                                         );
@@ -107,9 +107,9 @@ class _GameScreenState extends State<GameScreen> {
                                     );
                                   },
                                   height: 50,
-                                  textColor: seWhite,
-                                  buttonColor: seLightPinkyRed,
-                                  borderColor: sePinkyRed,
+                                  textColor: SEColors().white,
+                                  buttonColor: SEColors().lred,
+                                  borderColor: SEColors().red,
                                 ),
                               ],
                             );
@@ -117,9 +117,9 @@ class _GameScreenState extends State<GameScreen> {
                         );
                       },
                       height: 50,
-                      textColor: seWhite,
-                      buttonColor: seLightBlue,
-                      borderColor: seBlue,
+                      textColor: SEColors().white,
+                      buttonColor: SEColors().lblue,
+                      borderColor: SEColors().blue,
                     ),
                   ),
                   (eventPageIndex == 0)
@@ -185,9 +185,9 @@ class _GameScreenState extends State<GameScreen> {
                                                 context, '/homescreen');
                                           },
                                           height: 50,
-                                          textColor: seWhite,
-                                          buttonColor: seLightBlue,
-                                          borderColor: seBlue,
+                                          textColor: SEColors().white,
+                                          buttonColor: SEColors().lblue,
+                                          borderColor: SEColors().blue,
                                         ),
                                       ],
                                     );
@@ -196,9 +196,9 @@ class _GameScreenState extends State<GameScreen> {
                               }
                             },
                             height: 50,
-                            textColor: seWhite,
-                            buttonColor: seLightPinkyRed,
-                            borderColor: sePinkyRed,
+                            textColor: SEColors().white,
+                            buttonColor: SEColors().lred,
+                            borderColor: SEColors().red,
                           ),
                         ),
                 ],
@@ -217,10 +217,10 @@ class StateValueBox extends StatefulWidget {
   final int value;
   final double? width;
   final double? height;
-  final int textColor;
-  final int boxColor;
-  final int bgColor;
-  final int borderColor;
+  final Color textColor;
+  final Color boxColor;
+  final Color bgColor;
+  final Color borderColor;
   const StateValueBox({
     super.key,
     required this.text,
@@ -244,11 +244,11 @@ class _StateValueBoxState extends State<StateValueBox> {
       height: (widget.height != null) ? widget.height : null,
       width: (widget.width != null) ? widget.width : null,
       decoration: BoxDecoration(
-        color: Color(widget.bgColor),
+        color: widget.bgColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(widget.borderColor),
+          color: widget.borderColor,
         ),
       ),
       child: Stack(
@@ -261,7 +261,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                     (maxtStateValue - minStateValue)
                 : null,
             decoration: BoxDecoration(
-              color: Color(widget.boxColor),
+              color: widget.boxColor,
               borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
             duration: const Duration(milliseconds: 500),
@@ -279,7 +279,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Color(widget.textColor),
+                      color: widget.textColor,
                       fontSize: 20,
                     ),
                   ),
@@ -291,7 +291,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Color(widget.textColor),
+                      color: widget.textColor,
                       fontSize: 20,
                     ),
                   ),
@@ -309,10 +309,10 @@ class _StateValueBoxState extends State<StateValueBox> {
 class EventBox extends StatefulWidget {
   final String title;
   final String desc;
-  final int titleColor;
-  final int descColor;
-  final int boxColor;
-  final int borderColor;
+  final Color titleColor;
+  final Color descColor;
+  final Color boxColor;
+  final Color borderColor;
   const EventBox({
     super.key,
     required this.title,
@@ -337,11 +337,11 @@ class _EventBoxState extends State<EventBox> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(widget.boxColor),
+        color: widget.boxColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(widget.borderColor),
+          color: widget.borderColor,
         ),
       ),
       child: Column(
@@ -353,7 +353,7 @@ class _EventBoxState extends State<EventBox> {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Color(widget.titleColor),
+                color: widget.titleColor,
                 fontSize: 25,
               ),
             ),
@@ -370,7 +370,7 @@ class _EventBoxState extends State<EventBox> {
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.fade,
                   style: TextStyle(
-                    color: Color(widget.descColor),
+                    color: widget.descColor,
                     fontSize: 18,
                   ),
                 ),
@@ -388,10 +388,10 @@ class _EventBoxState extends State<EventBox> {
                       text: 'Health',
                       value: currentStates.health,
                       height: 80,
-                      textColor: seWhite,
-                      boxColor: seLightPinkyRed,
-                      bgColor: seDarkPinkyRed,
-                      borderColor: sePinkyRed,
+                      textColor: SEColors().white,
+                      boxColor: SEColors().lred,
+                      bgColor: SEColors().dred,
+                      borderColor: SEColors().red,
                     ),
                   ),
                 ),
@@ -402,10 +402,10 @@ class _EventBoxState extends State<EventBox> {
                       text: 'Oxygen',
                       value: currentStates.oxygen,
                       height: 80,
-                      textColor: seWhite,
-                      boxColor: seLightBlue,
-                      bgColor: seDarkBlue,
-                      borderColor: seBlue,
+                      textColor: SEColors().white,
+                      boxColor: SEColors().lblue,
+                      bgColor: SEColors().dblue,
+                      borderColor: SEColors().blue,
                     ),
                   ),
                 ),
@@ -416,10 +416,10 @@ class _EventBoxState extends State<EventBox> {
                       text: 'Morale',
                       value: currentStates.morale,
                       height: 80,
-                      textColor: seWhite,
-                      boxColor: seLightPurple,
-                      bgColor: seDarkPurple,
-                      borderColor: sePurple,
+                      textColor: SEColors().white,
+                      boxColor: SEColors().lpurple,
+                      bgColor: SEColors().dpurple,
+                      borderColor: SEColors().purple,
                     ),
                   ),
                 ),
@@ -430,10 +430,10 @@ class _EventBoxState extends State<EventBox> {
                       text: 'Energy',
                       value: currentStates.energy,
                       height: 80,
-                      textColor: seWhite,
-                      boxColor: seLightYellow,
-                      bgColor: seDarkYellow,
-                      borderColor: seYellow,
+                      textColor: SEColors().white,
+                      boxColor: SEColors().lyellow,
+                      bgColor: SEColors().dyellow,
+                      borderColor: SEColors().yellow,
                     ),
                   ),
                 ),
@@ -469,11 +469,11 @@ class CharBox extends StatelessWidget {
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,
         decoration: BoxDecoration(
-          color: Color(seLightCream),
+          color: SEColors().lcream,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seCream),
+            color: SEColors().cream,
           ),
         ),
         padding: const EdgeInsets.all(2),
@@ -501,7 +501,7 @@ class CharBox extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(
                       width: seBorderWidth,
-                      color: Color(seDarkCream),
+                      color: SEColors().dcream,
                     ),
                   ),
                 ),
@@ -515,7 +515,7 @@ class CharBox extends StatelessWidget {
                   textAlign: TextAlign.left,
                   overflow: TextOverflow.fade,
                   style: TextStyle(
-                    color: Color(sePinkyRed),
+                    color: SEColors().red,
                     fontSize: 18,
                   ),
                 ),
@@ -553,11 +553,11 @@ class PopUpAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(seWhite),
+          color: SEColors().white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seGrey),
+            color: SEColors().grey,
           ),
         ),
         child: Column(
@@ -597,9 +597,9 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: sePinkyRed,
-                      buttonColor: seLightGrey,
-                      borderColor: seGrey,
+                      textColor: SEColors().red,
+                      buttonColor: SEColors().lgrey,
+                      borderColor: SEColors().grey,
                     ),
                   ),
               ],
@@ -642,9 +642,9 @@ class AnyButton extends StatelessWidget {
   final VoidCallback onTapAction;
   final double? width;
   final double? height;
-  final int textColor;
-  final int buttonColor;
-  final int borderColor;
+  final Color textColor;
+  final Color buttonColor;
+  final Color borderColor;
   const AnyButton({
     super.key,
     required this.text,
@@ -665,11 +665,11 @@ class AnyButton extends StatelessWidget {
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,
         decoration: BoxDecoration(
-          color: Color(buttonColor),
+          color: buttonColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(borderColor),
+            color: borderColor,
           ),
         ),
         child: Text(
@@ -677,7 +677,7 @@ class AnyButton extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Color(textColor),
+            color: textColor,
             fontSize: 20,
           ),
         ),

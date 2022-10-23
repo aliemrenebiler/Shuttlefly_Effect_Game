@@ -12,7 +12,7 @@ class ChooseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(seDarkBlue),
+      backgroundColor: SEColors().dblue,
       body: Container(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -51,11 +51,11 @@ class TopBar extends StatelessWidget {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: Color(seLightBlue),
+        color: SEColors().lblue,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(seBlue),
+          color: SEColors().blue,
         ),
       ),
       child: Row(
@@ -73,7 +73,7 @@ class TopBar extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Color(seWhite),
+                color: SEColors().white,
                 fontSize: 25,
               ),
             ),
@@ -115,7 +115,7 @@ class TopBarButton extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Color(seWhite),
+            color: SEColors().white,
             fontSize: 18,
           ),
         ),
@@ -137,11 +137,11 @@ class CharBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Color(seWhite),
+        color: SEColors().white,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(seLightGrey),
+          color: SEColors().lgrey,
         ),
       ),
       child: Column(
@@ -154,7 +154,7 @@ class CharBox extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Color(seDarkBlue),
+                color: SEColors().dblue,
                 fontSize: 20,
               ),
             ),
@@ -205,7 +205,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
               'Loading...',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color(seLightBlue),
+                color: SEColors().lblue,
                 fontSize: 30,
               ),
             ),
@@ -228,9 +228,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     setState(() {});
                   },
                   width: 35,
-                  textColor: seWhite,
-                  buttonColor: seLightPinkyRed,
-                  borderColor: sePinkyRed,
+                  textColor: SEColors().white,
+                  buttonColor: SEColors().lred,
+                  borderColor: SEColors().red,
                 ),
               ),
               Expanded(
@@ -238,11 +238,11 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   margin: const EdgeInsets.all(3),
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: Color(seLightCream),
+                    color: SEColors().lcream,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(
                       width: seBorderWidth,
-                      color: Color(seCream),
+                      color: SEColors().cream,
                     ),
                   ),
                   child: Column(
@@ -252,17 +252,18 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                         child: Container(
                           padding: const EdgeInsets.all(3),
                           child: AspectRatio(
-                            aspectRatio: 1.0,
+                            aspectRatio: 1,
                             child: Container(
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(seGrey),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                color: SEColors().grey,
                                 border: Border.all(
                                   width: seBorderWidth,
-                                  color: Color(seDarkCream),
+                                  color: SEColors().dcream,
                                 ),
                                 image: DecorationImage(
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                   image: AssetImage(
                                     join("assets", "images",
                                         selectedChars[widget.index]!.imgName),
@@ -280,7 +281,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Color(sePinkyRed),
+                            color: SEColors().dcream,
                             fontSize: 20,
                           ),
                         ),
@@ -302,9 +303,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     setState(() {});
                   },
                   width: 35,
-                  textColor: seWhite,
-                  buttonColor: seLightPinkyRed,
-                  borderColor: sePinkyRed,
+                  textColor: SEColors().white,
+                  buttonColor: SEColors().lred,
+                  borderColor: SEColors().red,
                 ),
               ),
             ],
@@ -359,9 +360,9 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     setState(() {});
                   },
                   width: 35,
-                  textColor: seWhite,
-                  buttonColor: seLightBlue,
-                  borderColor: seBlue,
+                  textColor: SEColors().white,
+                  buttonColor: SEColors().lblue,
+                  borderColor: SEColors().blue,
                 ),
               ),
               Expanded(
@@ -383,11 +384,11 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     margin: const EdgeInsets.all(3),
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                      color: Color(seLightGrey),
+                      color: SEColors().lgrey,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       border: Border.all(
                         width: seBorderWidth,
-                        color: Color(seGrey),
+                        color: SEColors().grey,
                       ),
                     ),
                     alignment: Alignment.center,
@@ -416,9 +417,9 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     setState(() {});
                   },
                   width: 35,
-                  textColor: seWhite,
-                  buttonColor: seLightBlue,
-                  borderColor: seBlue,
+                  textColor: SEColors().white,
+                  buttonColor: SEColors().lblue,
+                  borderColor: SEColors().blue,
                 ),
               ),
             ],
@@ -454,11 +455,11 @@ class PopUpAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(seWhite),
+          color: SEColors().white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(seGrey),
+            color: SEColors().grey,
           ),
         ),
         child: Column(
@@ -498,9 +499,9 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: sePinkyRed,
-                      buttonColor: seLightGrey,
-                      borderColor: seGrey,
+                      textColor: SEColors().red,
+                      buttonColor: SEColors().lgrey,
+                      borderColor: SEColors().grey,
                     ),
                   ),
               ],
@@ -543,9 +544,9 @@ class AnyButton extends StatelessWidget {
   final VoidCallback onTapAction;
   final double? width;
   final double? height;
-  final int textColor;
-  final int buttonColor;
-  final int borderColor;
+  final Color textColor;
+  final Color buttonColor;
+  final Color borderColor;
   const AnyButton({
     super.key,
     required this.text,
@@ -566,11 +567,11 @@ class AnyButton extends StatelessWidget {
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,
         decoration: BoxDecoration(
-          color: Color(buttonColor),
+          color: buttonColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: seBorderWidth,
-            color: Color(borderColor),
+            color: borderColor,
           ),
         ),
         child: Text(
@@ -578,7 +579,7 @@ class AnyButton extends StatelessWidget {
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Color(textColor),
+            color: textColor,
             fontSize: 20,
           ),
         ),

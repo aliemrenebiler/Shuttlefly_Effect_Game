@@ -8,7 +8,7 @@ class StoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(seDarkBlue),
+      backgroundColor: SEColors().dblue,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -58,11 +58,11 @@ class TopBar extends StatelessWidget {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: Color(seLightBlue),
+        color: SEColors().lblue,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: Color(seBlue),
+          color: SEColors().blue,
         ),
       ),
       child: Row(
