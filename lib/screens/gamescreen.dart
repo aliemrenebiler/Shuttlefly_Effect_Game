@@ -192,7 +192,7 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  (eventState == 0)
+                  (eventIsWaiting)
                       ? Expanded(
                           child: Container(
                             padding: const EdgeInsets.all(5),
@@ -205,7 +205,7 @@ class _GameScreenState extends State<GameScreen> {
                                       child: CharBox(
                                         index: i,
                                         onTapAction: () async {
-                                          if (eventState != 1) {
+                                          if (eventIsWaiting) {
                                             currentSelection =
                                                 await SQLiteServices()
                                                     .getSelection(
@@ -214,7 +214,7 @@ class _GameScreenState extends State<GameScreen> {
                                               selectedChars[i]!.name,
                                             );
                                             manageStates();
-                                            eventState = 1;
+                                            eventIsWaiting = false;
                                             await SharedPrefsService()
                                                 .saveStates();
                                             refresh();
@@ -236,7 +236,7 @@ class _GameScreenState extends State<GameScreen> {
                               if (message == null) {
                                 currentEvent = await getRandomEvent();
                                 await SharedPrefsService().saveEventID();
-                                eventState = 0;
+                                eventIsWaiting = true;
                                 refresh();
                               } else {
                                 showDialog(
@@ -421,7 +421,7 @@ class _EventBoxState extends State<EventBox> {
           Container(
             margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
             child: Text(
-              (eventState != 1) ? currentEvent!.title : 'WHAT HAPPENED?',
+              (eventIsWaiting) ? currentEvent!.title : 'WHAT HAPPENED?',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -436,7 +436,7 @@ class _EventBoxState extends State<EventBox> {
               child: Container(
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Text(
-                  (eventState != 1)
+                  (eventIsWaiting)
                       ? currentEvent!.desc
                       : currentSelection!.desc,
                   textAlign: TextAlign.center,

@@ -18,7 +18,7 @@ int totalSkillAmount = 0;
 List<Character?> selectedChars = [null, null, null];
 List<Skill?> selectedSkills = [null, null, null];
 
-int eventState = 0;
+bool eventIsWaiting = true;
 
 Event? currentEvent;
 Selection? currentSelection;
