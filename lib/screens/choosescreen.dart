@@ -249,39 +249,45 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 1.0,
-                          child: Container(
-                            margin: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: SEColors().lcream,
-                              border: Border.all(
-                                width: seBorderWidth,
-                                color: SEColors().dcream,
-                              ),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                  join("assets", "images",
-                                      selectedChars[widget.index]!.imgName),
+                        flex: 3,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                color: SEColors().lcream,
+                                border: Border.all(
+                                  width: seBorderWidth,
+                                  color: SEColors().dcream,
+                                ),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    join("assets", "images",
+                                        selectedChars[widget.index]!.imgName),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        alignment: Alignment.center,
-                        child: Text(
-                          selectedChars[widget.index]!.name,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: SEColors().dcream2,
-                            fontSize: 20,
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          alignment: Alignment.center,
+                          child: Text(
+                            selectedChars[widget.index]!.name,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                              color: SEColors().dcream2,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
