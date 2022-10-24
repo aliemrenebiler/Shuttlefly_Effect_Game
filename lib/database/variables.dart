@@ -18,7 +18,7 @@ int totalSkillAmount = 0;
 List<Character?> selectedChars = [null, null, null];
 List<Skill?> selectedSkills = [null, null, null];
 
-int eventPageIndex = 0;
+int eventState = 0;
 
 Event? currentEvent;
 Selection? currentSelection;

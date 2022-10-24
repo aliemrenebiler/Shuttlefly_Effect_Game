@@ -81,11 +81,19 @@ class TopBar extends StatelessWidget {
           TopBarButton(
             text: "DONE",
             onTapAction: () async {
-              await SharedPrefsService().saveCharacters();
-              currentEvent = await getRandomEvent();
-              await SharedPrefsService().saveEventID();
-              // ignore: use_build_context_synchronously
-              Navigator.pushReplacementNamed(context, '/gamescreen');
+              bool noNullChar = true;
+              for (int i = 0; i < 3; i++) {
+                if (selectedChars[i] == null) {
+                  noNullChar = false;
+                }
+              }
+              if (noNullChar) {
+                await SharedPrefsService().saveCharacters();
+                currentEvent = await getRandomEvent();
+                await SharedPrefsService().saveEventID();
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacementNamed(context, '/gamescreen');
+              }
             },
           ),
         ],
@@ -198,124 +206,119 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
     return FutureBuilder<Character>(
       future: SQLiteServices().getChar(counter.toString()),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            alignment: Alignment.center,
-            child: Text(
-              'Loading...',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: SEColors().lblue,
-                fontSize: 30,
+        if (snapshot.hasData) {
+          selectedChars[widget.index] = snapshot.data!;
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(3),
+              child: AnyButton(
+                text: '<',
+                onTapAction: () {
+                  if (counter == 0) {
+                    counter = totalCharAmount - 1;
+                  } else {
+                    counter--;
+                  }
+                  setState(() {});
+                },
+                width: 35,
+                textColor: SEColors().white,
+                buttonColor: SEColors().lred,
+                borderColor: SEColors().red,
               ),
             ),
-          );
-        } else {
-          selectedChars[widget.index] = snapshot.data!;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(3),
                 padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '<',
-                  onTapAction: () {
-                    if (counter == 0) {
-                      counter = totalCharAmount - 1;
-                    } else {
-                      counter--;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().white,
-                  buttonColor: SEColors().lred,
-                  borderColor: SEColors().red,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(3),
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: SEColors().lcream,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: SEColors().cream,
-                    ),
+                decoration: BoxDecoration(
+                  color: SEColors().lcream,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(
+                    width: seBorderWidth,
+                    color: SEColors().cream,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              margin: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: SEColors().lcream,
-                                border: Border.all(
-                                  width: seBorderWidth,
-                                  color: SEColors().dcream,
-                                ),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    join("assets", "images",
-                                        selectedChars[widget.index]!.imgName),
-                                  ),
-                                ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            margin: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: SEColors().cream,
+                              border: Border.all(
+                                width: seBorderWidth,
+                                color: SEColors().dcream,
                               ),
+                              image: (!snapshot.hasData)
+                                  ? null
+                                  : DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        join(
+                                            "assets",
+                                            "images",
+                                            selectedChars[widget.index]!
+                                                .imgName),
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: const EdgeInsets.all(3),
-                          alignment: Alignment.center,
-                          child: Text(
-                            selectedChars[widget.index]!.name,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.fade,
-                            style: TextStyle(
-                              color: SEColors().dcream2,
-                              fontSize: 20,
-                            ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        alignment: Alignment.center,
+                        child: Text(
+                          (!snapshot.hasData)
+                              ? "..."
+                              : selectedChars[widget.index]!.name,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                            color: SEColors().dcream2,
+                            fontSize: 20,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '>',
-                  onTapAction: () {
-                    if (counter == totalCharAmount - 1) {
-                      counter = 0;
-                    } else {
-                      counter++;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().white,
-                  buttonColor: SEColors().lred,
-                  borderColor: SEColors().red,
-                ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(3),
+              child: AnyButton(
+                text: '>',
+                onTapAction: () {
+                  if (counter == totalCharAmount - 1) {
+                    counter = 0;
+                  } else {
+                    counter++;
+                  }
+                  setState(() {});
+                },
+                width: 35,
+                textColor: SEColors().white,
+                buttonColor: SEColors().lred,
+                borderColor: SEColors().red,
               ),
-            ],
-          );
-        }
+            ),
+          ],
+        );
       },
     );
   }
@@ -345,91 +348,91 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
     return FutureBuilder<Skill>(
       future: SQLiteServices().getSkill(counter.toString()),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
-        } else {
+        if (snapshot.hasData) {
           selectedSkills[widget.index] = snapshot.data!;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '<',
-                  onTapAction: () {
-                    if (counter == 0) {
-                      counter = totalSkillAmount - 1;
-                    } else {
-                      counter--;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().white,
-                  buttonColor: SEColors().lblue,
-                  borderColor: SEColors().blue,
-                ),
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(3),
+              child: AnyButton(
+                text: '<',
+                onTapAction: () {
+                  if (counter == 0) {
+                    counter = totalSkillAmount - 1;
+                  } else {
+                    counter--;
+                  }
+                  setState(() {});
+                },
+                width: 35,
+                textColor: SEColors().white,
+                buttonColor: SEColors().lblue,
+                borderColor: SEColors().blue,
               ),
-              Expanded(
-                flex: 2,
-                child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return PopUpAlertBox(
-                          alertTitle: selectedSkills[widget.index]!.name,
-                          alertDesc: selectedSkills[widget.index]!.desc,
-                          closeButtonActive: true,
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(3),
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: SEColors().lgrey,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(
-                        width: seBorderWidth,
-                        color: SEColors().grey,
-                      ),
+            ),
+            Expanded(
+              flex: 2,
+              child: InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PopUpAlertBox(
+                        alertTitle: selectedSkills[widget.index]!.name,
+                        alertDesc: selectedSkills[widget.index]!.desc,
+                        closeButtonActive: true,
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: SEColors().lgrey,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      width: seBorderWidth,
+                      color: SEColors().grey,
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'The\n${selectedSkills[widget.index]!.name}',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        color: SEColors().black,
-                        fontSize: 16,
-                      ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    (!snapshot.hasData)
+                        ? "Loading..."
+                        : 'The\n${selectedSkills[widget.index]!.name}',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      color: SEColors().black,
+                      fontSize: 16,
                     ),
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '>',
-                  onTapAction: () {
-                    if (counter == totalSkillAmount - 1) {
-                      counter = 0;
-                    } else {
-                      counter++;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().white,
-                  buttonColor: SEColors().lblue,
-                  borderColor: SEColors().blue,
-                ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(3),
+              child: AnyButton(
+                text: '>',
+                onTapAction: () {
+                  if (counter == totalSkillAmount - 1) {
+                    counter = 0;
+                  } else {
+                    counter++;
+                  }
+                  setState(() {});
+                },
+                width: 35,
+                textColor: SEColors().white,
+                buttonColor: SEColors().lblue,
+                borderColor: SEColors().blue,
               ),
-            ],
-          );
-        }
+            ),
+          ],
+        );
       },
     );
   }
