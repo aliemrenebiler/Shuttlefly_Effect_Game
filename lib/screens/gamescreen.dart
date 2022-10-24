@@ -24,6 +24,155 @@ class _GameScreenState extends State<GameScreen> {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: AnyButton(
+                    text: 'MENU',
+                    onTapAction: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PopUpAlertBox(
+                            alertTitle: 'PAUSED',
+                            closeButtonActive: true,
+                            buttons: [
+                              AnyButton(
+                                text: 'MAIN MENU',
+                                onTapAction: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/homescreen');
+                                },
+                                height: 50,
+                                textColor: SEColors().white,
+                                buttonColor: SEColors().lblue,
+                                borderColor: SEColors().blue,
+                              ),
+                              AnyButton(
+                                text: 'RESTART',
+                                onTapAction: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return PopUpAlertBox(
+                                        alertTitle: 'ARE YOU SURE?',
+                                        alertDesc:
+                                            'Your previous progress will be deleted.',
+                                        closeButtonActive: false,
+                                        buttons: [
+                                          AnyButton(
+                                            text: 'NO',
+                                            onTapAction: () {
+                                              Navigator.pop(context);
+                                            },
+                                            height: 50,
+                                            textColor: SEColors().white,
+                                            buttonColor: SEColors().lblue,
+                                            borderColor: SEColors().blue,
+                                          ),
+                                          AnyButton(
+                                            text: 'YES',
+                                            onTapAction: () async {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/choosescreen');
+                                              restartTheGame();
+                                            },
+                                            height: 50,
+                                            textColor: SEColors().white,
+                                            buttonColor: SEColors().lred,
+                                            borderColor: SEColors().red,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                height: 50,
+                                textColor: SEColors().white,
+                                buttonColor: SEColors().lred,
+                                borderColor: SEColors().red,
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    height: 50,
+                    width: 150,
+                    textColor: SEColors().white,
+                    buttonColor: SEColors().lblue,
+                    borderColor: SEColors().blue,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: StateValueBox(
+                              text: 'Health',
+                              value: currentStates.health,
+                              width: 150,
+                              textColor: SEColors().white,
+                              boxColor: SEColors().lred,
+                              bgColor: SEColors().dred,
+                              borderColor: SEColors().red,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: StateValueBox(
+                              text: 'Oxygen',
+                              value: currentStates.oxygen,
+                              width: 150,
+                              textColor: SEColors().white,
+                              boxColor: SEColors().lblue,
+                              bgColor: SEColors().dblue,
+                              borderColor: SEColors().blue,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: StateValueBox(
+                              text: 'Morale',
+                              value: currentStates.morale,
+                              width: 150,
+                              textColor: SEColors().white,
+                              boxColor: SEColors().lpurple,
+                              bgColor: SEColors().dpurple,
+                              borderColor: SEColors().purple,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: StateValueBox(
+                              text: 'Energy',
+                              value: currentStates.energy,
+                              width: 150,
+                              textColor: SEColors().white,
+                              boxColor: SEColors().lyellow,
+                              bgColor: SEColors().dyellow,
+                              borderColor: SEColors().yellow,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Expanded(
               flex: 2,
               child: Container(
@@ -43,86 +192,7 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: AnyButton(
-                      text: 'MENU',
-                      onTapAction: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return PopUpAlertBox(
-                              alertTitle: 'PAUSED',
-                              closeButtonActive: true,
-                              buttons: [
-                                AnyButton(
-                                  text: 'MAIN MENU',
-                                  onTapAction: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/homescreen');
-                                  },
-                                  height: 50,
-                                  textColor: SEColors().white,
-                                  buttonColor: SEColors().lblue,
-                                  borderColor: SEColors().blue,
-                                ),
-                                AnyButton(
-                                  text: 'RESTART',
-                                  onTapAction: () {
-                                    Navigator.pop(context);
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return PopUpAlertBox(
-                                          alertTitle: 'ARE YOU SURE?',
-                                          alertDesc:
-                                              'Your previous progress will be deleted.',
-                                          closeButtonActive: false,
-                                          buttons: [
-                                            AnyButton(
-                                              text: 'NO',
-                                              onTapAction: () {
-                                                Navigator.pop(context);
-                                              },
-                                              height: 50,
-                                              textColor: SEColors().white,
-                                              buttonColor: SEColors().lblue,
-                                              borderColor: SEColors().blue,
-                                            ),
-                                            AnyButton(
-                                              text: 'YES',
-                                              onTapAction: () async {
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/choosescreen');
-                                                restartTheGame();
-                                              },
-                                              height: 50,
-                                              textColor: SEColors().white,
-                                              buttonColor: SEColors().lred,
-                                              borderColor: SEColors().red,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  height: 50,
-                                  textColor: SEColors().white,
-                                  buttonColor: SEColors().lred,
-                                  borderColor: SEColors().red,
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      height: 50,
-                      textColor: SEColors().white,
-                      buttonColor: SEColors().lblue,
-                      borderColor: SEColors().blue,
-                    ),
-                  ),
-                  (eventPageIndex == 0)
+                  (eventState == 0)
                       ? Expanded(
                           child: Container(
                             padding: const EdgeInsets.all(5),
@@ -135,7 +205,7 @@ class _GameScreenState extends State<GameScreen> {
                                       child: CharBox(
                                         index: i,
                                         onTapAction: () async {
-                                          if (eventPageIndex != 1) {
+                                          if (eventState != 1) {
                                             currentSelection =
                                                 await SQLiteServices()
                                                     .getSelection(
@@ -144,7 +214,7 @@ class _GameScreenState extends State<GameScreen> {
                                               selectedChars[i]!.name,
                                             );
                                             manageStates();
-                                            eventPageIndex = 1;
+                                            eventState = 1;
                                             await SharedPrefsService()
                                                 .saveStates();
                                             refresh();
@@ -166,7 +236,7 @@ class _GameScreenState extends State<GameScreen> {
                               if (message == null) {
                                 currentEvent = await getRandomEvent();
                                 await SharedPrefsService().saveEventID();
-                                eventPageIndex = 0;
+                                eventState = 0;
                                 refresh();
                               } else {
                                 showDialog(
@@ -252,11 +322,11 @@ class _StateValueBoxState extends State<StateValueBox> {
         ),
       ),
       child: Stack(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomLeft,
         children: [
           AnimatedContainer(
-            height: (widget.height != null)
-                ? (widget.height! - 10) *
+            width: (widget.width != null)
+                ? (widget.width! - 10) *
                     (widget.value - minStateValue) /
                     (maxtStateValue - minStateValue)
                 : null,
@@ -267,36 +337,38 @@ class _StateValueBoxState extends State<StateValueBox> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCirc,
           ),
-          Container(
-            padding: const EdgeInsets.all(3),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  child: Text(
-                    widget.text,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: widget.textColor,
-                      fontSize: 20,
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: Text(
+                      widget.text,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: widget.textColor,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  child: Text(
-                    '${widget.value}',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: widget.textColor,
-                      fontSize: 20,
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: Text(
+                      "%${widget.value}",
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: widget.textColor,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -349,7 +421,7 @@ class _EventBoxState extends State<EventBox> {
           Container(
             margin: const EdgeInsets.fromLTRB(15, 20, 15, 10),
             child: Text(
-              (eventPageIndex != 1) ? currentEvent!.title : 'WHAT HAPPENED?',
+              (eventState != 1) ? currentEvent!.title : 'WHAT HAPPENED?',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -364,7 +436,7 @@ class _EventBoxState extends State<EventBox> {
               child: Container(
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Text(
-                  (eventPageIndex != 1)
+                  (eventState != 1)
                       ? currentEvent!.desc
                       : currentSelection!.desc,
                   textAlign: TextAlign.center,
@@ -375,69 +447,6 @@ class _EventBoxState extends State<EventBox> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(3),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Health',
-                      value: currentStates.health,
-                      height: 80,
-                      textColor: SEColors().white,
-                      boxColor: SEColors().lred,
-                      bgColor: SEColors().dred,
-                      borderColor: SEColors().red,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Oxygen',
-                      value: currentStates.oxygen,
-                      height: 80,
-                      textColor: SEColors().white,
-                      boxColor: SEColors().lblue,
-                      bgColor: SEColors().dblue,
-                      borderColor: SEColors().blue,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Morale',
-                      value: currentStates.morale,
-                      height: 80,
-                      textColor: SEColors().white,
-                      boxColor: SEColors().lpurple,
-                      bgColor: SEColors().dpurple,
-                      borderColor: SEColors().purple,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Energy',
-                      value: currentStates.energy,
-                      height: 80,
-                      textColor: SEColors().white,
-                      boxColor: SEColors().lyellow,
-                      bgColor: SEColors().dyellow,
-                      borderColor: SEColors().yellow,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -479,10 +488,7 @@ class CharBox extends StatelessWidget {
         padding: const EdgeInsets.all(2),
         child: Row(
           children: [
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 80,
-              ),
+            Center(
               child: AspectRatio(
                 aspectRatio: 1.0,
                 child: Container(
