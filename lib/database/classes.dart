@@ -1,3 +1,4 @@
+// DATABASE CLASSES
 class Character {
   String id;
   String name;
