@@ -247,6 +247,7 @@ void restartTheGame() async {
   currentStates.health = defaultStateValue;
   currentStates.morale = defaultStateValue;
   currentStates.oxygen = defaultStateValue;
+  currentSelection = null;
   eventIsWaiting = true;
   await SharedPrefsService().eraseSavedData();
   await SQLiteServices().getDatabaseLimits();

@@ -406,7 +406,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
-                      color: SEColors().black,
+                      color: SEColors().dblack,
                       fontSize: 16,
                     ),
                   ),

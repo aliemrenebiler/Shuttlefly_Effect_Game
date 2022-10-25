@@ -20,11 +20,21 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: SEColors().dblue,
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Column(
+      body: Row(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: SEColors().black,
+              border: Border(
+                right: BorderSide(
+                  width: seBorderWidth,
+                  color: SEColors().lblack,
+                ),
+              ),
+            ),
+            child: Column(
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
@@ -119,9 +129,18 @@ class _GameScreenState extends State<GameScreen> {
                               value: currentStates.health,
                               width: 150,
                               textColor: SEColors().white,
-                              boxColor: SEColors().lred,
-                              bgColor: SEColors().dred,
-                              borderColor: SEColors().red,
+                              boxColor: (currentSelection != null &&
+                                      currentSelection!.healthChange != 0)
+                                  ? SEColors().lred
+                                  : SEColors().dgrey2,
+                              bgColor: (currentSelection != null &&
+                                      currentSelection!.healthChange != 0)
+                                  ? SEColors().dred
+                                  : SEColors().dblack,
+                              borderColor: (currentSelection != null &&
+                                      currentSelection!.healthChange != 0)
+                                  ? SEColors().red
+                                  : SEColors().lblack,
                             ),
                           ),
                         ),
@@ -133,9 +152,18 @@ class _GameScreenState extends State<GameScreen> {
                               value: currentStates.oxygen,
                               width: 150,
                               textColor: SEColors().white,
-                              boxColor: SEColors().lblue,
-                              bgColor: SEColors().dblue,
-                              borderColor: SEColors().blue,
+                              boxColor: (currentSelection != null &&
+                                      currentSelection!.oxygenChange != 0)
+                                  ? SEColors().lblue
+                                  : SEColors().dgrey2,
+                              bgColor: (currentSelection != null &&
+                                      currentSelection!.oxygenChange != 0)
+                                  ? SEColors().dblue
+                                  : SEColors().dblack,
+                              borderColor: (currentSelection != null &&
+                                      currentSelection!.oxygenChange != 0)
+                                  ? SEColors().blue
+                                  : SEColors().lblack,
                             ),
                           ),
                         ),
@@ -147,9 +175,18 @@ class _GameScreenState extends State<GameScreen> {
                               value: currentStates.morale,
                               width: 150,
                               textColor: SEColors().white,
-                              boxColor: SEColors().lpurple,
-                              bgColor: SEColors().dpurple,
-                              borderColor: SEColors().purple,
+                              boxColor: (currentSelection != null &&
+                                      currentSelection!.moraleChange != 0)
+                                  ? SEColors().lpurple
+                                  : SEColors().dgrey2,
+                              bgColor: (currentSelection != null &&
+                                      currentSelection!.moraleChange != 0)
+                                  ? SEColors().dpurple
+                                  : SEColors().dblack,
+                              borderColor: (currentSelection != null &&
+                                      currentSelection!.moraleChange != 0)
+                                  ? SEColors().purple
+                                  : SEColors().lblack,
                             ),
                           ),
                         ),
@@ -161,9 +198,18 @@ class _GameScreenState extends State<GameScreen> {
                               value: currentStates.energy,
                               width: 150,
                               textColor: SEColors().white,
-                              boxColor: SEColors().lyellow,
-                              bgColor: SEColors().dyellow,
-                              borderColor: SEColors().yellow,
+                              boxColor: (currentSelection != null &&
+                                      currentSelection!.energyChange != 0)
+                                  ? SEColors().lyellow
+                                  : SEColors().dgrey2,
+                              bgColor: (currentSelection != null &&
+                                      currentSelection!.energyChange != 0)
+                                  ? SEColors().dyellow
+                                  : SEColors().dblack,
+                              borderColor: (currentSelection != null &&
+                                      currentSelection!.energyChange != 0)
+                                  ? SEColors().yellow
+                                  : SEColors().lblack,
                             ),
                           ),
                         ),
@@ -173,109 +219,123 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ],
             ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                child: EventBox(
-                  title: currentEvent!.title,
-                  desc: currentEvent!.desc,
-                  titleColor: SEColors().dblue,
-                  descColor: SEColors().black,
-                  boxColor: SEColors().white,
-                  borderColor: SEColors().lgrey,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  (eventIsWaiting)
-                      ? Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              children: [
-                                for (int i = 0; i < 3; i++)
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      child: CharBox(
-                                        index: i,
-                                        onTapAction: () async {
-                                          if (eventIsWaiting) {
-                                            currentSelection =
-                                                await SQLiteServices()
-                                                    .getSelection(
-                                              currentEvent!.id,
-                                              selectedSkills[i]!.id,
-                                              selectedChars[i]!.name,
-                                            );
-                                            manageStates();
-                                            eventIsWaiting = false;
-                                            await SharedPrefsService()
-                                                .saveStates();
-                                            refresh();
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(
-                          padding: const EdgeInsets.all(10),
-                          child: AnyButton(
-                            text: 'DONE',
-                            onTapAction: () async {
-                              String? message = checkStates();
-                              if (message == null) {
-                                currentEvent = await getRandomEvent();
-                                await SharedPrefsService().saveEventID();
-                                eventIsWaiting = true;
-                                refresh();
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return PopUpAlertBox(
-                                      alertTitle: 'THE END',
-                                      alertDesc: message,
-                                      closeButtonActive: false,
-                                      buttons: [
-                                        AnyButton(
-                                          text: 'MAIN MENU',
-                                          onTapAction: () {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/homescreen');
-                                          },
-                                          height: 50,
-                                          textColor: SEColors().white,
-                                          buttonColor: SEColors().lblue,
-                                          borderColor: SEColors().blue,
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        (eventIsWaiting)
+                            ? Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Column(
+                                    children: [
+                                      for (int i = 0; i < 3; i++)
+                                        Expanded(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            child: CharBox(
+                                              index: i,
+                                              onTapAction: () async {
+                                                if (eventIsWaiting) {
+                                                  currentSelection =
+                                                      await SQLiteServices()
+                                                          .getSelection(
+                                                    currentEvent!.id,
+                                                    selectedSkills[i]!.id,
+                                                    selectedChars[i]!.name,
+                                                  );
+                                                  manageStates();
+                                                  eventIsWaiting = false;
+                                                  await SharedPrefsService()
+                                                      .saveStates();
+                                                  refresh();
+                                                }
+                                              },
+                                            ),
+                                          ),
                                         ),
-                                      ],
-                                    );
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(10),
+                                child: AnyButton(
+                                  text: 'DONE',
+                                  onTapAction: () async {
+                                    String? message = checkStates();
+                                    if (message == null) {
+                                      currentEvent = await getRandomEvent();
+                                      await SharedPrefsService().saveEventID();
+                                      currentSelection = null;
+                                      eventIsWaiting = true;
+                                      refresh();
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return PopUpAlertBox(
+                                            alertTitle: 'THE END',
+                                            alertDesc: message,
+                                            closeButtonActive: false,
+                                            buttons: [
+                                              AnyButton(
+                                                text: 'MAIN MENU',
+                                                onTapAction: () {
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                          context,
+                                                          '/homescreen');
+                                                },
+                                                height: 50,
+                                                textColor: SEColors().white,
+                                                buttonColor: SEColors().lblue,
+                                                borderColor: SEColors().blue,
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
-                                );
-                              }
-                            },
-                            height: 50,
-                            textColor: SEColors().white,
-                            buttonColor: SEColors().lred,
-                            borderColor: SEColors().red,
-                          ),
-                        ),
+                                  height: 50,
+                                  textColor: SEColors().white,
+                                  buttonColor: SEColors().lred,
+                                  borderColor: SEColors().red,
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      child: EventBox(
+                        title: currentEvent!.title,
+                        desc: currentEvent!.desc,
+                        titleColor: SEColors().dblue,
+                        descColor: SEColors().dblack,
+                        boxColor: SEColors().white,
+                        borderColor: SEColors().lgrey,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
