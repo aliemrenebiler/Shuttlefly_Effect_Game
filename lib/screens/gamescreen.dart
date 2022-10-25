@@ -699,7 +699,7 @@ class PopUpAlertBox extends StatelessWidget {
   }
 }
 
-// BUTTONS
+// BUTTON
 class AnyButton extends StatelessWidget {
   final String text;
   final VoidCallback onTapAction;
