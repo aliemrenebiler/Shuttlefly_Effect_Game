@@ -7,8 +7,6 @@ import '../database/methods.dart';
 import '../database/variables.dart';
 import '../database/theme.dart';
 
-Timer? animationTimer;
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

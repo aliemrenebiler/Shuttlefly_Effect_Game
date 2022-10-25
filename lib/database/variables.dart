@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:sqflite/sqflite.dart';
 
 import 'classes.dart';
+
+Timer? animationTimer;
 
 const int defaultStateValue = 50;
 const int maxtStateValue = 100;
