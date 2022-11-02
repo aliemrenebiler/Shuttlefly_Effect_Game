@@ -82,9 +82,9 @@ class HomeScreen extends StatelessWidget {
                                         AnyButton(
                                           text: 'YES',
                                           onTapAction: () {
+                                            animationTimer!.cancel();
                                             Navigator.pushReplacementNamed(
                                                 context, '/storyscreen');
-                                            animationTimer!.cancel();
                                             restartTheGame();
                                           },
                                           height: 50,
@@ -115,6 +115,7 @@ class HomeScreen extends StatelessWidget {
                             text: 'CONTINUE',
                             onTapAction: () async {
                               if (await SharedPrefsService().dataExists) {
+                                animationTimer!.cancel();
                                 Navigator.pushReplacementNamed(
                                     context, '/gamescreen');
                                 animationTimer!.cancel();

@@ -61,6 +61,7 @@ class _GameScreenState extends State<GameScreen> {
                                 AnyButton(
                                   text: 'MAIN MENU',
                                   onTapAction: () {
+                                    animationTimer!.cancel();
                                     Navigator.pushReplacementNamed(
                                         context, '/homescreen');
                                   },
@@ -95,6 +96,7 @@ class _GameScreenState extends State<GameScreen> {
                                             AnyButton(
                                               text: 'YES',
                                               onTapAction: () async {
+                                                animationTimer!.cancel();
                                                 Navigator.pushReplacementNamed(
                                                     context, '/choosescreen');
                                                 restartTheGame();
@@ -295,6 +297,7 @@ class _GameScreenState extends State<GameScreen> {
                                                 AnyButton(
                                                   text: 'MAIN MENU',
                                                   onTapAction: () {
+                                                    animationTimer!.cancel();
                                                     Navigator
                                                         .pushReplacementNamed(
                                                             context,

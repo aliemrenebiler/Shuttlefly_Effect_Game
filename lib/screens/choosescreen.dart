@@ -145,11 +145,11 @@ class CharBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: SEColors().white,
+        color: SEColors().lgrey,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           width: seBorderWidth,
-          color: SEColors().lgrey,
+          color: SEColors().grey,
         ),
       ),
       child: Column(
@@ -162,7 +162,7 @@ class CharBox extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: SEColors().dblue,
+                color: SEColors().dgrey2,
                 fontSize: 20,
               ),
             ),
@@ -225,9 +225,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().white,
-                buttonColor: SEColors().lred,
-                borderColor: SEColors().red,
+                textColor: SEColors().dgrey2,
+                buttonColor: SEColors().dgrey,
+                borderColor: SEColors().grey,
               ),
             ),
             Expanded(
@@ -235,11 +235,11 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                 margin: const EdgeInsets.all(3),
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  color: SEColors().lcream,
+                  color: SEColors().red,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(
                     width: seBorderWidth,
-                    color: SEColors().cream,
+                    color: SEColors().lred,
                   ),
                 ),
                 child: Column(
@@ -255,10 +255,10 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                             decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
-                              color: SEColors().cream,
+                              color: SEColors().red,
                               border: Border.all(
                                 width: seBorderWidth,
-                                color: SEColors().dcream,
+                                color: SEColors().dred,
                               ),
                               image: (!snapshot.hasData)
                                   ? null
@@ -289,7 +289,7 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.fade,
                           style: TextStyle(
-                            color: SEColors().dcream2,
+                            color: SEColors().white,
                             fontSize: 20,
                           ),
                         ),
@@ -312,9 +312,9 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().white,
-                buttonColor: SEColors().lred,
-                borderColor: SEColors().red,
+                textColor: SEColors().dgrey2,
+                buttonColor: SEColors().dgrey,
+                borderColor: SEColors().grey,
               ),
             ),
           ],
@@ -367,9 +367,9 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().white,
-                buttonColor: SEColors().lblue,
-                borderColor: SEColors().blue,
+                textColor: SEColors().dgrey2,
+                buttonColor: SEColors().dgrey,
+                borderColor: SEColors().grey,
               ),
             ),
             Expanded(
@@ -391,11 +391,11 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   margin: const EdgeInsets.all(3),
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: SEColors().lgrey,
+                    color: SEColors().blue,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(
                       width: seBorderWidth,
-                      color: SEColors().grey,
+                      color: SEColors().lblue,
                     ),
                   ),
                   alignment: Alignment.center,
@@ -406,7 +406,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
-                      color: SEColors().dblack,
+                      color: SEColors().white,
                       fontSize: 16,
                     ),
                   ),
@@ -426,9 +426,9 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().white,
-                buttonColor: SEColors().lblue,
-                borderColor: SEColors().blue,
+                textColor: SEColors().dgrey2,
+                buttonColor: SEColors().dgrey,
+                borderColor: SEColors().grey,
               ),
             ),
           ],
