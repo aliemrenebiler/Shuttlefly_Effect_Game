@@ -19,14 +19,16 @@ const String storyDesc =
 
 Database? database;
 int totalCharAmount = 0;
-int totalEventAmount = 0;
 int totalSkillAmount = 0;
+int totalGalaxyAmount = 0;
+List<int> totalEventAmount = [];
 
 List<Character?> selectedChars = [null, null, null];
 List<Skill?> selectedSkills = [null, null, null];
 
 bool eventIsWaiting = true;
 
+Galaxy currentGalaxy = Galaxy(id: "0");
 Event? currentEvent;
 Selection? currentSelection;
 States currentStates = States(

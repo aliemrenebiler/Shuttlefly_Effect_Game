@@ -23,12 +23,24 @@ class Skill {
   });
 }
 
+class Galaxy {
+  String id; // galaxy database ID
+  String? name; // galaxy name
+
+  Galaxy({
+    required this.id,
+    this.name,
+  });
+}
+
 class Event {
+  String galaxyID; // galaxy database ID
   String id; // event database ID
   String title; // events title
   String desc; // event description
 
   Event({
+    required this.galaxyID,
     required this.id,
     required this.title,
     required this.desc,
@@ -36,8 +48,9 @@ class Event {
 }
 
 class Selection {
+  String galaxyID;
   String eventID;
-  String? skillID;
+  String? id;
   String desc;
   int healthChange;
   int oxygenChange;
@@ -46,8 +59,9 @@ class Selection {
   String? nextEventID;
 
   Selection({
+    required this.galaxyID,
     required this.eventID,
-    this.skillID,
+    this.id,
     required this.desc,
     required this.healthChange,
     required this.oxygenChange,

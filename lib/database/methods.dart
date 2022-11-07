@@ -43,8 +43,13 @@ class SQLiteServices {
         await database!.rawQuery('SELECT COUNT(*) FROM CHARACTERS'))!;
     totalSkillAmount =
         firstIntValue(await database!.rawQuery('SELECT COUNT(*) FROM SKILLS'))!;
-    totalEventAmount =
-        firstIntValue(await database!.rawQuery('SELECT COUNT(*) FROM EVENTS'))!;
+    totalGalaxyAmount = firstIntValue(
+        await database!.rawQuery('SELECT COUNT(*) FROM GALAXIES'))!;
+    totalEventAmount = List<int>.generate(totalGalaxyAmount, (index) => 0);
+    for (int i = 0; i < totalGalaxyAmount; i++) {
+      totalEventAmount[i] = firstIntValue(await database!
+          .rawQuery('SELECT COUNT(*) FROM EVENTS WHERE GALAXY_ID = "$i"'))!;
+    }
   }
 
   Future<Character> getChar(String id) async {
@@ -69,29 +74,32 @@ class SQLiteServices {
     );
   }
 
-  Future<Event> getEvent(String id) async {
-    var newEvent =
-        await database!.rawQuery('SELECT * FROM EVENTS WHERE ID = $id');
+  Future<Event> getEvent(String galaxyID, String id) async {
+    var newEvent = await database!.rawQuery(
+        'SELECT * FROM EVENTS WHERE GALAXY_ID = $galaxyID AND ID = $id');
 
     return Event(
+      galaxyID: galaxyID,
       id: id,
       title: newEvent[0]["TITLE"] as String,
       desc: newEvent[0]["DESC"] as String,
     );
   }
 
-  getSelection(String eventID, String skillID, String charName) async {
+  getSelection(
+      String galaxyID, String eventID, String skillID, String charName) async {
     var newSelect = await database!.rawQuery(
-        'SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID = $skillID');
+        'SELECT * FROM SELECTIONS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID = $skillID');
 
     if (newSelect.isEmpty) {
       newSelect = await database!.rawQuery(
-          "SELECT * FROM SELECTIONS WHERE EVENT_ID = $eventID AND SKILL_ID IS NULL");
+          "SELECT * FROM SELECTIONS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID IS NULL");
     }
 
     return Selection(
+      galaxyID: galaxyID,
       eventID: eventID,
-      skillID: newSelect[0]["SKILL_ID"] as String,
+      id: newSelect[0]["ID"] as String,
       desc: "$charName ${newSelect[0]["DESC"] as String}",
       energyChange: newSelect[0]["ENERGY_CHANGE"] as int,
       healthChange: newSelect[0]["HEALTH_CHANGE"] as int,
@@ -115,11 +123,6 @@ class SharedPrefsService {
 
     prefs.setString('char2_charID', selectedChars[2]!.id);
     prefs.setString('char2_skillID', selectedSkills[2]!.id);
-
-    prefs.setInt('currentHealth', currentStates.health);
-    prefs.setInt('currentOxygen', currentStates.oxygen);
-    prefs.setInt('currentMorale', currentStates.morale);
-    prefs.setInt('currentEnergy', currentStates.energy);
   }
 
   Future saveStates() async {
@@ -133,7 +136,15 @@ class SharedPrefsService {
 
   Future saveEventID() async {
     final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('currentEventsGalaxyID', currentEvent!.galaxyID);
     prefs.setString('currentEventID', currentEvent!.id);
+  }
+
+  Future saveGalaxyID() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('currentGalaxyID', currentGalaxy.id);
   }
 
   Future<bool> get dataExists async {
@@ -157,8 +168,9 @@ class SharedPrefsService {
 
   Future<Event> getEventFromLocal() async {
     final prefs = await SharedPreferences.getInstance();
+    String galaxyID = prefs.getString('currentEventsGalaxyID')!;
     String eventID = prefs.getString('currentEventID')!;
-    Event event = await SQLiteServices().getEvent(eventID);
+    Event event = await SQLiteServices().getEvent(galaxyID, eventID);
     return event;
   }
 
@@ -173,6 +185,16 @@ class SharedPrefsService {
     );
 
     return states;
+  }
+
+  Future<Galaxy> getGalaxyFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Galaxy galaxy = Galaxy(
+      id: prefs.getString('currentGalaxyID')!,
+    );
+
+    return galaxy;
   }
 
   Future eraseSavedData() async {
@@ -193,10 +215,12 @@ void setAnimationTimer() async {
   );
 }
 
-getRandomEvent() async {
+getRandomEvent(Galaxy currentGalaxy) async {
   Random random = Random();
-  int randomNumber = random.nextInt(totalEventAmount);
-  return await SQLiteServices().getEvent(randomNumber.toString());
+  int randomGalaxyID = random.nextInt(int.parse(currentGalaxy.id));
+  int randomEventID = random.nextInt(totalEventAmount[randomGalaxyID]);
+  return await SQLiteServices()
+      .getEvent(randomGalaxyID.toString(), randomEventID.toString());
 }
 
 void manageStates() {
