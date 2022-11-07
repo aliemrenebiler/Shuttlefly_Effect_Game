@@ -464,7 +464,7 @@ class AnimatedShip extends StatelessWidget {
                     image: DecorationImage(
                       fit: BoxFit.contain,
                       image: AssetImage(
-                          'assets/images/shuttlefly_effect_logo.png'),
+                          'assets/images/shuttlefly_effect_ship.png'),
                     ),
                   ),
                 );
