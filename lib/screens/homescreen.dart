@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,192 +11,171 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: FutureBuilder<Database>(
-          future: SQLiteServices().copyAndOpenDB("shuttlefly_db.db"),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container(
-                alignment: Alignment.center,
-                child: Text(
-                  'Loading...',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: SEColors().white,
-                    fontSize: 30,
-                  ),
-                ),
-              );
-            } else {
-              database = snapshot.data;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: AnimatedLogo(
-                      width: MediaQuery.of(context).size.width / 2,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width / 3.5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          child: AnyButton(
-                            text: 'NEW GAME',
-                            onTapAction: () async {
-                              if (await SharedPrefsService().dataExists) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return PopUpAlertBox(
-                                      alertTitle: 'ARE YOU SURE?',
-                                      alertDesc:
-                                          'Your previous progress will be deleted.',
-                                      closeButtonActive: false,
-                                      buttons: [
-                                        AnyButton(
-                                          text: 'NO',
-                                          onTapAction: () {
-                                            Navigator.pop(context);
-                                          },
-                                          height: 50,
-                                          textColor: SEColors().white,
-                                          buttonColor: SEColors().lblue,
-                                          borderColor: SEColors().blue,
-                                        ),
-                                        AnyButton(
-                                          text: 'YES',
-                                          onTapAction: () {
-                                            animationTimer!.cancel();
-                                            Navigator.pushReplacementNamed(
-                                                context, '/storyscreen');
-                                            restartTheGame();
-                                          },
-                                          height: 50,
-                                          textColor: SEColors().white,
-                                          buttonColor: SEColors().lred,
-                                          borderColor: SEColors().red,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {
-                                Navigator.pushReplacementNamed(
-                                    context, '/storyscreen');
-                                animationTimer!.cancel();
-                                restartTheGame();
-                              }
-                            },
-                            height: 50,
-                            textColor: SEColors().white,
-                            buttonColor: SEColors().lblue,
-                            borderColor: SEColors().blue,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          child: AnyButton(
-                            text: 'CONTINUE',
-                            onTapAction: () async {
-                              if (await SharedPrefsService().dataExists) {
-                                animationTimer!.cancel();
-                                Navigator.pushReplacementNamed(
-                                    context, '/gamescreen');
-                                animationTimer!.cancel();
-                                selectedChars[0] = await SharedPrefsService()
-                                    .getCharFromLocal(0);
-                                selectedChars[1] = await SharedPrefsService()
-                                    .getCharFromLocal(1);
-                                selectedChars[2] = await SharedPrefsService()
-                                    .getCharFromLocal(2);
-                                currentEvent = await SharedPrefsService()
-                                    .getEventFromLocal();
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const PopUpAlertBox(
-                                      alertTitle: 'NO DATA!',
-                                      alertDesc:
-                                          'There is no progress saved.\nYou should start a new game.',
-                                      closeButtonActive: true,
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            height: 50,
-                            textColor: SEColors().white,
-                            buttonColor: SEColors().lred,
-                            borderColor: SEColors().red,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          child: AnyButton(
-                            text: 'EXIT',
-                            onTapAction: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return PopUpAlertBox(
-                                    alertTitle: 'LEAVING?',
-                                    closeButtonActive: false,
-                                    buttons: [
-                                      AnyButton(
-                                        text: 'NO',
-                                        onTapAction: () {
-                                          Navigator.pop(context);
-                                        },
-                                        height: 50,
-                                        textColor: SEColors().white,
-                                        buttonColor: SEColors().lblue,
-                                        borderColor: SEColors().blue,
-                                      ),
-                                      AnyButton(
-                                        text: 'YES',
-                                        onTapAction: () {
-                                          animationTimer!.cancel();
-                                          SystemNavigator.pop(); // EXIT
-                                        },
-                                        height: 50,
-                                        textColor: SEColors().white,
-                                        buttonColor: SEColors().lred,
-                                        borderColor: SEColors().red,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            height: 50,
-                            textColor: SEColors().white,
-                            buttonColor: SEColors().grey,
-                            borderColor: SEColors().dgrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }
+    return WillPopScope(
+      onWillPop: () async {
+        return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const ExitBox();
           },
+        );
+      },
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: FutureBuilder<Database>(
+            future: SQLiteServices().copyAndOpenDB("shuttlefly_db.db"),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Loading...',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: SEColors().white,
+                      fontSize: 30,
+                    ),
+                  ),
+                );
+              } else {
+                database = snapshot.data;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: const AnimatedLogo(),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: MediaQuery.of(context).size.width / 3.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: AnyButton(
+                              text: 'NEW GAME',
+                              onTapAction: () async {
+                                if (await SharedPrefsService().dataExists) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return PopUpAlertBox(
+                                        alertTitle: 'ARE YOU SURE?',
+                                        alertDesc:
+                                            'Your previous progress will be deleted.',
+                                        closeButtonActive: false,
+                                        buttons: [
+                                          AnyButton(
+                                            text: 'NO',
+                                            onTapAction: () {
+                                              Navigator.pop(context);
+                                            },
+                                            height: 50,
+                                            textColor: SEColors().white,
+                                            buttonColor: SEColors().lblue,
+                                            borderColor: SEColors().blue,
+                                          ),
+                                          AnyButton(
+                                            text: 'YES',
+                                            onTapAction: () {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/storyscreen');
+                                              restartTheGame();
+                                            },
+                                            height: 50,
+                                            textColor: SEColors().white,
+                                            buttonColor: SEColors().lred,
+                                            borderColor: SEColors().red,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/storyscreen');
+                                  restartTheGame();
+                                }
+                              },
+                              height: 50,
+                              textColor: SEColors().white,
+                              buttonColor: SEColors().lblue,
+                              borderColor: SEColors().blue,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: AnyButton(
+                              text: 'CONTINUE',
+                              onTapAction: () async {
+                                if (await SharedPrefsService().dataExists) {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/gamescreen');
+                                  selectedChars[0] = await SharedPrefsService()
+                                      .getCharFromLocal(0);
+                                  selectedChars[1] = await SharedPrefsService()
+                                      .getCharFromLocal(1);
+                                  selectedChars[2] = await SharedPrefsService()
+                                      .getCharFromLocal(2);
+                                  currentEvent = await SharedPrefsService()
+                                      .getEventFromLocal();
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const PopUpAlertBox(
+                                        alertTitle: 'NO DATA!',
+                                        alertDesc:
+                                            'There is no progress saved.\nYou should start a new game.',
+                                        closeButtonActive: true,
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              height: 50,
+                              textColor: SEColors().white,
+                              buttonColor: SEColors().lred,
+                              borderColor: SEColors().red,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: AnyButton(
+                              text: 'EXIT',
+                              onTapAction: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const ExitBox();
+                                  },
+                                );
+                              },
+                              height: 50,
+                              textColor: SEColors().white,
+                              buttonColor: SEColors().grey,
+                              borderColor: SEColors().dgrey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -205,51 +183,65 @@ class HomeScreen extends StatelessWidget {
 }
 
 // ANIMATED LOGO
-class AnimatedLogo extends StatefulWidget {
-  final double width;
-  const AnimatedLogo({super.key, required this.width});
-
-  @override
-  State<AnimatedLogo> createState() => _AnimatedLogoState();
-}
-
-class _AnimatedLogoState extends State<AnimatedLogo> {
-  bool animationState = true;
-
-  @override
-  void initState() {
-    super.initState();
-    animationTimer = Timer.periodic(
-      const Duration(seconds: 1, milliseconds: 500),
-      (dataTimer) => setState(() {
-        animationState = !animationState;
-      }),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    animationTimer!.cancel();
-  }
+class AnimatedLogo extends StatelessWidget {
+  const AnimatedLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      padding: animationState
-          ? const EdgeInsets.only(bottom: 30)
-          : const EdgeInsets.only(top: 30),
-      duration: const Duration(seconds: 1, milliseconds: 500),
-      curve: Curves.easeInOut,
-      child: Container(
-        width: widget.width,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.contain,
-            image: AssetImage('assets/images/shuttlefly_effect_logo.png'),
+    return StreamBuilder<Object>(
+      stream: flowAnimationStream,
+      builder: (context, snapshot) {
+        return AnimatedContainer(
+          padding: flowAnimationState
+              ? const EdgeInsets.only(bottom: 30)
+              : const EdgeInsets.only(top: 30),
+          duration: const Duration(seconds: 1, milliseconds: 500),
+          curve: Curves.easeInOut,
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage('assets/images/shuttlefly_effect_logo.png'),
+              ),
+            ),
           ),
+        );
+      },
+    );
+  }
+}
+
+// EXIT BOX
+class ExitBox extends StatelessWidget {
+  const ExitBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopUpAlertBox(
+      alertTitle: 'LEAVING?',
+      closeButtonActive: false,
+      buttons: [
+        AnyButton(
+          text: 'NO',
+          onTapAction: () {
+            Navigator.pop(context);
+          },
+          height: 50,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lblue,
+          borderColor: SEColors().blue,
         ),
-      ),
+        AnyButton(
+          text: 'YES',
+          onTapAction: () {
+            SystemNavigator.pop(); // EXIT
+          },
+          height: 50,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lred,
+          borderColor: SEColors().red,
+        ),
+      ],
     );
   }
 }

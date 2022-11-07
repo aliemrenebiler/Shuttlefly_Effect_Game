@@ -3,7 +3,11 @@ import 'package:sqflite/sqflite.dart';
 
 import 'classes.dart';
 
-Timer? animationTimer;
+Timer? flowAnimationTimer;
+bool flowAnimationState = true;
+StreamController<bool> flowAnimationController =
+    StreamController<bool>.broadcast();
+Stream<bool> flowAnimationStream = flowAnimationController.stream;
 
 const int defaultStateValue = 50;
 const int maxtStateValue = 100;

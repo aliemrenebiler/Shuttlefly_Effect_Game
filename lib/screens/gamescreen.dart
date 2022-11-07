@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
@@ -20,259 +18,100 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
-            fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async {
+        return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const MenuBox();
+          },
+        );
+      },
+      child: Scaffold(
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: SEColors().black,
-                border: Border(
-                  right: BorderSide(
-                    width: seBorderWidth,
-                    color: SEColors().lblack,
-                  ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                child: TopBar(
+                  health: currentStates.health,
+                  energy: currentStates.energy,
+                  oxygen: currentStates.oxygen,
+                  morale: currentStates.morale,
                 ),
               ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    child: AnyButton(
-                      text: 'MENU',
-                      onTapAction: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return PopUpAlertBox(
-                              alertTitle: 'PAUSED',
-                              closeButtonActive: true,
-                              buttons: [
-                                AnyButton(
-                                  text: 'MAIN MENU',
-                                  onTapAction: () {
-                                    animationTimer!.cancel();
-                                    Navigator.pushReplacementNamed(
-                                        context, '/homescreen');
-                                  },
-                                  height: 50,
-                                  textColor: SEColors().white,
-                                  buttonColor: SEColors().lblue,
-                                  borderColor: SEColors().blue,
-                                ),
-                                AnyButton(
-                                  text: 'RESTART',
-                                  onTapAction: () {
-                                    Navigator.pop(context);
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return PopUpAlertBox(
-                                          alertTitle: 'ARE YOU SURE?',
-                                          alertDesc:
-                                              'Your previous progress will be deleted.',
-                                          closeButtonActive: false,
-                                          buttons: [
-                                            AnyButton(
-                                              text: 'NO',
-                                              onTapAction: () {
-                                                Navigator.pop(context);
-                                              },
-                                              height: 50,
-                                              textColor: SEColors().white,
-                                              buttonColor: SEColors().lblue,
-                                              borderColor: SEColors().blue,
-                                            ),
-                                            AnyButton(
-                                              text: 'YES',
-                                              onTapAction: () async {
-                                                animationTimer!.cancel();
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/choosescreen');
-                                                restartTheGame();
-                                              },
-                                              height: 50,
-                                              textColor: SEColors().white,
-                                              buttonColor: SEColors().lred,
-                                              borderColor: SEColors().red,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  height: 50,
-                                  textColor: SEColors().white,
-                                  buttonColor: SEColors().lred,
-                                  borderColor: SEColors().red,
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      height: 50,
-                      width: 150,
-                      textColor: SEColors().white,
-                      buttonColor: SEColors().lblue,
-                      borderColor: SEColors().blue,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: StateValueBox(
-                                text: 'Health',
-                                value: currentStates.health,
-                                width: 150,
-                                textColor: SEColors().white,
-                                boxColor: (currentSelection != null &&
-                                        currentSelection!.healthChange != 0)
-                                    ? SEColors().lred
-                                    : SEColors().dgrey2,
-                                bgColor: (currentSelection != null &&
-                                        currentSelection!.healthChange != 0)
-                                    ? SEColors().dred
-                                    : SEColors().dblack,
-                                borderColor: (currentSelection != null &&
-                                        currentSelection!.healthChange != 0)
-                                    ? SEColors().red
-                                    : SEColors().lblack,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: StateValueBox(
-                                text: 'Oxygen',
-                                value: currentStates.oxygen,
-                                width: 150,
-                                textColor: SEColors().white,
-                                boxColor: (currentSelection != null &&
-                                        currentSelection!.oxygenChange != 0)
-                                    ? SEColors().lblue
-                                    : SEColors().dgrey2,
-                                bgColor: (currentSelection != null &&
-                                        currentSelection!.oxygenChange != 0)
-                                    ? SEColors().dblue
-                                    : SEColors().dblack,
-                                borderColor: (currentSelection != null &&
-                                        currentSelection!.oxygenChange != 0)
-                                    ? SEColors().blue
-                                    : SEColors().lblack,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: StateValueBox(
-                                text: 'Morale',
-                                value: currentStates.morale,
-                                width: 150,
-                                textColor: SEColors().white,
-                                boxColor: (currentSelection != null &&
-                                        currentSelection!.moraleChange != 0)
-                                    ? SEColors().lpurple
-                                    : SEColors().dgrey2,
-                                bgColor: (currentSelection != null &&
-                                        currentSelection!.moraleChange != 0)
-                                    ? SEColors().dpurple
-                                    : SEColors().dblack,
-                                borderColor: (currentSelection != null &&
-                                        currentSelection!.moraleChange != 0)
-                                    ? SEColors().purple
-                                    : SEColors().lblack,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: StateValueBox(
-                                text: 'Energy',
-                                value: currentStates.energy,
-                                width: 150,
-                                textColor: SEColors().white,
-                                boxColor: (currentSelection != null &&
-                                        currentSelection!.energyChange != 0)
-                                    ? SEColors().lyellow
-                                    : SEColors().dgrey2,
-                                bgColor: (currentSelection != null &&
-                                        currentSelection!.energyChange != 0)
-                                    ? SEColors().dyellow
-                                    : SEColors().dblack,
-                                borderColor: (currentSelection != null &&
-                                        currentSelection!.energyChange != 0)
-                                    ? SEColors().yellow
-                                    : SEColors().lblack,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              Expanded(
+                child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: AnimatedShip(
-                          notifyParent: refresh,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: AnimatedShip(
+                            notifyParent: refresh,
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(5),
+                    Expanded(
                       child: Column(
                         children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              child: EventBox(
+                                title: currentEvent!.title,
+                                desc: currentEvent!.desc,
+                                textColor: SEColors().white,
+                                boxColor: SEColors().dblack,
+                                borderColor: SEColors().lblack,
+                              ),
+                            ),
+                          ),
                           (eventIsWaiting)
                               ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     for (int i = 0; i < 3; i++)
                                       Expanded(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(5),
-                                          child: CharBox(
-                                            index: i,
-                                            height: 70,
-                                            textColor: SEColors().white,
-                                            boxColor: SEColors().blue,
-                                            imgBgColor: SEColors().lblue,
-                                            borderColor: SEColors().dblue,
-                                          ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(5),
+                                              child: CharBox(
+                                                index: i,
+                                                textColor: SEColors().white,
+                                                boxColor: SEColors().red,
+                                                imgBgColor: SEColors().dred,
+                                                borderColor: SEColors().lred,
+                                                imgBorderColor: SEColors().dred,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.all(5),
+                                              child: SkillBox(
+                                                index: i,
+                                                textColor: SEColors().white,
+                                                boxColor: SEColors().blue,
+                                                borderColor: SEColors().lblue,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
                                   ],
                                 )
                               : Container(
-                                  padding: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(3),
                                   child: AnyButton(
                                     text: 'DONE',
                                     onTapAction: () async {
@@ -297,7 +136,6 @@ class _GameScreenState extends State<GameScreen> {
                                                 AnyButton(
                                                   text: 'MAIN MENU',
                                                   onTapAction: () {
-                                                    animationTimer!.cancel();
                                                     Navigator
                                                         .pushReplacementNamed(
                                                             context,
@@ -320,25 +158,184 @@ class _GameScreenState extends State<GameScreen> {
                                     borderColor: SEColors().red,
                                   ),
                                 ),
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            child: EventBox(
-                              title: currentEvent!.title,
-                              desc: currentEvent!.desc,
-                              height: 120,
-                              textColor: SEColors().white,
-                              boxColor: SEColors().dblack,
-                              borderColor: SEColors().lblack,
-                            ),
-                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// TOP BAR
+class TopBar extends StatelessWidget {
+  final int health;
+  final int oxygen;
+  final int energy;
+  final int morale;
+  const TopBar({
+    super.key,
+    required this.health,
+    required this.energy,
+    required this.oxygen,
+    required this.morale,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: SEColors().lblue,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          width: seBorderWidth,
+          color: SEColors().blue,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TopBarButton(
+            text: "MENU",
+            onTapAction: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const MenuBox();
+                },
+              );
+            },
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Health',
+                      value: health,
+                      width: MediaQuery.of(context).size.width / 6,
+                      textColor: SEColors().white,
+                      boxColor: (currentSelection != null &&
+                              currentSelection!.healthChange != 0)
+                          ? SEColors().lred
+                          : SEColors().dgrey2,
+                      bgColor: (currentSelection != null &&
+                              currentSelection!.healthChange != 0)
+                          ? SEColors().dred
+                          : SEColors().dblack,
+                      borderColor: (currentSelection != null &&
+                              currentSelection!.healthChange != 0)
+                          ? SEColors().red
+                          : SEColors().lblack,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Oxygen',
+                      value: oxygen,
+                      width: MediaQuery.of(context).size.width / 6,
+                      textColor: SEColors().white,
+                      boxColor: (currentSelection != null &&
+                              currentSelection!.oxygenChange != 0)
+                          ? SEColors().lblue
+                          : SEColors().dgrey2,
+                      bgColor: (currentSelection != null &&
+                              currentSelection!.oxygenChange != 0)
+                          ? SEColors().dblue
+                          : SEColors().dblack,
+                      borderColor: (currentSelection != null &&
+                              currentSelection!.oxygenChange != 0)
+                          ? SEColors().blue
+                          : SEColors().lblack,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Morale',
+                      value: morale,
+                      width: MediaQuery.of(context).size.width / 6,
+                      textColor: SEColors().white,
+                      boxColor: (currentSelection != null &&
+                              currentSelection!.moraleChange != 0)
+                          ? SEColors().lpurple
+                          : SEColors().dgrey2,
+                      bgColor: (currentSelection != null &&
+                              currentSelection!.moraleChange != 0)
+                          ? SEColors().dpurple
+                          : SEColors().dblack,
+                      borderColor: (currentSelection != null &&
+                              currentSelection!.moraleChange != 0)
+                          ? SEColors().purple
+                          : SEColors().lblack,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    child: StateValueBox(
+                      text: 'Energy',
+                      value: energy,
+                      width: MediaQuery.of(context).size.width / 6,
+                      textColor: SEColors().white,
+                      boxColor: (currentSelection != null &&
+                              currentSelection!.energyChange != 0)
+                          ? SEColors().lyellow
+                          : SEColors().dgrey2,
+                      bgColor: (currentSelection != null &&
+                              currentSelection!.energyChange != 0)
+                          ? SEColors().dyellow
+                          : SEColors().dblack,
+                      borderColor: (currentSelection != null &&
+                              currentSelection!.energyChange != 0)
+                          ? SEColors().yellow
+                          : SEColors().lblack,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TopBarButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTapAction;
+  const TopBarButton({
+    super.key,
+    required this.text,
+    required this.onTapAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTapAction,
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(15),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: SEColors().white,
+            fontSize: 18,
+          ),
         ),
       ),
     );
@@ -403,32 +400,28 @@ class _StateValueBoxState extends State<StateValueBox> {
           ),
           Center(
             child: Container(
-              padding: const EdgeInsets.all(3),
+              padding: const EdgeInsets.all(5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(3),
+                  Expanded(
                     child: Text(
                       widget.text,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: widget.textColor,
-                        fontSize: 18,
+                        fontSize: 15,
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: Text(
-                      "%${widget.value}",
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: widget.textColor,
-                        fontSize: 18,
-                      ),
+                  Text(
+                    "%${widget.value}",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: widget.textColor,
+                      fontSize: 17,
                     ),
                   ),
                 ],
@@ -441,8 +434,67 @@ class _StateValueBoxState extends State<StateValueBox> {
   }
 }
 
+// ANIMATED SHIP BOX
+class AnimatedShip extends StatelessWidget {
+  final Function() notifyParent;
+  const AnimatedShip({
+    super.key,
+    required this.notifyParent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Object>(
+        stream: flowAnimationStream,
+        builder: (context, snapshot) {
+          return AnimatedContainer(
+            padding: flowAnimationState
+                ? const EdgeInsets.only(bottom: 30)
+                : const EdgeInsets.only(top: 30),
+            duration: const Duration(seconds: 1, milliseconds: 500),
+            curve: Curves.easeInOut,
+            child: DragTarget<int>(
+              builder: (
+                BuildContext context,
+                List<dynamic> accepted,
+                List<dynamic> rejected,
+              ) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage(
+                          'assets/images/shuttlefly_effect_logo.png'),
+                    ),
+                  ),
+                );
+              },
+              onMove: (details) async {
+                currentSelection ??= await SQLiteServices().getSelection(
+                  currentEvent!.id,
+                  selectedSkills[details.data]!.id,
+                  selectedChars[details.data]!.name,
+                );
+                notifyParent();
+              },
+              onLeave: (data) {
+                currentSelection = null;
+                notifyParent();
+              },
+              onAccept: (data) async {
+                manageStates();
+                eventIsWaiting = false;
+                await SharedPrefsService().saveStates();
+                notifyParent();
+              },
+            ),
+          );
+        });
+  }
+}
+
 // EVENT BOX
-class EventBox extends StatefulWidget {
+class EventBox extends StatelessWidget {
   final String title;
   final String desc;
   final double? width;
@@ -462,24 +514,18 @@ class EventBox extends StatefulWidget {
   });
 
   @override
-  State<EventBox> createState() => _EventBoxState();
-}
-
-class _EventBoxState extends State<EventBox> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      height: (widget.height != null) ? widget.height : null,
-      width: (widget.width != null) ? widget.width : null,
+      height: (height != null) ? height : null,
+      width: (width != null) ? width : null,
       decoration: BoxDecoration(
-        color: widget.boxColor,
+        color: boxColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          width: seBorderWidth,
+          color: borderColor,
+        ),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -492,7 +538,7 @@ class _EventBoxState extends State<EventBox> {
             textAlign: TextAlign.center,
             overflow: TextOverflow.fade,
             style: TextStyle(
-              color: widget.textColor,
+              color: textColor,
               fontSize: 18,
             ),
           ),
@@ -511,7 +557,7 @@ class CharBox extends StatelessWidget {
   final Color boxColor;
   final Color imgBgColor;
   final Color borderColor;
-
+  final Color imgBorderColor;
   const CharBox({
     super.key,
     required this.index,
@@ -521,6 +567,7 @@ class CharBox extends StatelessWidget {
     required this.boxColor,
     required this.imgBgColor,
     required this.borderColor,
+    required this.imgBorderColor,
   });
 
   @override
@@ -528,6 +575,7 @@ class CharBox extends StatelessWidget {
     return Container(
       height: (height != null) ? height : null,
       width: (width != null) ? width : null,
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: boxColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -536,68 +584,93 @@ class CharBox extends StatelessWidget {
           color: borderColor,
         ),
       ),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Draggable<int>(
             data: index,
             feedback: SizedBox(
-              height: (height != null)
-                  ? height
-                  : (width != null)
-                      ? width
-                      : 70,
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: imgBgColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        join("assets", "images", selectedChars[index]!.imgName),
+              width: 80,
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: SEColors().red,
+                      border: Border.all(
+                        width: seBorderWidth,
+                        color: imgBorderColor,
+                      ),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          join("assets", "images",
+                              selectedChars[index]!.imgName),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            childWhenDragging: AspectRatio(
-              aspectRatio: 1.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  color: imgBgColor,
+            childWhenDragging: SizedBox(
+              width: 80,
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: imgBgColor,
+                      border: Border.all(
+                        width: seBorderWidth,
+                        color: imgBorderColor,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  color: imgBgColor,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      join("assets", "images", selectedChars[index]!.imgName),
+            child: SizedBox(
+              width: 80,
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: SEColors().red,
+                      border: Border.all(
+                        width: seBorderWidth,
+                        color: imgBorderColor,
+                      ),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          join("assets", "images",
+                              selectedChars[index]!.imgName),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                '${selectedChars[index]!.name} The ${selectedSkills[index]!.name}',
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.fade,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 15,
-                ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            alignment: Alignment.center,
+            child: Text(
+              selectedChars[index]!.name,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: SEColors().white,
+                fontSize: 15,
               ),
             ),
           ),
@@ -607,80 +680,125 @@ class CharBox extends StatelessWidget {
   }
 }
 
-// ANIMATED SHIP BOX
-class AnimatedShip extends StatefulWidget {
-  final Function() notifyParent;
-  const AnimatedShip({
+// SKILL BOX
+class SkillBox extends StatelessWidget {
+  final int index;
+  final Color textColor;
+  final Color boxColor;
+  final Color borderColor;
+  const SkillBox({
     super.key,
-    required this.notifyParent,
+    required this.index,
+    required this.textColor,
+    required this.boxColor,
+    required this.borderColor,
   });
 
   @override
-  State<AnimatedShip> createState() => _AnimatedShipState();
-}
-
-class _AnimatedShipState extends State<AnimatedShip> {
-  bool animationState = true;
-
-  @override
-  void initState() {
-    super.initState();
-    animationTimer = Timer.periodic(
-      const Duration(seconds: 1, milliseconds: 500),
-      (dataTimer) => setState(() {
-        animationState = !animationState;
-      }),
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return PopUpAlertBox(
+              alertTitle: selectedSkills[index]!.name,
+              alertDesc: selectedSkills[index]!.desc,
+              closeButtonActive: true,
+            );
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: boxColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(
+            width: seBorderWidth,
+            color: borderColor,
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          selectedSkills[index]!.name,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: textColor,
+            fontSize: 15,
+          ),
+        ),
+      ),
     );
   }
+}
 
-  @override
-  void dispose() {
-    super.dispose();
-    animationTimer!.cancel();
-  }
+// MENU BOX
+class MenuBox extends StatelessWidget {
+  const MenuBox({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      padding: animationState
-          ? const EdgeInsets.only(bottom: 30)
-          : const EdgeInsets.only(top: 30),
-      duration: const Duration(seconds: 1, milliseconds: 500),
-      curve: Curves.easeInOut,
-      child: DragTarget<int>(
-        builder: (
-          BuildContext context,
-          List<dynamic> accepted,
-          List<dynamic> rejected,
-        ) {
-          return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage('assets/images/shuttlefly_effect_logo.png'),
-              ),
-            ),
-          );
-        },
-        onMove: (details) async {
-          currentSelection ??= await SQLiteServices().getSelection(
-            currentEvent!.id,
-            selectedSkills[details.data]!.id,
-            selectedChars[details.data]!.name,
-          );
-          widget.notifyParent();
-        },
-        onLeave: (data) {
-          currentSelection = null;
-          widget.notifyParent();
-        },
-        onAccept: (data) async {
-          manageStates();
-          eventIsWaiting = false;
-          await SharedPrefsService().saveStates();
-          widget.notifyParent();
-        },
-      ),
+    return PopUpAlertBox(
+      alertTitle: 'PAUSED',
+      closeButtonActive: true,
+      buttons: [
+        AnyButton(
+          text: 'MAIN MENU',
+          onTapAction: () {
+            Navigator.pushReplacementNamed(context, '/homescreen');
+          },
+          height: 50,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lblue,
+          borderColor: SEColors().blue,
+        ),
+        AnyButton(
+          text: 'RESTART',
+          onTapAction: () {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return PopUpAlertBox(
+                  alertTitle: 'ARE YOU SURE?',
+                  alertDesc: 'Your previous progress will be deleted.',
+                  closeButtonActive: false,
+                  buttons: [
+                    AnyButton(
+                      text: 'NO',
+                      onTapAction: () {
+                        Navigator.pop(context);
+                      },
+                      height: 50,
+                      textColor: SEColors().white,
+                      buttonColor: SEColors().lblue,
+                      borderColor: SEColors().blue,
+                    ),
+                    AnyButton(
+                      text: 'YES',
+                      onTapAction: () async {
+                        Navigator.pushReplacementNamed(
+                            context, '/choosescreen');
+                        restartTheGame();
+                      },
+                      height: 50,
+                      textColor: SEColors().white,
+                      buttonColor: SEColors().lred,
+                      borderColor: SEColors().red,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          height: 50,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lred,
+          borderColor: SEColors().red,
+        ),
+      ],
     );
   }
 }

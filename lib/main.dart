@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shuttlefly_effect/database/variables.dart';
 
 import '/screens/homescreen.dart';
 import '/screens/choosescreen.dart';
 import '/screens/gamescreen.dart';
 import '/screens/storyscreen.dart';
+import 'database/methods.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,30 +34,35 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/homescreen':
+            setAnimationTimer();
             return PageTransition(
               child: const HomeScreen(),
               type: PageTransitionType.fade,
               settings: settings,
             );
           case '/storyscreen':
+            if (flowAnimationTimer != null) flowAnimationTimer!.cancel();
             return PageTransition(
               child: const StoryScreen(),
               type: PageTransitionType.fade,
               settings: settings,
             );
           case '/choosescreen':
+            if (flowAnimationTimer != null) flowAnimationTimer!.cancel();
             return PageTransition(
               child: const ChooseScreen(),
               type: PageTransitionType.fade,
               settings: settings,
             );
           case '/gamescreen':
+            setAnimationTimer();
             return PageTransition(
               child: const GameScreen(),
               type: PageTransitionType.fade,
               settings: settings,
             );
           default:
+            setAnimationTimer();
             return PageTransition(
               child: const HomeScreen(),
               type: PageTransitionType.fade,

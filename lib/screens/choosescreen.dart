@@ -11,31 +11,37 @@ class ChooseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: SEColors().dblue,
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(5),
-              child: const TopBar(),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  for (int i = 0; i < 3; i++)
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        child: CharBox(index: i),
-                      ),
-                    ),
-                ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacementNamed(context, '/storyscreen');
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: SEColors().dblue,
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                child: const TopBar(),
               ),
-            ),
-          ],
+              Expanded(
+                child: Row(
+                  children: [
+                    for (int i = 0; i < 3; i++)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          child: CharBox(index: i),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -402,7 +408,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   child: Text(
                     (!snapshot.hasData)
                         ? "Loading..."
-                        : 'The\n${selectedSkills[widget.index]!.name}',
+                        : selectedSkills[widget.index]!.name,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: TextStyle(

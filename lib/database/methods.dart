@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/services.dart';
@@ -178,6 +179,18 @@ class SharedPrefsService {
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+}
+
+void setAnimationTimer() async {
+  flowAnimationState = true;
+  if (flowAnimationTimer != null) flowAnimationTimer!.cancel();
+  flowAnimationTimer = Timer.periodic(
+    const Duration(seconds: 1, milliseconds: 500),
+    (dataTimer) {
+      flowAnimationState = !flowAnimationState;
+      flowAnimationController.add(flowAnimationState);
+    },
+  );
 }
 
 getRandomEvent() async {
