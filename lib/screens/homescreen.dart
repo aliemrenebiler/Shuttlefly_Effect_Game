@@ -174,11 +174,16 @@ class ContinueButton extends StatelessWidget {
       onTapAction: () async {
         if (await SharedPrefsService().dataExists) {
           Navigator.pushReplacementNamed(context, '/gamescreen');
+          currentGalaxy = await SharedPrefsService().getGalaxyFromLocal();
+          currentEvent = await SharedPrefsService().getEventFromLocal();
+
           selectedChars[0] = await SharedPrefsService().getCharFromLocal(0);
           selectedChars[1] = await SharedPrefsService().getCharFromLocal(1);
           selectedChars[2] = await SharedPrefsService().getCharFromLocal(2);
-          currentGalaxy = await SharedPrefsService().getGalaxyFromLocal();
-          currentEvent = await SharedPrefsService().getEventFromLocal();
+
+          selectedSkills[0] = await SharedPrefsService().getSkillFromLocal(0);
+          selectedSkills[1] = await SharedPrefsService().getSkillFromLocal(1);
+          selectedSkills[2] = await SharedPrefsService().getSkillFromLocal(2);
         } else {
           showDialog(
             context: context,
@@ -247,7 +252,7 @@ class ExitMenu extends StatelessWidget {
         AnyButton(
           text: 'YES',
           onTapAction: () {
-            SystemNavigator.pop(); // EXIT
+            SystemNavigator.pop();
           },
           height: 50,
           textColor: SEColors().white,

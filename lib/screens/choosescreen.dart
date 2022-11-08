@@ -118,9 +118,11 @@ class ChooseScreenTopBar extends StatelessWidget {
               }
             }
             if (noNullChar) {
-              await SharedPrefsService().saveCharacters();
               currentEvent = await getRandomEvent(currentGalaxy.id);
+              await SharedPrefsService().saveGalaxyID();
               await SharedPrefsService().saveEventID();
+              await SharedPrefsService().saveCharsAndSkills();
+              await SharedPrefsService().saveStates();
               // ignore: use_build_context_synchronously
               Navigator.pushReplacementNamed(context, '/gamescreen');
             }

@@ -404,6 +404,7 @@ class AnimatedShip extends StatelessWidget {
               manageStates();
               eventIsWaiting = false;
               await SharedPrefsService().saveStates();
+              checkStates();
               notifyParent();
             },
           ),
@@ -413,7 +414,7 @@ class AnimatedShip extends StatelessWidget {
   }
 }
 
-// EVENT BOX
+// BOXES
 class EventBox extends StatelessWidget {
   final String title;
   final String desc;
@@ -468,7 +469,6 @@ class EventBox extends StatelessWidget {
   }
 }
 
-// CHARACTER BOX
 class CharBox extends StatelessWidget {
   final int index;
   final double? height;
@@ -600,7 +600,6 @@ class CharBox extends StatelessWidget {
   }
 }
 
-// SKILL BOX
 class SkillBox extends StatelessWidget {
   final int index;
   final Color textColor;

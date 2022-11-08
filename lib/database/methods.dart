@@ -145,7 +145,7 @@ class SQLiteServices {
 }
 
 class SharedPrefsService {
-  Future saveCharacters() async {
+  Future saveCharsAndSkills() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('dataExists', true);
 
@@ -314,13 +314,20 @@ checkStates() {
 }
 
 void restartTheGame() async {
+  await SharedPrefsService().eraseSavedData();
+  await SQLiteServices().getDatabaseLimits();
+
+  currentGalaxy = Galaxy(id: "0");
+  currentEvent = null;
+  currentSelection = null;
+
   currentStates.energy = defaultStateValue;
   currentStates.health = defaultStateValue;
   currentStates.morale = defaultStateValue;
   currentStates.oxygen = defaultStateValue;
-  currentGalaxy.id = "0";
-  currentSelection = null;
+
+  selectedChars = [null, null, null];
+  selectedSkills = [null, null, null];
+
   eventIsWaiting = true;
-  await SharedPrefsService().eraseSavedData();
-  await SQLiteServices().getDatabaseLimits();
 }
