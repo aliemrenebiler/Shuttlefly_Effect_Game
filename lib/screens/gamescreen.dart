@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
+import 'allglobalwidgets.dart';
 import '../database/methods.dart';
-import '../database/variables.dart';
 import '../database/theme.dart';
 
 class GameScreen extends StatefulWidget {
@@ -23,149 +23,119 @@ class _GameScreenState extends State<GameScreen> {
         return await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const MenuBox();
+            return const PauseMenu();
           },
         );
       },
       child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.all(10),
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                child: TopBar(
-                  health: currentStates.health,
-                  energy: currentStates.energy,
-                  oxygen: currentStates.oxygen,
-                  morale: currentStates.morale,
+        body: ContainerWithBG(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  // ignore: prefer_const_constructors
+                  child: GameScreenTopBar(),
                 ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          height: MediaQuery.of(context).size.height / 3,
-                          child: AnimatedShip(
-                            notifyParent: refresh,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: EventBox(
-                                title: currentEvent!.title,
-                                desc: currentEvent!.desc,
-                                textColor: SEColors().white,
-                                boxColor: SEColors().dblack,
-                                borderColor: SEColors().lblack,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Galaxy #${currentGalaxy.id}",
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: SEColors().white,
+                                  fontSize: 25,
+                                ),
                               ),
                             ),
-                          ),
-                          (eventIsWaiting)
-                              ? Row(
-                                  children: [
-                                    for (int i = 0; i < 3; i++)
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(5),
-                                              child: CharBox(
-                                                index: i,
-                                                textColor: SEColors().white,
-                                                boxColor: SEColors().red,
-                                                imgBgColor: SEColors().dred,
-                                                borderColor: SEColors().lred,
-                                                imgBorderColor: SEColors().dred,
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.all(5),
-                                              child: SkillBox(
-                                                index: i,
-                                                textColor: SEColors().white,
-                                                boxColor: SEColors().blue,
-                                                borderColor: SEColors().lblue,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                  ],
-                                )
-                              : Container(
-                                  padding: const EdgeInsets.all(3),
-                                  child: AnyButton(
-                                    text: 'DONE',
-                                    onTapAction: () async {
-                                      String? message = checkStates();
-                                      if (message == null) {
-                                        currentEvent = await getRandomEvent(
-                                            currentGalaxy.id);
-                                        await SharedPrefsService()
-                                            .saveEventID();
-                                        currentSelection = null;
-                                        eventIsWaiting = true;
-                                        refresh();
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return PopUpAlertBox(
-                                              alertTitle: 'THE END',
-                                              alertDesc: message,
-                                              closeButtonActive: false,
-                                              buttons: [
-                                                AnyButton(
-                                                  text: 'MAIN MENU',
-                                                  onTapAction: () {
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                            context,
-                                                            '/homescreen');
-                                                  },
-                                                  height: 50,
-                                                  textColor: SEColors().white,
-                                                  buttonColor: SEColors().lblue,
-                                                  borderColor: SEColors().blue,
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                    height: 50,
-                                    textColor: SEColors().white,
-                                    buttonColor: SEColors().lred,
-                                    borderColor: SEColors().red,
+                            Expanded(
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  height:
+                                      MediaQuery.of(context).size.height / 3,
+                                  child: AnimatedShip(
+                                    notifyParent: refresh,
                                   ),
                                 ),
-                        ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                child: EventBox(
+                                  title: currentEvent!.title,
+                                  desc: currentEvent!.desc,
+                                  textColor: SEColors().white,
+                                  boxColor: SEColors().dblack,
+                                  borderColor: SEColors().lblack,
+                                ),
+                              ),
+                            ),
+                            (eventIsWaiting)
+                                ? Row(
+                                    children: [
+                                      for (int i = 0; i < 3; i++)
+                                        Expanded(
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                child: CharBox(
+                                                  index: i,
+                                                  textColor: SEColors().white,
+                                                  boxColor: SEColors().red,
+                                                  imgBgColor: SEColors().dred,
+                                                  borderColor: SEColors().lred,
+                                                  imgBorderColor:
+                                                      SEColors().dred,
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                child: SkillBox(
+                                                  index: i,
+                                                  textColor: SEColors().white,
+                                                  boxColor: SEColors().blue,
+                                                  borderColor: SEColors().lblue,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                    ],
+                                  )
+                                : Container(
+                                    padding: const EdgeInsets.all(3),
+                                    child: DoneButton(
+                                      notifyParent: refresh,
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -174,176 +144,123 @@ class _GameScreenState extends State<GameScreen> {
 }
 
 // TOP BAR
-class TopBar extends StatelessWidget {
-  final int health;
-  final int oxygen;
-  final int energy;
-  final int morale;
-  const TopBar({
-    super.key,
-    required this.health,
-    required this.energy,
-    required this.oxygen,
-    required this.morale,
-  });
+class GameScreenTopBar extends StatelessWidget {
+  const GameScreenTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: SEColors().lblue,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: SEColors().blue,
+    return TopBar(
+      widgets: [
+        TopBarButton(
+          text: "MENU",
+          onTapAction: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const PauseMenu();
+              },
+            );
+          },
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TopBarButton(
-            text: "MENU",
-            onTapAction: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const MenuBox();
-                },
-              );
-            },
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Health',
-                      value: health,
-                      width: MediaQuery.of(context).size.width / 6,
-                      textColor: SEColors().white,
-                      boxColor: (currentSelection != null &&
-                              currentSelection!.healthChange != 0)
-                          ? SEColors().lred
-                          : SEColors().dgrey2,
-                      bgColor: (currentSelection != null &&
-                              currentSelection!.healthChange != 0)
-                          ? SEColors().dred
-                          : SEColors().dblack,
-                      borderColor: (currentSelection != null &&
-                              currentSelection!.healthChange != 0)
-                          ? SEColors().red
-                          : SEColors().lblack,
-                    ),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: StateValueBox(
+                    text: 'Health',
+                    value: currentStates.health,
+                    width: MediaQuery.of(context).size.width / 6,
+                    textColor: SEColors().white,
+                    boxColor: (currentSelection != null &&
+                            currentSelection!.healthChange != 0)
+                        ? SEColors().lred
+                        : SEColors().dgrey2,
+                    bgColor: (currentSelection != null &&
+                            currentSelection!.healthChange != 0)
+                        ? SEColors().dred
+                        : SEColors().dblack,
+                    borderColor: (currentSelection != null &&
+                            currentSelection!.healthChange != 0)
+                        ? SEColors().red
+                        : SEColors().lblack,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Oxygen',
-                      value: oxygen,
-                      width: MediaQuery.of(context).size.width / 6,
-                      textColor: SEColors().white,
-                      boxColor: (currentSelection != null &&
-                              currentSelection!.oxygenChange != 0)
-                          ? SEColors().lblue
-                          : SEColors().dgrey2,
-                      bgColor: (currentSelection != null &&
-                              currentSelection!.oxygenChange != 0)
-                          ? SEColors().dblue
-                          : SEColors().dblack,
-                      borderColor: (currentSelection != null &&
-                              currentSelection!.oxygenChange != 0)
-                          ? SEColors().blue
-                          : SEColors().lblack,
-                    ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: StateValueBox(
+                    text: 'Oxygen',
+                    value: currentStates.oxygen,
+                    width: MediaQuery.of(context).size.width / 6,
+                    textColor: SEColors().white,
+                    boxColor: (currentSelection != null &&
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().lblue
+                        : SEColors().dgrey2,
+                    bgColor: (currentSelection != null &&
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().dblue
+                        : SEColors().dblack,
+                    borderColor: (currentSelection != null &&
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().blue
+                        : SEColors().lblack,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Morale',
-                      value: morale,
-                      width: MediaQuery.of(context).size.width / 6,
-                      textColor: SEColors().white,
-                      boxColor: (currentSelection != null &&
-                              currentSelection!.moraleChange != 0)
-                          ? SEColors().lpurple
-                          : SEColors().dgrey2,
-                      bgColor: (currentSelection != null &&
-                              currentSelection!.moraleChange != 0)
-                          ? SEColors().dpurple
-                          : SEColors().dblack,
-                      borderColor: (currentSelection != null &&
-                              currentSelection!.moraleChange != 0)
-                          ? SEColors().purple
-                          : SEColors().lblack,
-                    ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: StateValueBox(
+                    text: 'Morale',
+                    value: currentStates.morale,
+                    width: MediaQuery.of(context).size.width / 6,
+                    textColor: SEColors().white,
+                    boxColor: (currentSelection != null &&
+                            currentSelection!.moraleChange != 0)
+                        ? SEColors().lpurple
+                        : SEColors().dgrey2,
+                    bgColor: (currentSelection != null &&
+                            currentSelection!.moraleChange != 0)
+                        ? SEColors().dpurple
+                        : SEColors().dblack,
+                    borderColor: (currentSelection != null &&
+                            currentSelection!.moraleChange != 0)
+                        ? SEColors().purple
+                        : SEColors().lblack,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    child: StateValueBox(
-                      text: 'Energy',
-                      value: energy,
-                      width: MediaQuery.of(context).size.width / 6,
-                      textColor: SEColors().white,
-                      boxColor: (currentSelection != null &&
-                              currentSelection!.energyChange != 0)
-                          ? SEColors().lyellow
-                          : SEColors().dgrey2,
-                      bgColor: (currentSelection != null &&
-                              currentSelection!.energyChange != 0)
-                          ? SEColors().dyellow
-                          : SEColors().dblack,
-                      borderColor: (currentSelection != null &&
-                              currentSelection!.energyChange != 0)
-                          ? SEColors().yellow
-                          : SEColors().lblack,
-                    ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: StateValueBox(
+                    text: 'Energy',
+                    value: currentStates.energy,
+                    width: MediaQuery.of(context).size.width / 6,
+                    textColor: SEColors().white,
+                    boxColor: (currentSelection != null &&
+                            currentSelection!.energyChange != 0)
+                        ? SEColors().lyellow
+                        : SEColors().dgrey2,
+                    bgColor: (currentSelection != null &&
+                            currentSelection!.energyChange != 0)
+                        ? SEColors().dyellow
+                        : SEColors().dblack,
+                    borderColor: (currentSelection != null &&
+                            currentSelection!.energyChange != 0)
+                        ? SEColors().yellow
+                        : SEColors().lblack,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class TopBarButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onTapAction;
-  const TopBarButton({
-    super.key,
-    required this.text,
-    required this.onTapAction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTapAction,
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(15),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: SEColors().white,
-            fontSize: 18,
-          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-// STATE VALUE BOX
 class StateValueBox extends StatefulWidget {
   final String text;
   final int value;
@@ -737,9 +654,63 @@ class SkillBox extends StatelessWidget {
   }
 }
 
-// MENU BOX
-class MenuBox extends StatelessWidget {
-  const MenuBox({super.key});
+// DONE BUTTON
+class DoneButton extends StatelessWidget {
+  final Function() notifyParent;
+  const DoneButton({
+    super.key,
+    required this.notifyParent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnyButton(
+      text: 'DONE',
+      onTapAction: () async {
+        String? message = checkStates();
+        if (message == null) {
+          currentEvent = await getRandomEvent(currentGalaxy.id);
+          await SharedPrefsService().saveEventID();
+          currentSelection = null;
+          eventIsWaiting = true;
+          notifyParent();
+        } else {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return PopUpAlertBox(
+                alertTitle: 'THE END',
+                alertDesc: message,
+                closeButtonActive: false,
+                buttons: [
+                  AnyButton(
+                    text: 'MAIN MENU',
+                    onTapAction: () {
+                      Navigator.pushReplacementNamed(context, '/homescreen');
+                    },
+                    height: 50,
+                    textColor: SEColors().white,
+                    buttonColor: SEColors().lblue,
+                    borderColor: SEColors().blue,
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
+      height: 50,
+      textColor: SEColors().white,
+      buttonColor: SEColors().lred,
+      borderColor: SEColors().red,
+    );
+  }
+}
+
+// PAUSE MENU
+class PauseMenu extends StatelessWidget {
+  const PauseMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -802,164 +773,6 @@ class MenuBox extends StatelessWidget {
           borderColor: SEColors().red,
         ),
       ],
-    );
-  }
-}
-
-// ALERT BOX
-class PopUpAlertBox extends StatelessWidget {
-  final String alertTitle;
-  final String? alertDesc;
-  final bool closeButtonActive;
-  final List<Widget>? buttons;
-  const PopUpAlertBox({
-    super.key,
-    required this.alertTitle,
-    this.alertDesc,
-    required this.closeButtonActive,
-    this.buttons,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      content: Container(
-        width: 300,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: SEColors().white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            width: seBorderWidth,
-            color: SEColors().grey,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              crossAxisAlignment: closeButtonActive
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    alignment: closeButtonActive
-                        ? Alignment.bottomLeft
-                        : Alignment.bottomCenter,
-                    child: Text(
-                      alertTitle,
-                      textAlign:
-                          closeButtonActive ? TextAlign.left : TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                      ),
-                    ),
-                  ),
-                ),
-                if (closeButtonActive)
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    child: AnyButton(
-                      text: 'X',
-                      onTapAction: () {
-                        Navigator.pop(context);
-                      },
-                      height: 50,
-                      width: 50,
-                      textColor: SEColors().red,
-                      buttonColor: SEColors().lgrey,
-                      borderColor: SEColors().grey,
-                    ),
-                  ),
-              ],
-            ),
-            if (alertDesc != null)
-              Container(
-                alignment:
-                    closeButtonActive ? Alignment.centerLeft : Alignment.center,
-                padding: const EdgeInsets.all(5),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Text(
-                    alertDesc!,
-                    textAlign:
-                        closeButtonActive ? TextAlign.left : TextAlign.center,
-                    overflow: TextOverflow.fade,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-            if (buttons != null)
-              for (int i = 0; i < buttons!.length; i++)
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  child: buttons![i],
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// BUTTON
-class AnyButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onTapAction;
-  final double? width;
-  final double? height;
-  final Color textColor;
-  final Color buttonColor;
-  final Color borderColor;
-  const AnyButton({
-    super.key,
-    required this.text,
-    required this.onTapAction,
-    this.width,
-    this.height,
-    required this.textColor,
-    required this.buttonColor,
-    required this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTapAction,
-      child: Container(
-        alignment: Alignment.center,
-        height: (height != null) ? height : null,
-        width: (width != null) ? width : null,
-        decoration: BoxDecoration(
-          color: buttonColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: borderColor,
-          ),
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 20,
-          ),
-        ),
-      ),
     );
   }
 }

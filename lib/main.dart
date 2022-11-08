@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:shuttlefly_effect/database/variables.dart';
 
+import 'database/methods.dart';
 import '/screens/homescreen.dart';
 import '/screens/choosescreen.dart';
 import '/screens/gamescreen.dart';
 import '/screens/storyscreen.dart';
-import 'database/methods.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
