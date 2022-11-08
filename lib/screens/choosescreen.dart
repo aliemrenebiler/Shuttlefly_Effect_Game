@@ -95,7 +95,7 @@ class TopBar extends StatelessWidget {
               }
               if (noNullChar) {
                 await SharedPrefsService().saveCharacters();
-                currentEvent = await getRandomEvent();
+                currentEvent = await getRandomEvent(currentGalaxy.id);
                 await SharedPrefsService().saveEventID();
                 // ignore: use_build_context_synchronously
                 Navigator.pushReplacementNamed(context, '/gamescreen');

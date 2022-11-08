@@ -128,6 +128,8 @@ class HomeScreen extends StatelessWidget {
                                       .getCharFromLocal(1);
                                   selectedChars[2] = await SharedPrefsService()
                                       .getCharFromLocal(2);
+                                  currentGalaxy = await SharedPrefsService()
+                                      .getGalaxyFromLocal();
                                   currentEvent = await SharedPrefsService()
                                       .getEventFromLocal();
                                 } else {

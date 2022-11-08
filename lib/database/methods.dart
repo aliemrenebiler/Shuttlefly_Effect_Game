@@ -215,9 +215,9 @@ void setAnimationTimer() async {
   );
 }
 
-getRandomEvent(Galaxy currentGalaxy) async {
+getRandomEvent(String galaxyID) async {
   Random random = Random();
-  int randomGalaxyID = random.nextInt(int.parse(currentGalaxy.id));
+  int randomGalaxyID = random.nextInt(int.parse(galaxyID) + 1);
   int randomEventID = random.nextInt(totalEventAmount[randomGalaxyID]);
   return await SQLiteServices()
       .getEvent(randomGalaxyID.toString(), randomEventID.toString());
@@ -284,6 +284,7 @@ void restartTheGame() async {
   currentStates.health = defaultStateValue;
   currentStates.morale = defaultStateValue;
   currentStates.oxygen = defaultStateValue;
+  currentGalaxy.id = "0";
   currentSelection = null;
   eventIsWaiting = true;
   await SharedPrefsService().eraseSavedData();

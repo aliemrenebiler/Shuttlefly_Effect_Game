@@ -117,7 +117,8 @@ class _GameScreenState extends State<GameScreen> {
                                     onTapAction: () async {
                                       String? message = checkStates();
                                       if (message == null) {
-                                        currentEvent = await getRandomEvent();
+                                        currentEvent = await getRandomEvent(
+                                            currentGalaxy.id);
                                         await SharedPrefsService()
                                             .saveEventID();
                                         currentSelection = null;
@@ -445,51 +446,53 @@ class AnimatedShip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-        stream: flowAnimationStream,
-        builder: (context, snapshot) {
-          return AnimatedContainer(
-            padding: flowAnimationState
-                ? const EdgeInsets.only(bottom: 30)
-                : const EdgeInsets.only(top: 30),
-            duration: const Duration(seconds: 1, milliseconds: 500),
-            curve: Curves.easeInOut,
-            child: DragTarget<int>(
-              builder: (
-                BuildContext context,
-                List<dynamic> accepted,
-                List<dynamic> rejected,
-              ) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage(
-                          'assets/images/shuttlefly_effect_ship.png'),
-                    ),
+      stream: flowAnimationStream,
+      builder: (context, snapshot) {
+        return AnimatedContainer(
+          padding: flowAnimationState
+              ? const EdgeInsets.only(bottom: 30)
+              : const EdgeInsets.only(top: 30),
+          duration: const Duration(seconds: 1, milliseconds: 500),
+          curve: Curves.easeInOut,
+          child: DragTarget<int>(
+            builder: (
+              BuildContext context,
+              List<dynamic> accepted,
+              List<dynamic> rejected,
+            ) {
+              return Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.contain,
+                    image:
+                        AssetImage('assets/images/shuttlefly_effect_ship.png'),
                   ),
-                );
-              },
-              onMove: (details) async {
-                currentSelection ??= await SQLiteServices().getSelection(
-                  currentEvent!.id,
-                  selectedSkills[details.data]!.id,
-                  selectedChars[details.data]!.name,
-                );
-                notifyParent();
-              },
-              onLeave: (data) {
-                currentSelection = null;
-                notifyParent();
-              },
-              onAccept: (data) async {
-                manageStates();
-                eventIsWaiting = false;
-                await SharedPrefsService().saveStates();
-                notifyParent();
-              },
-            ),
-          );
-        });
+                ),
+              );
+            },
+            onMove: (details) async {
+              currentSelection ??= await SQLiteServices().getSelection(
+                currentGalaxy.id,
+                currentEvent!.id,
+                selectedSkills[details.data]!.id,
+                selectedChars[details.data]!.name,
+              );
+              notifyParent();
+            },
+            onLeave: (data) {
+              currentSelection = null;
+              notifyParent();
+            },
+            onAccept: (data) async {
+              manageStates();
+              eventIsWaiting = false;
+              await SharedPrefsService().saveStates();
+              notifyParent();
+            },
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -534,7 +537,7 @@ class EventBox extends StatelessWidget {
           child: Text(
             (eventIsWaiting)
                 ? "${currentEvent!.title} ${currentEvent!.desc}"
-                : "The Result: ${currentSelection!.desc}",
+                : currentSelection!.desc,
             textAlign: TextAlign.center,
             overflow: TextOverflow.fade,
             style: TextStyle(
