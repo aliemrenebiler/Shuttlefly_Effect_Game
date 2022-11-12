@@ -54,7 +54,7 @@ class Selection {
   String desc;
   int healthChange;
   int oxygenChange;
-  int energyChange;
+  int sourceChange;
   int moraleChange;
   String? nextEventID;
 
@@ -65,7 +65,7 @@ class Selection {
     required this.desc,
     required this.healthChange,
     required this.oxygenChange,
-    required this.energyChange,
+    required this.sourceChange,
     required this.moraleChange,
     this.nextEventID,
   });
@@ -85,13 +85,13 @@ class Story {
 class States {
   int health;
   int oxygen;
-  int energy;
+  int source;
   int morale;
 
   States({
     required this.health,
     required this.oxygen,
-    required this.energy,
+    required this.source,
     required this.morale,
   });
 }

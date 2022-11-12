@@ -192,27 +192,6 @@ class GameScreenTopBar extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(3),
                   child: StateValueBox(
-                    text: 'Oxygen',
-                    value: currentStates.oxygen,
-                    width: MediaQuery.of(context).size.width / 6,
-                    textColor: SEColors().white,
-                    boxColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
-                        ? SEColors().lblue
-                        : SEColors().dgrey2,
-                    bgColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
-                        ? SEColors().dblue
-                        : SEColors().dblack,
-                    borderColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
-                        ? SEColors().blue
-                        : SEColors().lblack,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  child: StateValueBox(
                     text: 'Morale',
                     value: currentStates.morale,
                     width: MediaQuery.of(context).size.width / 6,
@@ -234,20 +213,41 @@ class GameScreenTopBar extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(3),
                   child: StateValueBox(
-                    text: 'Energy',
-                    value: currentStates.energy,
+                    text: 'Oxygen',
+                    value: currentStates.oxygen,
                     width: MediaQuery.of(context).size.width / 6,
                     textColor: SEColors().white,
                     boxColor: (currentSelection != null &&
-                            currentSelection!.energyChange != 0)
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().lblue
+                        : SEColors().dgrey2,
+                    bgColor: (currentSelection != null &&
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().dblue
+                        : SEColors().dblack,
+                    borderColor: (currentSelection != null &&
+                            currentSelection!.oxygenChange != 0)
+                        ? SEColors().blue
+                        : SEColors().lblack,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  child: StateValueBox(
+                    text: 'Source',
+                    value: currentStates.source,
+                    width: MediaQuery.of(context).size.width / 6,
+                    textColor: SEColors().white,
+                    boxColor: (currentSelection != null &&
+                            currentSelection!.sourceChange != 0)
                         ? SEColors().lyellow
                         : SEColors().dgrey2,
                     bgColor: (currentSelection != null &&
-                            currentSelection!.energyChange != 0)
+                            currentSelection!.sourceChange != 0)
                         ? SEColors().dyellow
                         : SEColors().dblack,
                     borderColor: (currentSelection != null &&
-                            currentSelection!.energyChange != 0)
+                            currentSelection!.sourceChange != 0)
                         ? SEColors().yellow
                         : SEColors().lblack,
                   ),

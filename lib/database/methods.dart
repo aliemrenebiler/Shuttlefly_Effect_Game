@@ -40,7 +40,7 @@ Selection? currentSelection;
 States currentStates = States(
   health: defaultStateValue,
   oxygen: defaultStateValue,
-  energy: defaultStateValue,
+  source: defaultStateValue,
   morale: defaultStateValue,
 );
 
@@ -129,7 +129,7 @@ class SQLiteServices {
       eventID: eventID,
       id: newSelect[0]["ID"] as String,
       desc: "$charName ${newSelect[0]["DESC"] as String}",
-      energyChange: newSelect[0]["ENERGY_CHANGE"] as int,
+      sourceChange: newSelect[0]["SOURCE_CHANGE"] as int,
       healthChange: newSelect[0]["HEALTH_CHANGE"] as int,
       moraleChange: newSelect[0]["MORALE_CHANGE"] as int,
       oxygenChange: newSelect[0]["OXYGEN_CHANGE"] as int,
@@ -165,7 +165,7 @@ class SharedPrefsService {
     prefs.setInt('currentHealth', currentStates.health);
     prefs.setInt('currentOxygen', currentStates.oxygen);
     prefs.setInt('currentMorale', currentStates.morale);
-    prefs.setInt('currentEnergy', currentStates.energy);
+    prefs.setInt('currentSource', currentStates.source);
   }
 
   Future saveEventID() async {
@@ -211,7 +211,7 @@ class SharedPrefsService {
     States states = States(
       health: prefs.getInt('currentHealth')!,
       oxygen: prefs.getInt('currentOxygen')!,
-      energy: prefs.getInt('currentEnergy')!,
+      source: prefs.getInt('currentSource')!,
       morale: prefs.getInt('currentMorale')!,
     );
 
@@ -255,13 +255,13 @@ getRandomEvent(String galaxyID) async {
 }
 
 void manageStates() {
-  if (currentStates.energy + currentSelection!.energyChange > 100) {
-    currentStates.energy = 100;
-  } else if (currentStates.energy + currentSelection!.energyChange < 0) {
-    currentStates.energy = 0;
+  if (currentStates.source + currentSelection!.sourceChange > 100) {
+    currentStates.source = 100;
+  } else if (currentStates.source + currentSelection!.sourceChange < 0) {
+    currentStates.source = 0;
   } else {
-    currentStates.energy =
-        currentStates.energy + currentSelection!.energyChange;
+    currentStates.source =
+        currentStates.source + currentSelection!.sourceChange;
   }
 
   if (currentStates.health + currentSelection!.healthChange > 100) {
@@ -302,7 +302,7 @@ checkStates() {
   } else if (currentStates.morale <= 0) {
     SharedPrefsService().eraseSavedData();
     return 'The crew got crazy.';
-  } else if (currentStates.energy <= 0) {
+  } else if (currentStates.source <= 0) {
     SharedPrefsService().eraseSavedData();
     return "The crew can't make any move.";
   } else {
@@ -318,7 +318,7 @@ void restartTheGame() async {
   currentEvent = null;
   currentSelection = null;
 
-  currentStates.energy = defaultStateValue;
+  currentStates.source = defaultStateValue;
   currentStates.health = defaultStateValue;
   currentStates.morale = defaultStateValue;
   currentStates.oxygen = defaultStateValue;
