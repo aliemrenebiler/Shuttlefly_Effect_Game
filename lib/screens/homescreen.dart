@@ -173,7 +173,6 @@ class ContinueButton extends StatelessWidget {
       text: 'CONTINUE',
       onTapAction: () async {
         if (await SharedPrefsService().dataExists) {
-          Navigator.pushReplacementNamed(context, '/gamescreen');
           currentGalaxy = await SharedPrefsService().getGalaxyFromLocal();
           currentEvent = await SharedPrefsService().getEventFromLocal();
 
@@ -184,6 +183,8 @@ class ContinueButton extends StatelessWidget {
           selectedSkills[0] = await SharedPrefsService().getSkillFromLocal(0);
           selectedSkills[1] = await SharedPrefsService().getSkillFromLocal(1);
           selectedSkills[2] = await SharedPrefsService().getSkillFromLocal(2);
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/gamescreen');
         } else {
           showDialog(
             context: context,

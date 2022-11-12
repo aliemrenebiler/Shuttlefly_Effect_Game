@@ -49,23 +49,17 @@ class SQLiteServices {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, dbName);
 
-    // Check if the database exists
-    var exists = await databaseExists(path);
+    try {
+      await Directory(dirname(path)).create(recursive: true);
+    } catch (_) {}
 
-    if (!exists) {
-      // Make sure the parent directory exists
-      try {
-        await Directory(dirname(path)).create(recursive: true);
-      } catch (_) {}
+    // Copy from asset
+    ByteData data = await rootBundle.load(join("assets", "database", dbName));
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-      // Copy from asset
-      ByteData data = await rootBundle.load(join("assets", "database", dbName));
-      List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-      // Write and flush the bytes written
-      await File(path).writeAsBytes(bytes, flush: true);
-    }
+    // Write and flush the bytes written
+    await File(path).writeAsBytes(bytes, flush: true);
 
     // open the database
     Database db = await openDatabase(path);
@@ -145,6 +139,11 @@ class SQLiteServices {
 }
 
 class SharedPrefsService {
+  Future<bool> get dataExists async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('dataExists') ?? false;
+  }
+
   Future saveCharsAndSkills() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('dataExists', true);
@@ -161,6 +160,7 @@ class SharedPrefsService {
 
   Future saveStates() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('dataExists', true);
 
     prefs.setInt('currentHealth', currentStates.health);
     prefs.setInt('currentOxygen', currentStates.oxygen);
@@ -170,6 +170,7 @@ class SharedPrefsService {
 
   Future saveEventID() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('dataExists', true);
 
     prefs.setString('currentEventsGalaxyID', currentEvent!.galaxyID);
     prefs.setString('currentEventID', currentEvent!.id);
@@ -177,13 +178,9 @@ class SharedPrefsService {
 
   Future saveGalaxyID() async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('dataExists', true);
 
     prefs.setString('currentGalaxyID', currentGalaxy.id);
-  }
-
-  Future<bool> get dataExists async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('dataExists') ?? false;
   }
 
   Future<Character> getCharFromLocal(int id) async {
