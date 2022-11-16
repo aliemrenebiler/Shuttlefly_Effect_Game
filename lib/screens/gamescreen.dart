@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 import 'allglobalwidgets.dart';
-import '../database/methods.dart';
-import '../database/theme.dart';
+import '../backend/methods.dart';
+import '../backend/theme.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});

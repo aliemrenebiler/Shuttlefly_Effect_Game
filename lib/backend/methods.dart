@@ -39,9 +39,9 @@ Event? currentEvent;
 Selection? currentSelection;
 States currentStates = States(
   health: defaultStateValue,
+  morale: defaultStateValue,
   oxygen: defaultStateValue,
   source: defaultStateValue,
-  morale: defaultStateValue,
 );
 
 class SQLiteServices {
@@ -129,10 +129,10 @@ class SQLiteServices {
       eventID: eventID,
       id: newSelect[0]["ID"] as String,
       desc: "$charName ${newSelect[0]["DESC"] as String}",
-      sourceChange: newSelect[0]["SOURCE_CHANGE"] as int,
       healthChange: newSelect[0]["HEALTH_CHANGE"] as int,
       moraleChange: newSelect[0]["MORALE_CHANGE"] as int,
       oxygenChange: newSelect[0]["OXYGEN_CHANGE"] as int,
+      sourceChange: newSelect[0]["SOURCE_CHANGE"] as int,
       nextEventID: newSelect[0]["NEXT_EVENT_ID"] as String,
     );
   }

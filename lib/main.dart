@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'database/methods.dart';
+import 'backend/methods.dart';
 import '/screens/homescreen.dart';
 import '/screens/choosescreen.dart';
 import '/screens/gamescreen.dart';

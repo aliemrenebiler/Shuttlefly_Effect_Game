@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../database/methods.dart';
-import '../database/theme.dart';
+import '../backend/methods.dart';
+import '../backend/theme.dart';
 import 'allglobalwidgets.dart';
 
 class HomeScreen extends StatelessWidget {

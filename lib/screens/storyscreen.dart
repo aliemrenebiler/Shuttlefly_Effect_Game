@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'allglobalwidgets.dart';
-import '../database/methods.dart';
-import '../database/theme.dart';
+import '../backend/methods.dart';
+import '../backend/theme.dart';
 
 class StoryScreen extends StatelessWidget {
   const StoryScreen({super.key});

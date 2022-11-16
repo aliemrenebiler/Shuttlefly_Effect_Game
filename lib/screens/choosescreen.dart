@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
-import '../database/classes.dart';
-import '../database/methods.dart';
-import '../database/theme.dart';
+import '../backend/classes.dart';
+import '../backend/methods.dart';
+import '../backend/theme.dart';
 import 'allglobalwidgets.dart';
 
 class ChooseScreen extends StatelessWidget {

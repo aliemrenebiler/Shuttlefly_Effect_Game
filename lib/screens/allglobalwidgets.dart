@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../database/theme.dart';
+import '../backend/theme.dart';
 
 // CONTAINER WITH BACKGROUND
 class ContainerWithBG extends StatelessWidget {
