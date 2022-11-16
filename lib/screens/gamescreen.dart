@@ -81,6 +81,7 @@ class _GameScreenState extends State<GameScreen> {
                                 child: EventBox(
                                   title: currentEvent!.title,
                                   desc: currentEvent!.desc,
+                                  titleColor: SEColors().lyellow2,
                                   textColor: SEColors().white,
                                   boxColor: SEColors().dblack,
                                   borderColor: SEColors().lblack,
@@ -420,6 +421,7 @@ class EventBox extends StatelessWidget {
   final String desc;
   final double? width;
   final double? height;
+  final Color titleColor;
   final Color textColor;
   final Color boxColor;
   final Color borderColor;
@@ -429,6 +431,7 @@ class EventBox extends StatelessWidget {
     required this.desc,
     this.width,
     this.height,
+    required this.titleColor,
     required this.textColor,
     required this.boxColor,
     required this.borderColor,
@@ -452,15 +455,37 @@ class EventBox extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.all(15),
-          child: Text(
-            (eventIsWaiting)
-                ? "${currentEvent!.title} ${currentEvent!.desc}"
-                : currentSelection!.desc,
+          child: RichText(
             textAlign: TextAlign.center,
             overflow: TextOverflow.fade,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 18,
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: (eventIsWaiting)
+                  ? <TextSpan>[
+                      TextSpan(
+                        text: currentEvent!.title,
+                        style: TextStyle(
+                          color: titleColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                      TextSpan(
+                        text: " ${currentEvent!.desc}",
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ]
+                  : <TextSpan>[
+                      TextSpan(
+                        text: currentSelection!.desc,
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
             ),
           ),
         ),

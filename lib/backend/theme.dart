@@ -25,6 +25,7 @@ class SEColors {
   var blue = const Color(0xFF2962FF);
   var dblue = const Color(0xFF002486);
 
+  var lyellow2 = const Color(0xFFFFDF00);
   var lyellow = const Color(0xFFF9A825);
   var yellow = const Color(0xFFF57F17);
   var dyellow = const Color(0xFF8A470C);
