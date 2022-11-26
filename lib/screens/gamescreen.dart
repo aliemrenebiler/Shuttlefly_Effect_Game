@@ -403,10 +403,17 @@ class AnimatedShip extends StatelessWidget {
               notifyParent();
             },
             onAccept: (data) async {
+              currentEnding =
+                  await SQLiteServices().getEnding(currentResult!.endingID);
               manageStates();
               eventIsWaiting = false;
               await SharedPrefsService().saveStates();
-              checkStates();
+              checkStates(
+                currentEnding!.healthCondition,
+                currentEnding!.moraleCondition,
+                currentEnding!.oxygenCondition,
+                currentEnding!.sourceCondition,
+              );
               notifyParent();
             },
           ),
@@ -692,7 +699,12 @@ class DoneButton extends StatelessWidget {
     return AnyButton(
       text: 'DONE',
       onTapAction: () async {
-        String? message = checkStates();
+        String? message = checkStates(
+          currentEnding!.healthCondition,
+          currentEnding!.moraleCondition,
+          currentEnding!.oxygenCondition,
+          currentEnding!.sourceCondition,
+        );
         if (message == null) {
           currentEvent = await getRandomEvent(currentGalaxy.id);
           await SharedPrefsService().saveEventID();

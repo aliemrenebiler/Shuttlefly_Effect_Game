@@ -156,7 +156,7 @@ class SQLiteServices {
       moraleChange: newSelect[0]["MORALE_CHANGE"] as int,
       oxygenChange: newSelect[0]["OXYGEN_CHANGE"] as int,
       sourceChange: newSelect[0]["SOURCE_CHANGE"] as int,
-      endingID: "0", // TODO: Will be fixed
+      endingID: newSelect[0]["ENDING_ID"] as String,
       nextEventID: newSelect[0]["NEXT_EVENT_ID"] as String,
     );
   }
@@ -312,19 +312,14 @@ void manageStates() {
   }
 }
 
-checkStates() {
-  if (currentStates.health <= 0) {
+checkStates(int? healthCondition, int? moraleCondition, int? oxygenCondition,
+    int? sourceCondition) {
+  if (currentStates.health == healthCondition ||
+      currentStates.morale == moraleCondition ||
+      currentStates.oxygen == oxygenCondition ||
+      currentStates.source == sourceCondition) {
     SharedPrefsService().eraseSavedData();
-    return 'The crew bled to death.';
-  } else if (currentStates.oxygen <= 0) {
-    SharedPrefsService().eraseSavedData();
-    return 'The crew is out of oxygen.';
-  } else if (currentStates.morale <= 0) {
-    SharedPrefsService().eraseSavedData();
-    return 'The crew got crazy.';
-  } else if (currentStates.source <= 0) {
-    SharedPrefsService().eraseSavedData();
-    return "The crew can't make any move.";
+    return currentEnding!.desc;
   } else {
     return null;
   }
