@@ -111,7 +111,7 @@ class _GameScreenState extends State<GameScreen> {
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(5),
-                                                child: SkillBox(
+                                                child: ProfBox(
                                                   index: i,
                                                   textColor: SEColors().white,
                                                   boxColor: SEColors().blue,
@@ -176,16 +176,16 @@ class GameScreenTopBar extends StatelessWidget {
                     value: currentStates.health,
                     width: MediaQuery.of(context).size.width / 6,
                     textColor: SEColors().white,
-                    boxColor: (currentSelection != null &&
-                            currentSelection!.healthChange != 0)
+                    boxColor: (currentResult != null &&
+                            currentResult!.healthChange != 0)
                         ? SEColors().lred
                         : SEColors().dgrey2,
-                    bgColor: (currentSelection != null &&
-                            currentSelection!.healthChange != 0)
+                    bgColor: (currentResult != null &&
+                            currentResult!.healthChange != 0)
                         ? SEColors().dred
                         : SEColors().dblack,
-                    borderColor: (currentSelection != null &&
-                            currentSelection!.healthChange != 0)
+                    borderColor: (currentResult != null &&
+                            currentResult!.healthChange != 0)
                         ? SEColors().red
                         : SEColors().lblack,
                   ),
@@ -197,16 +197,16 @@ class GameScreenTopBar extends StatelessWidget {
                     value: currentStates.morale,
                     width: MediaQuery.of(context).size.width / 6,
                     textColor: SEColors().white,
-                    boxColor: (currentSelection != null &&
-                            currentSelection!.moraleChange != 0)
+                    boxColor: (currentResult != null &&
+                            currentResult!.moraleChange != 0)
                         ? SEColors().lpurple
                         : SEColors().dgrey2,
-                    bgColor: (currentSelection != null &&
-                            currentSelection!.moraleChange != 0)
+                    bgColor: (currentResult != null &&
+                            currentResult!.moraleChange != 0)
                         ? SEColors().dpurple
                         : SEColors().dblack,
-                    borderColor: (currentSelection != null &&
-                            currentSelection!.moraleChange != 0)
+                    borderColor: (currentResult != null &&
+                            currentResult!.moraleChange != 0)
                         ? SEColors().purple
                         : SEColors().lblack,
                   ),
@@ -218,16 +218,16 @@ class GameScreenTopBar extends StatelessWidget {
                     value: currentStates.oxygen,
                     width: MediaQuery.of(context).size.width / 6,
                     textColor: SEColors().white,
-                    boxColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
+                    boxColor: (currentResult != null &&
+                            currentResult!.oxygenChange != 0)
                         ? SEColors().lblue
                         : SEColors().dgrey2,
-                    bgColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
+                    bgColor: (currentResult != null &&
+                            currentResult!.oxygenChange != 0)
                         ? SEColors().dblue
                         : SEColors().dblack,
-                    borderColor: (currentSelection != null &&
-                            currentSelection!.oxygenChange != 0)
+                    borderColor: (currentResult != null &&
+                            currentResult!.oxygenChange != 0)
                         ? SEColors().blue
                         : SEColors().lblack,
                   ),
@@ -239,16 +239,16 @@ class GameScreenTopBar extends StatelessWidget {
                     value: currentStates.source,
                     width: MediaQuery.of(context).size.width / 6,
                     textColor: SEColors().white,
-                    boxColor: (currentSelection != null &&
-                            currentSelection!.sourceChange != 0)
+                    boxColor: (currentResult != null &&
+                            currentResult!.sourceChange != 0)
                         ? SEColors().lyellow
                         : SEColors().dgrey2,
-                    bgColor: (currentSelection != null &&
-                            currentSelection!.sourceChange != 0)
+                    bgColor: (currentResult != null &&
+                            currentResult!.sourceChange != 0)
                         ? SEColors().dyellow
                         : SEColors().dblack,
-                    borderColor: (currentSelection != null &&
-                            currentSelection!.sourceChange != 0)
+                    borderColor: (currentResult != null &&
+                            currentResult!.sourceChange != 0)
                         ? SEColors().yellow
                         : SEColors().lblack,
                   ),
@@ -379,26 +379,27 @@ class AnimatedShip extends StatelessWidget {
               List<dynamic> rejected,
             ) {
               return Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.contain,
-                    image:
-                        AssetImage('assets/images/shuttlefly_effect_ship.png'),
+                    image: AssetImage(
+                      join("assets", "images", "shuttlefly_effect_ship.png"),
+                    ),
                   ),
                 ),
               );
             },
             onMove: (details) async {
-              currentSelection ??= await SQLiteServices().getSelection(
+              currentResult ??= await SQLiteServices().getResult(
                 currentGalaxy.id,
                 currentEvent!.id,
-                selectedSkills[details.data]!.id,
+                selectedProfs[details.data]!.id,
                 selectedChars[details.data]!.name,
               );
               notifyParent();
             },
             onLeave: (data) {
-              currentSelection = null;
+              currentResult = null;
               notifyParent();
             },
             onAccept: (data) async {
@@ -479,7 +480,7 @@ class EventBox extends StatelessWidget {
                     ]
                   : <TextSpan>[
                       TextSpan(
-                        text: currentSelection!.desc,
+                        text: currentResult!.desc,
                         style: TextStyle(
                           color: textColor,
                           fontSize: 18,
@@ -625,12 +626,12 @@ class CharBox extends StatelessWidget {
   }
 }
 
-class SkillBox extends StatelessWidget {
+class ProfBox extends StatelessWidget {
   final int index;
   final Color textColor;
   final Color boxColor;
   final Color borderColor;
-  const SkillBox({
+  const ProfBox({
     super.key,
     required this.index,
     required this.textColor,
@@ -646,8 +647,8 @@ class SkillBox extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return PopUpAlertBox(
-              alertTitle: selectedSkills[index]!.name,
-              alertDesc: selectedSkills[index]!.desc,
+              alertTitle: selectedProfs[index]!.name,
+              alertDesc: selectedProfs[index]!.desc,
               closeButtonActive: true,
             );
           },
@@ -665,7 +666,7 @@ class SkillBox extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(
-          selectedSkills[index]!.name,
+          selectedProfs[index]!.name,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
@@ -695,7 +696,7 @@ class DoneButton extends StatelessWidget {
         if (message == null) {
           currentEvent = await getRandomEvent(currentGalaxy.id);
           await SharedPrefsService().saveEventID();
-          currentSelection = null;
+          currentResult = null;
           eventIsWaiting = true;
           notifyParent();
         } else {
@@ -724,7 +725,7 @@ class DoneButton extends StatelessWidget {
           );
         }
       },
-      height: 50,
+      height: 40,
       textColor: SEColors().white,
       buttonColor: SEColors().lred,
       borderColor: SEColors().red,

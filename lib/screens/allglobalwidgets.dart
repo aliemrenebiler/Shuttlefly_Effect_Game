@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../backend/theme.dart';
 
@@ -15,9 +16,11 @@ class ContainerWithBG extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/shuttlefly_effect_bg.png'),
+          image: AssetImage(
+            join("assets", "images", "shuttlefly_effect_bg.png"),
+          ),
           fit: BoxFit.cover,
         ),
       ),

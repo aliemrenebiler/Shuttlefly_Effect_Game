@@ -25,18 +25,19 @@ const String storyDesc =
 
 Database? database;
 int totalCharAmount = 0;
-int totalSkillAmount = 0;
+int totalProfAmount = 0;
 int totalGalaxyAmount = 0;
 List<int> totalEventAmount = [];
 
 List<Character?> selectedChars = [null, null, null];
-List<Skill?> selectedSkills = [null, null, null];
+List<Profession?> selectedProfs = [null, null, null];
 
 bool eventIsWaiting = true;
 
 Galaxy currentGalaxy = Galaxy(id: "0");
 Event? currentEvent;
-Selection? currentSelection;
+Result? currentResult;
+Ending? currentEnding;
 States currentStates = States(
   health: defaultStateValue,
   morale: defaultStateValue,
@@ -69,8 +70,8 @@ class SQLiteServices {
   getDatabaseLimits() async {
     totalCharAmount = firstIntValue(
         await database!.rawQuery('SELECT COUNT(*) FROM CHARACTERS'))!;
-    totalSkillAmount =
-        firstIntValue(await database!.rawQuery('SELECT COUNT(*) FROM SKILLS'))!;
+    totalProfAmount = firstIntValue(
+        await database!.rawQuery('SELECT COUNT(*) FROM PROFESSIONS'))!;
     totalGalaxyAmount = firstIntValue(
         await database!.rawQuery('SELECT COUNT(*) FROM GALAXIES'))!;
     totalEventAmount = List<int>.generate(totalGalaxyAmount, (index) => 0);
@@ -91,14 +92,14 @@ class SQLiteServices {
     );
   }
 
-  Future<Skill> getSkill(String id) async {
-    var newSkill =
-        await database!.rawQuery('SELECT * FROM SKILLS WHERE ID = $id');
+  Future<Profession> getProf(String id) async {
+    var newProf =
+        await database!.rawQuery('SELECT * FROM PROFESSIONS WHERE ID = $id');
 
-    return Skill(
+    return Profession(
       id: id,
-      name: newSkill[0]["NAME"] as String,
-      desc: newSkill[0]["DESC"] as String,
+      name: newProf[0]["NAME"] as String,
+      desc: newProf[0]["DESC"] as String,
     );
   }
 
@@ -114,17 +115,39 @@ class SQLiteServices {
     );
   }
 
-  getSelection(
-      String galaxyID, String eventID, String skillID, String charName) async {
+  getEnding(String id) async {
+    var newEnding =
+        await database!.rawQuery('SELECT * FROM ENDINGS WHERE ID = $id');
+
+    return Ending(
+      id: id,
+      healthCondition: (newEnding[0]["HEALTH_CONDITION"] == null)
+          ? null
+          : newEnding[0]["HEALTH_CONDITION"] as int,
+      moraleCondition: (newEnding[0]["MORALE_CONDITION"] == null)
+          ? null
+          : newEnding[0]["MORALE_CONDITION"] as int,
+      oxygenCondition: (newEnding[0]["OXYGEN_CONDITION"] == null)
+          ? null
+          : newEnding[0]["OXYGEN_CONDITION"] as int,
+      sourceCondition: (newEnding[0]["SOURCE_CONDITION"] == null)
+          ? null
+          : newEnding[0]["SOURCE_CONDITION"] as int,
+      title: newEnding[0]["TITLE"] as String,
+      desc: newEnding[0]["DESC"] as String,
+    );
+  }
+
+  getResult(String galaxyID, String eventID, String id, String charName) async {
     var newSelect = await database!.rawQuery(
-        'SELECT * FROM SELECTIONS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID = $skillID');
+        'SELECT * FROM RESULTS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID = $id');
 
     if (newSelect.isEmpty) {
       newSelect = await database!.rawQuery(
-          "SELECT * FROM SELECTIONS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID IS NULL");
+          "SELECT * FROM RESULTS WHERE GALAXY_ID = $galaxyID AND EVENT_ID = $eventID AND ID IS NULL");
     }
 
-    return Selection(
+    return Result(
       galaxyID: galaxyID,
       eventID: eventID,
       id: newSelect[0]["ID"] as String,
@@ -133,6 +156,7 @@ class SQLiteServices {
       moraleChange: newSelect[0]["MORALE_CHANGE"] as int,
       oxygenChange: newSelect[0]["OXYGEN_CHANGE"] as int,
       sourceChange: newSelect[0]["SOURCE_CHANGE"] as int,
+      endingID: "0", // TODO: Will be fixed
       nextEventID: newSelect[0]["NEXT_EVENT_ID"] as String,
     );
   }
@@ -144,18 +168,18 @@ class SharedPrefsService {
     return prefs.getBool('dataExists') ?? false;
   }
 
-  Future saveCharsAndSkills() async {
+  Future saveCharsAndProfs() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('dataExists', true);
 
     prefs.setString('char0_charID', selectedChars[0]!.id);
-    prefs.setString('char0_skillID', selectedSkills[0]!.id);
+    prefs.setString('char0_profID', selectedProfs[0]!.id);
 
     prefs.setString('char1_charID', selectedChars[1]!.id);
-    prefs.setString('char1_skillID', selectedSkills[1]!.id);
+    prefs.setString('char1_profID', selectedProfs[1]!.id);
 
     prefs.setString('char2_charID', selectedChars[2]!.id);
-    prefs.setString('char2_skillID', selectedSkills[2]!.id);
+    prefs.setString('char2_profID', selectedProfs[2]!.id);
   }
 
   Future saveStates() async {
@@ -190,11 +214,11 @@ class SharedPrefsService {
     return char;
   }
 
-  Future<Skill> getSkillFromLocal(int id) async {
+  Future<Profession> getProfFromLocal(int id) async {
     final prefs = await SharedPreferences.getInstance();
-    String skillID = prefs.getString('char${id}_skillID')!;
-    Skill skill = await SQLiteServices().getSkill(skillID);
-    return skill;
+    String profID = prefs.getString('char${id}_profID')!;
+    Profession prof = await SQLiteServices().getProf(profID);
+    return prof;
   }
 
   Future<Event> getEventFromLocal() async {
@@ -255,40 +279,36 @@ getRandomEvent(String galaxyID) async {
 }
 
 void manageStates() {
-  if (currentStates.source + currentSelection!.sourceChange > 100) {
+  if (currentStates.source + currentResult!.sourceChange > 100) {
     currentStates.source = 100;
-  } else if (currentStates.source + currentSelection!.sourceChange < 0) {
+  } else if (currentStates.source + currentResult!.sourceChange < 0) {
     currentStates.source = 0;
   } else {
-    currentStates.source =
-        currentStates.source + currentSelection!.sourceChange;
+    currentStates.source = currentStates.source + currentResult!.sourceChange;
   }
 
-  if (currentStates.health + currentSelection!.healthChange > 100) {
+  if (currentStates.health + currentResult!.healthChange > 100) {
     currentStates.health = 100;
-  } else if (currentStates.health + currentSelection!.healthChange < 0) {
+  } else if (currentStates.health + currentResult!.healthChange < 0) {
     currentStates.health = 0;
   } else {
-    currentStates.health =
-        currentStates.health + currentSelection!.healthChange;
+    currentStates.health = currentStates.health + currentResult!.healthChange;
   }
 
-  if (currentStates.oxygen + currentSelection!.oxygenChange > 100) {
+  if (currentStates.oxygen + currentResult!.oxygenChange > 100) {
     currentStates.oxygen = 100;
-  } else if (currentStates.oxygen + currentSelection!.oxygenChange < 0) {
+  } else if (currentStates.oxygen + currentResult!.oxygenChange < 0) {
     currentStates.oxygen = 0;
   } else {
-    currentStates.oxygen =
-        currentStates.oxygen + currentSelection!.oxygenChange;
+    currentStates.oxygen = currentStates.oxygen + currentResult!.oxygenChange;
   }
 
-  if (currentStates.morale + currentSelection!.moraleChange > 100) {
+  if (currentStates.morale + currentResult!.moraleChange > 100) {
     currentStates.morale = 100;
-  } else if (currentStates.morale + currentSelection!.moraleChange < 0) {
+  } else if (currentStates.morale + currentResult!.moraleChange < 0) {
     currentStates.morale = 0;
   } else {
-    currentStates.morale =
-        currentStates.morale + currentSelection!.moraleChange;
+    currentStates.morale = currentStates.morale + currentResult!.moraleChange;
   }
 }
 
@@ -316,7 +336,7 @@ void restartTheGame() async {
 
   currentGalaxy = Galaxy(id: "0");
   currentEvent = null;
-  currentSelection = null;
+  currentResult = null;
 
   currentStates.source = defaultStateValue;
   currentStates.health = defaultStateValue;
@@ -324,7 +344,7 @@ void restartTheGame() async {
   currentStates.oxygen = defaultStateValue;
 
   selectedChars = [null, null, null];
-  selectedSkills = [null, null, null];
+  selectedProfs = [null, null, null];
 
   eventIsWaiting = true;
 }

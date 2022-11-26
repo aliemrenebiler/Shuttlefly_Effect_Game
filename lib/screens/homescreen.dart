@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../backend/methods.dart';
@@ -95,10 +96,12 @@ class AnimatedLogo extends StatelessWidget {
           duration: const Duration(seconds: 1, milliseconds: 500),
           curve: Curves.easeInOut,
           child: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.contain,
-                image: AssetImage('assets/images/shuttlefly_effect_logo.png'),
+                image: AssetImage(
+                  join("assets", "images", "shuttlefly_effect_logo.png"),
+                ),
               ),
             ),
           ),
@@ -180,9 +183,9 @@ class ContinueButton extends StatelessWidget {
           selectedChars[1] = await SharedPrefsService().getCharFromLocal(1);
           selectedChars[2] = await SharedPrefsService().getCharFromLocal(2);
 
-          selectedSkills[0] = await SharedPrefsService().getSkillFromLocal(0);
-          selectedSkills[1] = await SharedPrefsService().getSkillFromLocal(1);
-          selectedSkills[2] = await SharedPrefsService().getSkillFromLocal(2);
+          selectedProfs[0] = await SharedPrefsService().getProfFromLocal(0);
+          selectedProfs[1] = await SharedPrefsService().getProfFromLocal(1);
+          selectedProfs[2] = await SharedPrefsService().getProfFromLocal(2);
           // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, '/gamescreen');
         } else {

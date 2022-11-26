@@ -11,12 +11,12 @@ class Character {
   });
 }
 
-class Skill {
+class Profession {
   String id;
   String name;
   String desc;
 
-  Skill({
+  Profession({
     required this.id,
     required this.name,
     required this.desc,
@@ -47,7 +47,7 @@ class Event {
   });
 }
 
-class Selection {
+class Result {
   String galaxyID;
   String eventID;
   String? id;
@@ -56,9 +56,10 @@ class Selection {
   int moraleChange;
   int oxygenChange;
   int sourceChange;
+  String endingID;
   String? nextEventID;
 
-  Selection({
+  Result({
     required this.galaxyID,
     required this.eventID,
     this.id,
@@ -67,21 +68,32 @@ class Selection {
     required this.moraleChange,
     required this.oxygenChange,
     required this.sourceChange,
+    required this.endingID,
     this.nextEventID,
   });
 }
 
-// OTHERS
-class Story {
-  String title; // skill name
-  String desc; // skill description
+class Ending {
+  String id;
+  String title;
+  String desc;
+  int? healthCondition;
+  int? moraleCondition;
+  int? oxygenCondition;
+  int? sourceCondition;
 
-  Story({
+  Ending({
+    required this.id,
     required this.title,
     required this.desc,
+    this.healthCondition,
+    this.moraleCondition,
+    this.oxygenCondition,
+    this.sourceCondition,
   });
 }
 
+// OTHERS
 class States {
   int health;
   int morale;

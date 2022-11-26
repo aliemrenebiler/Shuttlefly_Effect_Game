@@ -65,7 +65,7 @@ class ChooseScreen extends StatelessWidget {
                                 ),
                                 Expanded(
                                   flex: 2,
-                                  child: SkillSelectionBox(index: i),
+                                  child: ProfSelectionBox(index: i),
                                 ),
                               ],
                             ),
@@ -121,7 +121,7 @@ class ChooseScreenTopBar extends StatelessWidget {
               currentEvent = await getRandomEvent(currentGalaxy.id);
               await SharedPrefsService().saveGalaxyID();
               await SharedPrefsService().saveEventID();
-              await SharedPrefsService().saveCharsAndSkills();
+              await SharedPrefsService().saveCharsAndProfs();
               await SharedPrefsService().saveStates();
               // ignore: use_build_context_synchronously
               Navigator.pushReplacementNamed(context, '/gamescreen');
@@ -277,32 +277,32 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   }
 }
 
-class SkillSelectionBox extends StatefulWidget {
+class ProfSelectionBox extends StatefulWidget {
   final int index;
-  const SkillSelectionBox({
+  const ProfSelectionBox({
     super.key,
     required this.index,
   });
   @override
-  State<SkillSelectionBox> createState() => _SkillSelectionBoxState();
+  State<ProfSelectionBox> createState() => _ProfSelectionBoxState();
 }
 
-class _SkillSelectionBoxState extends State<SkillSelectionBox> {
+class _ProfSelectionBoxState extends State<ProfSelectionBox> {
   int counter = 0;
 
   @override
   void initState() {
     super.initState();
-    counter = widget.index % totalSkillAmount;
+    counter = widget.index % totalProfAmount;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Skill>(
-      future: SQLiteServices().getSkill(counter.toString()),
+    return FutureBuilder<Profession>(
+      future: SQLiteServices().getProf(counter.toString()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          selectedSkills[widget.index] = snapshot.data!;
+          selectedProfs[widget.index] = snapshot.data!;
         }
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -313,7 +313,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                 text: '<',
                 onTapAction: () {
                   if (counter == 0) {
-                    counter = totalSkillAmount - 1;
+                    counter = totalProfAmount - 1;
                   } else {
                     counter--;
                   }
@@ -333,8 +333,8 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                     context: context,
                     builder: (BuildContext context) {
                       return PopUpAlertBox(
-                        alertTitle: selectedSkills[widget.index]!.name,
-                        alertDesc: selectedSkills[widget.index]!.desc,
+                        alertTitle: selectedProfs[widget.index]!.name,
+                        alertDesc: selectedProfs[widget.index]!.desc,
                         closeButtonActive: true,
                       );
                     },
@@ -355,7 +355,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
                   child: Text(
                     (!snapshot.hasData)
                         ? "Loading..."
-                        : selectedSkills[widget.index]!.name,
+                        : selectedProfs[widget.index]!.name,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
@@ -371,7 +371,7 @@ class _SkillSelectionBoxState extends State<SkillSelectionBox> {
               child: AnyButton(
                 text: '>',
                 onTapAction: () {
-                  if (counter == totalSkillAmount - 1) {
+                  if (counter == totalProfAmount - 1) {
                     counter = 0;
                   } else {
                     counter++;
