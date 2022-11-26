@@ -117,11 +117,11 @@ class PopUpAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: SEColors().white,
+          color: SEColors().black,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
-            color: SEColors().grey,
+            color: SEColors().lblack,
           ),
         ),
         child: Column(
@@ -144,8 +144,8 @@ class PopUpAlertBox extends StatelessWidget {
                       textAlign:
                           closeButtonActive ? TextAlign.left : TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: SEColors().lyellow2,
                         fontSize: 25,
                       ),
                     ),
@@ -161,9 +161,9 @@ class PopUpAlertBox extends StatelessWidget {
                       },
                       height: 50,
                       width: 50,
-                      textColor: SEColors().red,
-                      buttonColor: SEColors().lgrey,
-                      borderColor: SEColors().grey,
+                      textColor: SEColors().dgrey,
+                      buttonColor: SEColors().lblack,
+                      borderColor: SEColors().dgrey2,
                     ),
                   ),
               ],
@@ -180,9 +180,9 @@ class PopUpAlertBox extends StatelessWidget {
                     textAlign:
                         closeButtonActive ? TextAlign.left : TextAlign.center,
                     overflow: TextOverflow.fade,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
+                    style: TextStyle(
+                      color: SEColors().white,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -190,7 +190,7 @@ class PopUpAlertBox extends StatelessWidget {
             if (buttons != null)
               for (int i = 0; i < buttons!.length; i++)
                 Container(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(5),
                   child: buttons![i],
                 ),
           ],

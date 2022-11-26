@@ -33,42 +33,8 @@ class ChooseScreen extends StatelessWidget {
                       for (int i = 0; i < 3; i++)
                         Expanded(
                           child: Container(
-                            margin: const EdgeInsets.all(5),
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: SEColors().lgrey,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              border: Border.all(
-                                width: seBorderWidth,
-                                color: SEColors().grey,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(5),
-                                  child: Text(
-                                    'CHARACTER #${i + 1}',
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: SEColors().dgrey2,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: CharSelectionBox(index: i),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: ProfSelectionBox(index: i),
-                                ),
-                              ],
-                            ),
+                            padding: const EdgeInsets.all(5),
+                            child: SelectionBox(index: i),
                           ),
                         ),
                     ],
@@ -133,19 +99,75 @@ class ChooseScreenTopBar extends StatelessWidget {
   }
 }
 
-// SELECTION BOXES
-class CharSelectionBox extends StatefulWidget {
+// SELECTION BOX
+class SelectionBox extends StatelessWidget {
+  final int index;
+  const SelectionBox({
+    super.key,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: SEColors().black,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          width: seBorderWidth,
+          color: SEColors().lblack,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(3),
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Character ",
+                      style: TextStyle(
+                        color: SEColors().white,
+                        fontSize: 25,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "#${index + 1}",
+                      style: TextStyle(
+                        color: SEColors().lyellow2,
+                        fontSize: 25,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          CharSelection(index: index),
+          ProfSelection(index: index),
+        ],
+      ),
+    );
+  }
+}
+
+class CharSelection extends StatefulWidget {
   final int index;
 
-  const CharSelectionBox({
+  const CharSelection({
     super.key,
     required this.index,
   });
   @override
-  State<CharSelectionBox> createState() => _CharSelectionBoxState();
+  State<CharSelection> createState() => _CharSelectionState();
 }
 
-class _CharSelectionBoxState extends State<CharSelectionBox> {
+class _CharSelectionState extends State<CharSelection> {
   int counter = 0;
 
   @override
@@ -178,15 +200,17 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().dgrey2,
-                buttonColor: SEColors().dgrey,
-                borderColor: SEColors().grey,
+                height: 140,
+                textColor: SEColors().dgrey,
+                buttonColor: SEColors().lblack,
+                borderColor: SEColors().dgrey2,
               ),
             ),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.all(3),
                 padding: const EdgeInsets.all(3),
+                height: 140,
                 decoration: BoxDecoration(
                   color: SEColors().red,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -198,8 +222,8 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 3,
+                    SizedBox(
+                      width: 80,
                       child: Center(
                         child: AspectRatio(
                           aspectRatio: 1,
@@ -230,21 +254,18 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.all(3),
-                        alignment: Alignment.center,
-                        child: Text(
-                          (!snapshot.hasData)
-                              ? "..."
-                              : selectedChars[widget.index]!.name,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            color: SEColors().white,
-                            fontSize: 20,
-                          ),
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      alignment: Alignment.center,
+                      child: Text(
+                        (!snapshot.hasData)
+                            ? "..."
+                            : selectedChars[widget.index]!.name,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.fade,
+                        style: TextStyle(
+                          color: SEColors().white,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -265,9 +286,10 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().dgrey2,
-                buttonColor: SEColors().dgrey,
-                borderColor: SEColors().grey,
+                height: 140,
+                textColor: SEColors().dgrey,
+                buttonColor: SEColors().lblack,
+                borderColor: SEColors().dgrey2,
               ),
             ),
           ],
@@ -277,17 +299,17 @@ class _CharSelectionBoxState extends State<CharSelectionBox> {
   }
 }
 
-class ProfSelectionBox extends StatefulWidget {
+class ProfSelection extends StatefulWidget {
   final int index;
-  const ProfSelectionBox({
+  const ProfSelection({
     super.key,
     required this.index,
   });
   @override
-  State<ProfSelectionBox> createState() => _ProfSelectionBoxState();
+  State<ProfSelection> createState() => _ProfSelectionState();
 }
 
-class _ProfSelectionBoxState extends State<ProfSelectionBox> {
+class _ProfSelectionState extends State<ProfSelection> {
   int counter = 0;
 
   @override
@@ -320,9 +342,10 @@ class _ProfSelectionBoxState extends State<ProfSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().dgrey2,
-                buttonColor: SEColors().dgrey,
-                borderColor: SEColors().grey,
+                height: 60,
+                textColor: SEColors().dgrey,
+                buttonColor: SEColors().lblack,
+                borderColor: SEColors().dgrey2,
               ),
             ),
             Expanded(
@@ -343,6 +366,7 @@ class _ProfSelectionBoxState extends State<ProfSelectionBox> {
                 child: Container(
                   margin: const EdgeInsets.all(3),
                   padding: const EdgeInsets.all(3),
+                  height: 60,
                   decoration: BoxDecoration(
                     color: SEColors().blue,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -379,9 +403,10 @@ class _ProfSelectionBoxState extends State<ProfSelectionBox> {
                   setState(() {});
                 },
                 width: 35,
-                textColor: SEColors().dgrey2,
-                buttonColor: SEColors().dgrey,
-                borderColor: SEColors().grey,
+                height: 60,
+                textColor: SEColors().dgrey,
+                buttonColor: SEColors().lblack,
+                borderColor: SEColors().dgrey2,
               ),
             ),
           ],

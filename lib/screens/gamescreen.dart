@@ -42,8 +42,17 @@ class _GameScreenState extends State<GameScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Column(
+                        child: Stack(
                           children: [
+                            Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                height: MediaQuery.of(context).size.height / 3,
+                                child: AnimatedShip(
+                                  notifyParent: refresh,
+                                ),
+                              ),
+                            ),
                             Container(
                               padding: const EdgeInsets.all(10),
                               alignment: Alignment.topLeft,
@@ -54,18 +63,6 @@ class _GameScreenState extends State<GameScreen> {
                                 style: TextStyle(
                                   color: SEColors().white,
                                   fontSize: 25,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  height:
-                                      MediaQuery.of(context).size.height / 3,
-                                  child: AnimatedShip(
-                                    notifyParent: refresh,
-                                  ),
                                 ),
                               ),
                             ),
@@ -83,7 +80,7 @@ class _GameScreenState extends State<GameScreen> {
                                   desc: currentEvent!.desc,
                                   titleColor: SEColors().lyellow2,
                                   textColor: SEColors().white,
-                                  boxColor: SEColors().dblack,
+                                  boxColor: SEColors().black,
                                   borderColor: SEColors().lblack,
                                 ),
                               ),
@@ -302,7 +299,7 @@ class _StateValueBoxState extends State<StateValueBox> {
         ),
       ),
       child: Stack(
-        alignment: Alignment.bottomLeft,
+        alignment: Alignment.centerLeft,
         children: [
           AnimatedContainer(
             width: (widget.width != null)

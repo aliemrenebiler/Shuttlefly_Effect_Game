@@ -227,8 +227,8 @@ class ExitButton extends StatelessWidget {
       },
       height: 50,
       textColor: SEColors().white,
-      buttonColor: SEColors().grey,
-      borderColor: SEColors().dgrey,
+      buttonColor: SEColors().lpurple,
+      borderColor: SEColors().purple,
     );
   }
 }
