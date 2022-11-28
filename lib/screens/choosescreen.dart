@@ -358,7 +358,21 @@ class _ProfSelectionState extends State<ProfSelection> {
                       return PopUpAlertBox(
                         alertTitle: selectedProfs[widget.index]!.name,
                         alertDesc: selectedProfs[widget.index]!.desc,
-                        closeButtonActive: true,
+                        titleColor: SEColors().lyellow2,
+                        textColor: SEColors().white,
+                        boxColor: SEColors().black,
+                        borderColor: SEColors().lblack,
+                        closeButton: AnyButton(
+                          text: 'X',
+                          onTapAction: () {
+                            Navigator.pop(context);
+                          },
+                          height: 50,
+                          width: 50,
+                          textColor: SEColors().dgrey,
+                          buttonColor: SEColors().lblack,
+                          borderColor: SEColors().dgrey2,
+                        ),
                       );
                     },
                   );

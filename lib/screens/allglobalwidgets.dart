@@ -96,14 +96,22 @@ class TopBarButton extends StatelessWidget {
 class PopUpAlertBox extends StatelessWidget {
   final String alertTitle;
   final String? alertDesc;
-  final bool closeButtonActive;
   final List<Widget>? buttons;
+  final Color titleColor;
+  final Color textColor;
+  final Color boxColor;
+  final Color borderColor;
+  final Widget? closeButton;
   const PopUpAlertBox({
     super.key,
     required this.alertTitle,
     this.alertDesc,
-    required this.closeButtonActive,
     this.buttons,
+    required this.titleColor,
+    required this.textColor,
+    required this.boxColor,
+    required this.borderColor,
+    this.closeButton,
   });
 
   @override
@@ -117,11 +125,11 @@ class PopUpAlertBox extends StatelessWidget {
         width: 300,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: SEColors().black,
+          color: boxColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: seBorderWidth,
-            color: SEColors().lblack,
+            color: borderColor,
           ),
         ),
         child: Column(
@@ -129,59 +137,51 @@ class PopUpAlertBox extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              crossAxisAlignment: closeButtonActive
+              crossAxisAlignment: closeButton != null
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(5),
-                    alignment: closeButtonActive
+                    alignment: closeButton != null
                         ? Alignment.bottomLeft
                         : Alignment.bottomCenter,
                     child: Text(
                       alertTitle,
-                      textAlign:
-                          closeButtonActive ? TextAlign.left : TextAlign.center,
+                      textAlign: closeButton != null
+                          ? TextAlign.left
+                          : TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: SEColors().lyellow2,
+                        color: titleColor,
                         fontSize: 25,
                       ),
                     ),
                   ),
                 ),
-                if (closeButtonActive)
+                if (closeButton != null)
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: AnyButton(
-                      text: 'X',
-                      onTapAction: () {
-                        Navigator.pop(context);
-                      },
-                      height: 50,
-                      width: 50,
-                      textColor: SEColors().dgrey,
-                      buttonColor: SEColors().lblack,
-                      borderColor: SEColors().dgrey2,
-                    ),
+                    child: closeButton,
                   ),
               ],
             ),
             if (alertDesc != null)
               Container(
-                alignment:
-                    closeButtonActive ? Alignment.centerLeft : Alignment.center,
+                alignment: closeButton != null
+                    ? Alignment.centerLeft
+                    : Alignment.center,
                 padding: const EdgeInsets.all(5),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Text(
                     alertDesc!,
                     textAlign:
-                        closeButtonActive ? TextAlign.left : TextAlign.center,
+                        closeButton != null ? TextAlign.left : TextAlign.center,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
-                      color: SEColors().white,
+                      color: textColor,
                       fontSize: 18,
                     ),
                   ),

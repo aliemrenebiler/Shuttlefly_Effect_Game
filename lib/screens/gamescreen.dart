@@ -653,7 +653,21 @@ class ProfBox extends StatelessWidget {
             return PopUpAlertBox(
               alertTitle: selectedProfs[index]!.name,
               alertDesc: selectedProfs[index]!.desc,
-              closeButtonActive: true,
+              titleColor: SEColors().lyellow2,
+              textColor: SEColors().white,
+              boxColor: SEColors().black,
+              borderColor: SEColors().lblack,
+              closeButton: AnyButton(
+                text: 'X',
+                onTapAction: () {
+                  Navigator.pop(context);
+                },
+                height: 50,
+                width: 50,
+                textColor: SEColors().dgrey,
+                buttonColor: SEColors().lblack,
+                borderColor: SEColors().dgrey2,
+              ),
             );
           },
         );
@@ -716,7 +730,10 @@ class DoneButton extends StatelessWidget {
               return PopUpAlertBox(
                 alertTitle: 'THE END',
                 alertDesc: message,
-                closeButtonActive: false,
+                titleColor: SEColors().lyellow2,
+                textColor: SEColors().white,
+                boxColor: SEColors().black,
+                borderColor: SEColors().lblack,
                 buttons: [
                   AnyButton(
                     text: 'MAIN MENU',
@@ -750,7 +767,21 @@ class PauseMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopUpAlertBox(
       alertTitle: 'PAUSED',
-      closeButtonActive: true,
+      titleColor: SEColors().lyellow2,
+      textColor: SEColors().white,
+      boxColor: SEColors().black,
+      borderColor: SEColors().lblack,
+      closeButton: AnyButton(
+        text: 'X',
+        onTapAction: () {
+          Navigator.pop(context);
+        },
+        height: 50,
+        width: 50,
+        textColor: SEColors().dgrey,
+        buttonColor: SEColors().lblack,
+        borderColor: SEColors().dgrey2,
+      ),
       buttons: [
         AnyButton(
           text: 'MAIN MENU',
@@ -772,7 +803,10 @@ class PauseMenu extends StatelessWidget {
                 return PopUpAlertBox(
                   alertTitle: 'ARE YOU SURE?',
                   alertDesc: 'Your previous progress will be deleted.',
-                  closeButtonActive: false,
+                  titleColor: SEColors().lyellow2,
+                  textColor: SEColors().white,
+                  boxColor: SEColors().black,
+                  borderColor: SEColors().lblack,
                   buttons: [
                     AnyButton(
                       text: 'NO',

@@ -127,7 +127,10 @@ class NewGameButton extends StatelessWidget {
               return PopUpAlertBox(
                 alertTitle: 'ARE YOU SURE?',
                 alertDesc: 'Your previous progress will be deleted.',
-                closeButtonActive: false,
+                titleColor: SEColors().lyellow2,
+                textColor: SEColors().white,
+                boxColor: SEColors().black,
+                borderColor: SEColors().lblack,
                 buttons: [
                   AnyButton(
                     text: 'NO',
@@ -192,11 +195,25 @@ class ContinueButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return const PopUpAlertBox(
+              return PopUpAlertBox(
                 alertTitle: 'NO DATA!',
                 alertDesc:
                     'There is no progress saved.\nYou should start a new game.',
-                closeButtonActive: true,
+                titleColor: SEColors().lyellow2,
+                textColor: SEColors().white,
+                boxColor: SEColors().black,
+                borderColor: SEColors().lblack,
+                closeButton: AnyButton(
+                  text: 'X',
+                  onTapAction: () {
+                    Navigator.pop(context);
+                  },
+                  height: 50,
+                  width: 50,
+                  textColor: SEColors().dgrey,
+                  buttonColor: SEColors().lblack,
+                  borderColor: SEColors().dgrey2,
+                ),
               );
             },
           );
@@ -241,7 +258,10 @@ class ExitMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopUpAlertBox(
       alertTitle: 'LEAVING?',
-      closeButtonActive: false,
+      titleColor: SEColors().lyellow2,
+      textColor: SEColors().white,
+      boxColor: SEColors().black,
+      borderColor: SEColors().lblack,
       buttons: [
         AnyButton(
           text: 'NO',
