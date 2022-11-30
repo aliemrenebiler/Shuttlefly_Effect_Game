@@ -337,7 +337,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: widget.textColor,
-                      fontSize: 17,
+                      fontSize: 18,
                     ),
                   ),
                 ],

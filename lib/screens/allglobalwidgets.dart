@@ -242,7 +242,7 @@ class AnyButton extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: textColor,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),

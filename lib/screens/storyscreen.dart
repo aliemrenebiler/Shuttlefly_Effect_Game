@@ -33,7 +33,7 @@ class StoryScreen extends StatelessWidget {
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                         color: SEColors().white,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
                     ),
                   ),

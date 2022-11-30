@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: SEColors().white,
-                      fontSize: 30,
+                      fontSize: 25,
                     ),
                   ),
                 );

@@ -123,24 +123,28 @@ class SelectionBox extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
+            flex: 2,
             child: Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.all(3),
-              child: Text.rich(
-                TextSpan(
+              child: RichText(
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.fade,
+                text: TextSpan(
+                  style: DefaultTextStyle.of(context).style,
                   children: [
                     TextSpan(
                       text: "Character ",
                       style: TextStyle(
-                        color: SEColors().white,
                         fontSize: 25,
+                        color: SEColors().white,
                       ),
                     ),
                     TextSpan(
                       text: "#${index + 1}",
                       style: TextStyle(
-                        color: SEColors().lyellow2,
                         fontSize: 25,
+                        color: SEColors().lyellow2,
                       ),
                     ),
                   ],
@@ -148,8 +152,14 @@ class SelectionBox extends StatelessWidget {
               ),
             ),
           ),
-          CharSelection(index: index),
-          ProfSelection(index: index),
+          Expanded(
+            flex: 5,
+            child: CharSelection(index: index),
+          ),
+          Expanded(
+            flex: 2,
+            child: ProfSelection(index: index),
+          ),
         ],
       ),
     );
@@ -184,115 +194,114 @@ class _CharSelectionState extends State<CharSelection> {
         if (snapshot.hasData) {
           selectedChars[widget.index] = snapshot.data!;
         }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(3),
-              child: AnyButton(
-                text: '<',
-                onTapAction: () {
-                  if (counter == 0) {
-                    counter = totalCharAmount - 1;
-                  } else {
-                    counter--;
-                  }
-                  setState(() {});
-                },
-                width: 35,
-                height: 140,
-                textColor: SEColors().dgrey,
-                buttonColor: SEColors().lblack,
-                borderColor: SEColors().dgrey2,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(3),
+        return SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
                 padding: const EdgeInsets.all(3),
-                height: 140,
-                decoration: BoxDecoration(
-                  color: SEColors().red,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(
-                    width: seBorderWidth,
-                    color: SEColors().lred,
-                  ),
+                child: AnyButton(
+                  text: '<',
+                  onTapAction: () {
+                    if (counter == 0) {
+                      counter = totalCharAmount - 1;
+                    } else {
+                      counter--;
+                    }
+                    setState(() {});
+                  },
+                  width: 35,
+                  textColor: SEColors().dgrey,
+                  buttonColor: SEColors().lblack,
+                  borderColor: SEColors().dgrey2,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      child: Center(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Container(
-                            margin: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: SEColors().red,
-                              border: Border.all(
-                                width: seBorderWidth,
-                                color: SEColors().dred,
-                              ),
-                              image: (!snapshot.hasData)
-                                  ? null
-                                  : DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        join(
-                                            "assets",
-                                            "images",
-                                            selectedChars[widget.index]!
-                                                .imgName),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: SEColors().red,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    border: Border.all(
+                      width: seBorderWidth,
+                      color: SEColors().lred,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              margin: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                color: SEColors().red,
+                                border: Border.all(
+                                  width: seBorderWidth,
+                                  color: SEColors().dred,
+                                ),
+                                image: (!snapshot.hasData)
+                                    ? null
+                                    : DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          join(
+                                              "assets",
+                                              "images",
+                                              selectedChars[widget.index]!
+                                                  .imgName),
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(3),
-                      alignment: Alignment.center,
-                      child: Text(
-                        (!snapshot.hasData)
-                            ? "..."
-                            : selectedChars[widget.index]!.name,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(
-                          color: SEColors().white,
-                          fontSize: 20,
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        alignment: Alignment.center,
+                        child: Text(
+                          (!snapshot.hasData)
+                              ? "..."
+                              : selectedChars[widget.index]!.name,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: SEColors().white,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(3),
-              child: AnyButton(
-                text: '>',
-                onTapAction: () {
-                  if (counter == totalCharAmount - 1) {
-                    counter = 0;
-                  } else {
-                    counter++;
-                  }
-                  setState(() {});
-                },
-                width: 35,
-                height: 140,
-                textColor: SEColors().dgrey,
-                buttonColor: SEColors().lblack,
-                borderColor: SEColors().dgrey2,
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: AnyButton(
+                  text: '>',
+                  onTapAction: () {
+                    if (counter == totalCharAmount - 1) {
+                      counter = 0;
+                    } else {
+                      counter++;
+                    }
+                    setState(() {});
+                  },
+                  width: 35,
+                  textColor: SEColors().dgrey,
+                  buttonColor: SEColors().lblack,
+                  borderColor: SEColors().dgrey2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -326,104 +335,103 @@ class _ProfSelectionState extends State<ProfSelection> {
         if (snapshot.hasData) {
           selectedProfs[widget.index] = snapshot.data!;
         }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(3),
-              child: AnyButton(
-                text: '<',
-                onTapAction: () {
-                  if (counter == 0) {
-                    counter = totalProfAmount - 1;
-                  } else {
-                    counter--;
-                  }
-                  setState(() {});
-                },
-                width: 35,
-                height: 60,
-                textColor: SEColors().dgrey,
-                buttonColor: SEColors().lblack,
-                borderColor: SEColors().dgrey2,
+        return SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: AnyButton(
+                  text: '<',
+                  onTapAction: () {
+                    if (counter == 0) {
+                      counter = totalProfAmount - 1;
+                    } else {
+                      counter--;
+                    }
+                    setState(() {});
+                  },
+                  width: 35,
+                  textColor: SEColors().dgrey,
+                  buttonColor: SEColors().lblack,
+                  borderColor: SEColors().dgrey2,
+                ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return PopUpAlertBox(
-                        alertTitle: selectedProfs[widget.index]!.name,
-                        alertDesc: selectedProfs[widget.index]!.desc,
-                        titleColor: SEColors().lyellow2,
-                        textColor: SEColors().white,
-                        boxColor: SEColors().black,
-                        borderColor: SEColors().lblack,
-                        closeButton: AnyButton(
-                          text: 'X',
-                          onTapAction: () {
-                            Navigator.pop(context);
-                          },
-                          height: 50,
-                          width: 50,
-                          textColor: SEColors().dgrey,
-                          buttonColor: SEColors().lblack,
-                          borderColor: SEColors().dgrey2,
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(3),
-                  padding: const EdgeInsets.all(3),
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: SEColors().blue,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: SEColors().lblue,
+              Expanded(
+                flex: 2,
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PopUpAlertBox(
+                          alertTitle: selectedProfs[widget.index]!.name,
+                          alertDesc: selectedProfs[widget.index]!.desc,
+                          titleColor: SEColors().lyellow2,
+                          textColor: SEColors().white,
+                          boxColor: SEColors().black,
+                          borderColor: SEColors().lblack,
+                          closeButton: AnyButton(
+                            text: 'X',
+                            onTapAction: () {
+                              Navigator.pop(context);
+                            },
+                            height: 50,
+                            width: 50,
+                            textColor: SEColors().dgrey,
+                            buttonColor: SEColors().lblack,
+                            borderColor: SEColors().dgrey2,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: SEColors().blue,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                        width: seBorderWidth,
+                        color: SEColors().lblue,
+                      ),
                     ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    (!snapshot.hasData)
-                        ? "Loading..."
-                        : selectedProfs[widget.index]!.name,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                      color: SEColors().white,
-                      fontSize: 16,
+                    alignment: Alignment.center,
+                    child: Text(
+                      (!snapshot.hasData)
+                          ? "Loading..."
+                          : selectedProfs[widget.index]!.name,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: SEColors().white,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(3),
-              child: AnyButton(
-                text: '>',
-                onTapAction: () {
-                  if (counter == totalProfAmount - 1) {
-                    counter = 0;
-                  } else {
-                    counter++;
-                  }
-                  setState(() {});
-                },
-                width: 35,
-                height: 60,
-                textColor: SEColors().dgrey,
-                buttonColor: SEColors().lblack,
-                borderColor: SEColors().dgrey2,
+              Container(
+                padding: const EdgeInsets.all(3),
+                child: AnyButton(
+                  text: '>',
+                  onTapAction: () {
+                    if (counter == totalProfAmount - 1) {
+                      counter = 0;
+                    } else {
+                      counter++;
+                    }
+                    setState(() {});
+                  },
+                  width: 35,
+                  textColor: SEColors().dgrey,
+                  buttonColor: SEColors().lblack,
+                  borderColor: SEColors().dgrey2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
