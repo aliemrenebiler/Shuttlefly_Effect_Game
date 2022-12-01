@@ -19,21 +19,26 @@ class StoryScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.height / 30,
+                  right: MediaQuery.of(context).size.height / 30,
+                  top: MediaQuery.of(context).size.height / 30,
+                ),
                 child: const StoryScreenTopBar(),
               ),
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Container(
-                    padding: const EdgeInsets.all(30),
+                    padding:
+                        EdgeInsets.all(MediaQuery.of(context).size.height / 20),
                     child: Text(
                       storyDesc,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                         color: SEColors().white,
-                        fontSize: 18,
+                        fontSize: MediaQuery.of(context).size.height / 20,
                       ),
                     ),
                   ),
@@ -67,7 +72,7 @@ class StoryScreenTopBar extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: SEColors().white,
-              fontSize: 25,
+              fontSize: MediaQuery.of(context).size.height / 15,
             ),
           ),
         ),

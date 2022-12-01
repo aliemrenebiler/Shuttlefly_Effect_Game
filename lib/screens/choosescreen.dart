@@ -19,12 +19,13 @@ class ChooseScreen extends StatelessWidget {
       child: Scaffold(
         body: ContainerWithBG(
           child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 60),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  padding:
+                      EdgeInsets.all(MediaQuery.of(context).size.height / 60),
                   child: const ChooseScreenTopBar(),
                 ),
                 Expanded(
@@ -33,7 +34,8 @@ class ChooseScreen extends StatelessWidget {
                       for (int i = 0; i < 3; i++)
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height / 60),
                             child: SelectionBox(index: i),
                           ),
                         ),
@@ -70,7 +72,7 @@ class ChooseScreenTopBar extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: SEColors().white,
-              fontSize: 25,
+              fontSize: MediaQuery.of(context).size.height / 15,
             ),
           ),
         ),
@@ -100,7 +102,7 @@ class ChooseScreenTopBar extends StatelessWidget {
 }
 
 // SELECTION BOX
-class SelectionBox extends StatelessWidget {
+class SelectionBox extends StatefulWidget {
   final int index;
   const SelectionBox({
     super.key,
@@ -108,9 +110,24 @@ class SelectionBox extends StatelessWidget {
   });
 
   @override
+  State<SelectionBox> createState() => _SelectionBoxState();
+}
+
+class _SelectionBoxState extends State<SelectionBox> {
+  int charCounter = 0;
+  int profCounter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    charCounter = widget.index % totalCharAmount;
+    profCounter = widget.index % totalProfAmount;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 60),
       decoration: BoxDecoration(
         color: SEColors().black,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -126,7 +143,7 @@ class SelectionBox extends StatelessWidget {
             flex: 2,
             child: Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(3),
+              padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
               child: RichText(
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.fade,
@@ -136,14 +153,14 @@ class SelectionBox extends StatelessWidget {
                     TextSpan(
                       text: "Character ",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: MediaQuery.of(context).size.height / 20,
                         color: SEColors().white,
                       ),
                     ),
                     TextSpan(
-                      text: "#${index + 1}",
+                      text: "#${widget.index + 1}",
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: MediaQuery.of(context).size.height / 20,
                         color: SEColors().lyellow2,
                       ),
                     ),
@@ -154,286 +171,152 @@ class SelectionBox extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: CharSelection(index: index),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: AnyButton(
+                      text: '<',
+                      onTapAction: () {
+                        if (charCounter == 0) {
+                          charCounter = totalCharAmount - 1;
+                        } else {
+                          charCounter--;
+                        }
+                        setState(() {});
+                      },
+                      textColor: SEColors().dgrey,
+                      buttonColor: SEColors().lblack,
+                      borderColor: SEColors().dgrey2,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: FutureBuilder<Character>(
+                      future: SQLiteServices().getChar(charCounter.toString()),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          selectedChars[widget.index] = snapshot.data!;
+                          return CharSelection(
+                            index: widget.index,
+                            isEmpty: false,
+                          );
+                        } else {
+                          return CharSelection(
+                            index: widget.index,
+                            isEmpty: true,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: AnyButton(
+                      text: '>',
+                      onTapAction: () {
+                        if (charCounter == totalCharAmount - 1) {
+                          charCounter = 0;
+                        } else {
+                          charCounter++;
+                        }
+                        setState(() {});
+                      },
+                      textColor: SEColors().dgrey,
+                      buttonColor: SEColors().lblack,
+                      borderColor: SEColors().dgrey2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             flex: 2,
-            child: ProfSelection(index: index),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: AnyButton(
+                      text: '<',
+                      onTapAction: () {
+                        if (profCounter == 0) {
+                          profCounter = totalProfAmount - 1;
+                        } else {
+                          profCounter--;
+                        }
+                        setState(() {});
+                      },
+                      textColor: SEColors().dgrey,
+                      buttonColor: SEColors().lblack,
+                      borderColor: SEColors().dgrey2,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: FutureBuilder<Profession>(
+                      future: SQLiteServices().getProf(profCounter.toString()),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          selectedProfs[widget.index] = snapshot.data!;
+                          return ProfSelection(
+                            index: widget.index,
+                            isEmpty: false,
+                          );
+                        } else {
+                          return ProfSelection(
+                            index: widget.index,
+                            isEmpty: true,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / 120),
+                    child: AnyButton(
+                      text: '>',
+                      onTapAction: () {
+                        if (profCounter == totalProfAmount - 1) {
+                          profCounter = 0;
+                        } else {
+                          profCounter++;
+                        }
+                        setState(() {});
+                      },
+                      textColor: SEColors().dgrey,
+                      buttonColor: SEColors().lblack,
+                      borderColor: SEColors().dgrey2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class CharSelection extends StatefulWidget {
-  final int index;
-
-  const CharSelection({
-    super.key,
-    required this.index,
-  });
-  @override
-  State<CharSelection> createState() => _CharSelectionState();
-}
-
-class _CharSelectionState extends State<CharSelection> {
-  int counter = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    counter = widget.index % totalCharAmount;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Character>(
-      future: SQLiteServices().getChar(counter.toString()),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          selectedChars[widget.index] = snapshot.data!;
-        }
-        return SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '<',
-                  onTapAction: () {
-                    if (counter == 0) {
-                      counter = totalCharAmount - 1;
-                    } else {
-                      counter--;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().dgrey,
-                  buttonColor: SEColors().lblack,
-                  borderColor: SEColors().dgrey2,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(3),
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: SEColors().red,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: SEColors().lred,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 80,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              margin: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: SEColors().red,
-                                border: Border.all(
-                                  width: seBorderWidth,
-                                  color: SEColors().dred,
-                                ),
-                                image: (!snapshot.hasData)
-                                    ? null
-                                    : DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          join(
-                                              "assets",
-                                              "images",
-                                              selectedChars[widget.index]!
-                                                  .imgName),
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        alignment: Alignment.center,
-                        child: Text(
-                          (!snapshot.hasData)
-                              ? "..."
-                              : selectedChars[widget.index]!.name,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: SEColors().white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '>',
-                  onTapAction: () {
-                    if (counter == totalCharAmount - 1) {
-                      counter = 0;
-                    } else {
-                      counter++;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().dgrey,
-                  buttonColor: SEColors().lblack,
-                  borderColor: SEColors().dgrey2,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ProfSelection extends StatefulWidget {
-  final int index;
-  const ProfSelection({
-    super.key,
-    required this.index,
-  });
-  @override
-  State<ProfSelection> createState() => _ProfSelectionState();
-}
-
-class _ProfSelectionState extends State<ProfSelection> {
-  int counter = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    counter = widget.index % totalProfAmount;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Profession>(
-      future: SQLiteServices().getProf(counter.toString()),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          selectedProfs[widget.index] = snapshot.data!;
-        }
-        return SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '<',
-                  onTapAction: () {
-                    if (counter == 0) {
-                      counter = totalProfAmount - 1;
-                    } else {
-                      counter--;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().dgrey,
-                  buttonColor: SEColors().lblack,
-                  borderColor: SEColors().dgrey2,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return PopUpAlertBox(
-                          alertTitle: selectedProfs[widget.index]!.name,
-                          alertDesc: selectedProfs[widget.index]!.desc,
-                          titleColor: SEColors().lyellow2,
-                          textColor: SEColors().white,
-                          boxColor: SEColors().black,
-                          borderColor: SEColors().lblack,
-                          closeButton: AnyButton(
-                            text: 'X',
-                            onTapAction: () {
-                              Navigator.pop(context);
-                            },
-                            height: 50,
-                            width: 50,
-                            textColor: SEColors().dgrey,
-                            buttonColor: SEColors().lblack,
-                            borderColor: SEColors().dgrey2,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(3),
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: SEColors().blue,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      border: Border.all(
-                        width: seBorderWidth,
-                        color: SEColors().lblue,
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      (!snapshot.hasData)
-                          ? "Loading..."
-                          : selectedProfs[widget.index]!.name,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: SEColors().white,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(3),
-                child: AnyButton(
-                  text: '>',
-                  onTapAction: () {
-                    if (counter == totalProfAmount - 1) {
-                      counter = 0;
-                    } else {
-                      counter++;
-                    }
-                    setState(() {});
-                  },
-                  width: 35,
-                  textColor: SEColors().dgrey,
-                  buttonColor: SEColors().lblack,
-                  borderColor: SEColors().dgrey2,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

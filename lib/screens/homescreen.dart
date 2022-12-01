@@ -44,26 +44,31 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height / 30),
                       width: MediaQuery.of(context).size.width / 2,
                       child: const AnimatedLogo(),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(10),
-                      width: MediaQuery.of(context).size.width / 3.5,
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height / 60),
+                      width: MediaQuery.of(context).size.height / 2,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height / 60),
                             child: const NewGameButton(),
                           ),
                           Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height / 60),
                             child: const ContinueButton(),
                           ),
                           Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.height / 60),
                             child: const ExitButton(),
                           ),
                         ],
@@ -124,37 +129,7 @@ class NewGameButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return PopUpAlertBox(
-                alertTitle: 'ARE YOU SURE?',
-                alertDesc: 'Your previous progress will be deleted.',
-                titleColor: SEColors().lyellow2,
-                textColor: SEColors().white,
-                boxColor: SEColors().black,
-                borderColor: SEColors().lblack,
-                buttons: [
-                  AnyButton(
-                    text: 'NO',
-                    onTapAction: () {
-                      Navigator.pop(context);
-                    },
-                    height: 50,
-                    textColor: SEColors().white,
-                    buttonColor: SEColors().lblue,
-                    borderColor: SEColors().blue,
-                  ),
-                  AnyButton(
-                    text: 'YES',
-                    onTapAction: () {
-                      Navigator.pushReplacementNamed(context, '/storyscreen');
-                      restartTheGame();
-                    },
-                    height: 50,
-                    textColor: SEColors().white,
-                    buttonColor: SEColors().lred,
-                    borderColor: SEColors().red,
-                  ),
-                ],
-              );
+              return const NewGameMenu();
             },
           );
         } else {
@@ -162,7 +137,7 @@ class NewGameButton extends StatelessWidget {
           restartTheGame();
         }
       },
-      height: 50,
+      height: MediaQuery.of(context).size.height / 8,
       textColor: SEColors().white,
       buttonColor: SEColors().lblue,
       borderColor: SEColors().blue,
@@ -195,31 +170,12 @@ class ContinueButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return PopUpAlertBox(
-                alertTitle: 'NO DATA!',
-                alertDesc:
-                    'There is no progress saved.\nYou should start a new game.',
-                titleColor: SEColors().lyellow2,
-                textColor: SEColors().white,
-                boxColor: SEColors().black,
-                borderColor: SEColors().lblack,
-                closeButton: AnyButton(
-                  text: 'X',
-                  onTapAction: () {
-                    Navigator.pop(context);
-                  },
-                  height: 50,
-                  width: 50,
-                  textColor: SEColors().dgrey,
-                  buttonColor: SEColors().lblack,
-                  borderColor: SEColors().dgrey2,
-                ),
-              );
+              return const ContinueAlertBox();
             },
           );
         }
       },
-      height: 50,
+      height: MediaQuery.of(context).size.height / 8,
       textColor: SEColors().white,
       buttonColor: SEColors().lred,
       borderColor: SEColors().red,
@@ -242,7 +198,7 @@ class ExitButton extends StatelessWidget {
           },
         );
       },
-      height: 50,
+      height: MediaQuery.of(context).size.height / 8,
       textColor: SEColors().white,
       buttonColor: SEColors().lpurple,
       borderColor: SEColors().purple,
@@ -250,7 +206,63 @@ class ExitButton extends StatelessWidget {
   }
 }
 
-// EXIT MENU
+// MENUES
+class NewGameMenu extends StatelessWidget {
+  const NewGameMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopUpAlertBox(
+      alertTitle: 'ARE YOU SURE?',
+      alertDesc: 'Your previous progress will be deleted.',
+      titleColor: SEColors().lyellow2,
+      textColor: SEColors().white,
+      boxColor: SEColors().black,
+      borderColor: SEColors().lblack,
+      buttons: [
+        AnyButton(
+          text: 'NO',
+          onTapAction: () {
+            Navigator.pop(context);
+          },
+          height: MediaQuery.of(context).size.height / 8,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lblue,
+          borderColor: SEColors().blue,
+        ),
+        AnyButton(
+          text: 'YES',
+          onTapAction: () {
+            Navigator.pushReplacementNamed(context, '/storyscreen');
+            restartTheGame();
+          },
+          height: MediaQuery.of(context).size.height / 8,
+          textColor: SEColors().white,
+          buttonColor: SEColors().lred,
+          borderColor: SEColors().red,
+        ),
+      ],
+    );
+  }
+}
+
+class ContinueAlertBox extends StatelessWidget {
+  const ContinueAlertBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopUpAlertBox(
+      alertTitle: 'NO DATA!',
+      alertDesc: 'There is no progress saved.\nYou should start a new game.',
+      titleColor: SEColors().lyellow2,
+      textColor: SEColors().white,
+      boxColor: SEColors().black,
+      borderColor: SEColors().lblack,
+      closeButton: const AlertCloseButton(),
+    );
+  }
+}
+
 class ExitMenu extends StatelessWidget {
   const ExitMenu({super.key});
 
@@ -268,7 +280,7 @@ class ExitMenu extends StatelessWidget {
           onTapAction: () {
             Navigator.pop(context);
           },
-          height: 50,
+          height: MediaQuery.of(context).size.height / 8,
           textColor: SEColors().white,
           buttonColor: SEColors().lblue,
           borderColor: SEColors().blue,
@@ -278,7 +290,7 @@ class ExitMenu extends StatelessWidget {
           onTapAction: () {
             SystemNavigator.pop();
           },
-          height: 50,
+          height: MediaQuery.of(context).size.height / 8,
           textColor: SEColors().white,
           buttonColor: SEColors().lred,
           borderColor: SEColors().red,
