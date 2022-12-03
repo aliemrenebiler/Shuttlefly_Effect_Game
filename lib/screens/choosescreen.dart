@@ -17,14 +17,13 @@ class ChooseScreen extends StatelessWidget {
       },
       child: Scaffold(
         body: ContainerWithBG(
-          child: Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+          child: Padding(
+            padding: EdgeInsets.all(SESizes().spaceScale * 4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                  padding: EdgeInsets.all(SESizes().spaceScale * 2),
                   child: const ChooseScreenTopBar(),
                 ),
                 Expanded(
@@ -33,8 +32,7 @@ class ChooseScreen extends StatelessWidget {
                       for (int i = 0; i < 3; i++)
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.height / 60),
+                            padding: EdgeInsets.all(SESizes().spaceScale * 2),
                             child: SelectionBox(index: i),
                           ),
                         ),
@@ -71,7 +69,7 @@ class ChooseScreenTopBar extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: SEColors().white,
-              fontSize: MediaQuery.of(context).size.height / 15,
+              fontSize: SESizes().fontSizeLarge,
             ),
           ),
         ),
@@ -126,7 +124,7 @@ class _SelectionBoxState extends State<SelectionBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+      padding: EdgeInsets.all(SESizes().spaceScale * 2),
       decoration: BoxDecoration(
         color: SEColors().black,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -142,7 +140,7 @@ class _SelectionBoxState extends State<SelectionBox> {
             flex: 2,
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+              padding: EdgeInsets.all(SESizes().spaceScale),
               child: RichText(
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.fade,
@@ -152,14 +150,14 @@ class _SelectionBoxState extends State<SelectionBox> {
                     TextSpan(
                       text: "Character ",
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 20,
+                        fontSize: SESizes().fontSizeMedium,
                         color: SEColors().white,
                       ),
                     ),
                     TextSpan(
                       text: "#${widget.index + 1}",
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 20,
+                        fontSize: SESizes().fontSizeMedium,
                         color: SEColors().lyellow2,
                       ),
                     ),
@@ -175,8 +173,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: AnyButton(
                       text: '<',
                       onTapAction: () {
@@ -196,8 +193,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 5,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: FutureBuilder<Character>(
                       future: SQLiteServices().getChar(charCounter.toString()),
                       builder: (context, snapshot) {
@@ -206,11 +202,13 @@ class _SelectionBoxState extends State<SelectionBox> {
                           return CharSelection(
                             index: widget.index,
                             isEmpty: false,
+                            isDraggable: false,
                           );
                         } else {
                           return CharSelection(
                             index: widget.index,
                             isEmpty: true,
+                            isDraggable: false,
                           );
                         }
                       },
@@ -220,8 +218,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: AnyButton(
                       text: '>',
                       onTapAction: () {
@@ -248,8 +245,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: AnyButton(
                       text: '<',
                       onTapAction: () {
@@ -269,8 +265,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 5,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: FutureBuilder<Profession>(
                       future: SQLiteServices().getProf(profCounter.toString()),
                       builder: (context, snapshot) {
@@ -293,8 +288,7 @@ class _SelectionBoxState extends State<SelectionBox> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height / 120),
+                    padding: EdgeInsets.all(SESizes().spaceScale),
                     child: AnyButton(
                       text: '>',
                       onTapAction: () {

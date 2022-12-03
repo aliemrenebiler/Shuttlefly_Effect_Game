@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: SEColors().white,
-                      fontSize: 25,
+                      fontSize: SESizes().fontSizeLarge,
                     ),
                   ),
                 );
@@ -44,31 +44,26 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.height / 30),
-                      width: MediaQuery.of(context).size.width / 2,
+                      padding: EdgeInsets.all(SESizes().spaceScale * 4),
+                      width: queryContext!.size.width / 2,
                       child: const AnimatedLogo(),
                     ),
                     Container(
-                      padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.height / 60),
-                      width: MediaQuery.of(context).size.height / 2,
+                      padding: EdgeInsets.all(SESizes().spaceScale * 2),
+                      width: queryContext!.size.width / 3.5,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.height / 60),
+                            padding: EdgeInsets.all(SESizes().spaceScale * 2),
                             child: const NewGameButton(),
                           ),
                           Container(
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.height / 60),
+                            padding: EdgeInsets.all(SESizes().spaceScale * 2),
                             child: const ContinueButton(),
                           ),
                           Container(
-                            padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.height / 60),
+                            padding: EdgeInsets.all(SESizes().spaceScale * 2),
                             child: const ExitButton(),
                           ),
                         ],
@@ -96,8 +91,8 @@ class AnimatedLogo extends StatelessWidget {
       builder: (context, snapshot) {
         return AnimatedContainer(
           padding: flowAnimationState
-              ? const EdgeInsets.only(bottom: 30)
-              : const EdgeInsets.only(top: 30),
+              ? EdgeInsets.only(bottom: SESizes().spaceScale * 10)
+              : EdgeInsets.only(top: SESizes().spaceScale * 10),
           duration: const Duration(seconds: 1, milliseconds: 500),
           curve: Curves.easeInOut,
           child: Container(
@@ -137,7 +132,7 @@ class NewGameButton extends StatelessWidget {
           restartTheGame();
         }
       },
-      height: MediaQuery.of(context).size.height / 8,
+      height: SESizes().defaultButtonHeight,
       textColor: SEColors().white,
       buttonColor: SEColors().lblue,
       borderColor: SEColors().blue,
@@ -175,7 +170,7 @@ class ContinueButton extends StatelessWidget {
           );
         }
       },
-      height: MediaQuery.of(context).size.height / 8,
+      height: SESizes().defaultButtonHeight,
       textColor: SEColors().white,
       buttonColor: SEColors().lred,
       borderColor: SEColors().red,
@@ -198,7 +193,7 @@ class ExitButton extends StatelessWidget {
           },
         );
       },
-      height: MediaQuery.of(context).size.height / 8,
+      height: SESizes().defaultButtonHeight,
       textColor: SEColors().white,
       buttonColor: SEColors().lpurple,
       borderColor: SEColors().purple,
@@ -225,7 +220,7 @@ class NewGameMenu extends StatelessWidget {
           onTapAction: () {
             Navigator.pop(context);
           },
-          height: MediaQuery.of(context).size.height / 8,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lblue,
           borderColor: SEColors().blue,
@@ -236,7 +231,7 @@ class NewGameMenu extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/storyscreen');
             restartTheGame();
           },
-          height: MediaQuery.of(context).size.height / 8,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lred,
           borderColor: SEColors().red,
@@ -280,7 +275,7 @@ class ExitMenu extends StatelessWidget {
           onTapAction: () {
             Navigator.pop(context);
           },
-          height: MediaQuery.of(context).size.height / 8,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lblue,
           borderColor: SEColors().blue,
@@ -290,7 +285,7 @@ class ExitMenu extends StatelessWidget {
           onTapAction: () {
             SystemNavigator.pop();
           },
-          height: MediaQuery.of(context).size.height / 8,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lred,
           borderColor: SEColors().red,

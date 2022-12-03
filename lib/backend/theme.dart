@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuttlefly_effect/backend/methods.dart';
 
 class SEColors {
   var white = const Color(0xFFFFFFFF);
@@ -35,4 +36,15 @@ class SEColors {
   var dpurple = const Color(0xFF310D47);
 }
 
-var seBorderWidth = 5.0;
+class SESizes {
+  double fontSizeSmall = queryContext!.size.height / 25;
+  double fontSizeMedium = queryContext!.size.height / 20;
+  double fontSizeLarge = queryContext!.size.height / 15;
+
+  double spaceScale = queryContext!.size.height / 180;
+  double sizeScale = queryContext!.size.height / 360;
+
+  double defaultButtonHeight = queryContext!.size.height / 360 * 50;
+}
+
+var seBorderWidth = queryContext!.size.height / 80;

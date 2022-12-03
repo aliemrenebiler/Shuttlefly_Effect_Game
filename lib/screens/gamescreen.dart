@@ -29,13 +29,12 @@ class _GameScreenState extends State<GameScreen> {
       },
       child: Scaffold(
         body: ContainerWithBG(
-          child: Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+          child: Padding(
+            padding: EdgeInsets.all(SESizes().spaceScale * 4),
             child: Column(
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                  padding: EdgeInsets.all(SESizes().spaceScale * 2),
                   // ignore: prefer_const_constructors
                   child: GameScreenTopBar(),
                 ),
@@ -47,17 +46,16 @@ class _GameScreenState extends State<GameScreen> {
                           children: [
                             Center(
                               child: Container(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.height / 60),
-                                height: MediaQuery.of(context).size.height / 3,
+                                padding:
+                                    EdgeInsets.all(SESizes().spaceScale * 2),
+                                height: SESizes().sizeScale * 120,
                                 child: AnimatedShip(
                                   notifyParent: refresh,
                                 ),
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.height / 30),
+                              padding: EdgeInsets.all(SESizes().spaceScale * 4),
                               alignment: Alignment.topLeft,
                               child: Text(
                                 "Galaxy #${currentGalaxy.id}",
@@ -65,8 +63,7 @@ class _GameScreenState extends State<GameScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: SEColors().white,
-                                  fontSize:
-                                      MediaQuery.of(context).size.height / 15,
+                                  fontSize: SESizes().fontSizeLarge,
                                 ),
                               ),
                             ),
@@ -78,8 +75,8 @@ class _GameScreenState extends State<GameScreen> {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.height / 60),
+                                padding:
+                                    EdgeInsets.all(SESizes().spaceScale * 2),
                                 child: EventBox(
                                   title: currentEvent!.title,
                                   desc: currentEvent!.desc,
@@ -97,41 +94,24 @@ class _GameScreenState extends State<GameScreen> {
                                         Expanded(
                                           child: Padding(
                                             padding: EdgeInsets.all(
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height /
-                                                    120),
+                                                SESizes().spaceScale),
                                             child: Column(
                                               children: [
                                                 Container(
                                                   padding: EdgeInsets.all(
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .height /
-                                                          120),
-                                                  child: CharBox(
+                                                      SESizes().spaceScale),
+                                                  child: CharSelection(
                                                     index: i,
-                                                    textColor: SEColors().white,
-                                                    boxColor: SEColors().red,
-                                                    imgBgColor: SEColors().dred,
-                                                    borderColor:
-                                                        SEColors().lred,
-                                                    imgBorderColor:
-                                                        SEColors().dred,
+                                                    isEmpty: false,
+                                                    isDraggable: true,
                                                   ),
                                                 ),
                                                 Container(
                                                   padding: EdgeInsets.all(
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .height /
-                                                          120),
-                                                  child: ProfBox(
+                                                      SESizes().spaceScale),
+                                                  child: ProfSelection(
                                                     index: i,
-                                                    textColor: SEColors().white,
-                                                    boxColor: SEColors().blue,
-                                                    borderColor:
-                                                        SEColors().lblue,
+                                                    isEmpty: false,
                                                   ),
                                                 )
                                               ],
@@ -142,8 +122,7 @@ class _GameScreenState extends State<GameScreen> {
                                   )
                                 : Container(
                                     padding: EdgeInsets.all(
-                                        MediaQuery.of(context).size.height /
-                                            120),
+                                        SESizes().spaceScale * 2),
                                     child: DoneButton(
                                       notifyParent: refresh,
                                     ),
@@ -184,17 +163,16 @@ class GameScreenTopBar extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+            padding: EdgeInsets.all(SESizes().spaceScale),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+                  padding: EdgeInsets.all(SESizes().spaceScale),
                   child: StateValueBox(
                     text: 'Health',
                     value: currentStates.health,
-                    width: MediaQuery.of(context).size.width / 6,
+                    width: queryContext!.size.width / 6,
                     textColor: SEColors().white,
                     boxColor: (currentResult != null &&
                             currentResult!.healthChange != 0)
@@ -211,12 +189,11 @@ class GameScreenTopBar extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+                  padding: EdgeInsets.all(SESizes().spaceScale),
                   child: StateValueBox(
                     text: 'Morale',
                     value: currentStates.morale,
-                    width: MediaQuery.of(context).size.width / 6,
+                    width: queryContext!.size.width / 6,
                     textColor: SEColors().white,
                     boxColor: (currentResult != null &&
                             currentResult!.moraleChange != 0)
@@ -233,12 +210,11 @@ class GameScreenTopBar extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+                  padding: EdgeInsets.all(SESizes().spaceScale),
                   child: StateValueBox(
                     text: 'Oxygen',
                     value: currentStates.oxygen,
-                    width: MediaQuery.of(context).size.width / 6,
+                    width: queryContext!.size.width / 6,
                     textColor: SEColors().white,
                     boxColor: (currentResult != null &&
                             currentResult!.oxygenChange != 0)
@@ -255,12 +231,11 @@ class GameScreenTopBar extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+                  padding: EdgeInsets.all(SESizes().spaceScale),
                   child: StateValueBox(
                     text: 'Source',
                     value: currentStates.source,
-                    width: MediaQuery.of(context).size.width / 6,
+                    width: queryContext!.size.width / 6,
                     textColor: SEColors().white,
                     boxColor: (currentResult != null &&
                             currentResult!.sourceChange != 0)
@@ -342,7 +317,7 @@ class _StateValueBoxState extends State<StateValueBox> {
           ),
           Center(
             child: Container(
-              padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+              padding: EdgeInsets.all(SESizes().spaceScale),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -353,7 +328,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: widget.textColor,
-                        fontSize: MediaQuery.of(context).size.height / 30,
+                        fontSize: SESizes().fontSizeSmall,
                       ),
                     ),
                   ),
@@ -363,7 +338,7 @@ class _StateValueBoxState extends State<StateValueBox> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: widget.textColor,
-                      fontSize: MediaQuery.of(context).size.height / 25,
+                      fontSize: SESizes().fontSizeSmall,
                     ),
                   ),
                 ],
@@ -391,8 +366,8 @@ class AnimatedShip extends StatelessWidget {
       builder: (context, snapshot) {
         return AnimatedContainer(
           padding: flowAnimationState
-              ? const EdgeInsets.only(bottom: 30)
-              : const EdgeInsets.only(top: 30),
+              ? EdgeInsets.only(bottom: SESizes().spaceScale * 10)
+              : EdgeInsets.only(top: SESizes().spaceScale * 10),
           duration: const Duration(seconds: 1, milliseconds: 500),
           curve: Curves.easeInOut,
           child: DragTarget<int>(
@@ -485,7 +460,7 @@ class EventBox extends StatelessWidget {
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
-          margin: EdgeInsets.all(MediaQuery.of(context).size.height / 20),
+          margin: EdgeInsets.all(SESizes().spaceScale * 6),
           child: RichText(
             textAlign: TextAlign.center,
             overflow: TextOverflow.fade,
@@ -497,14 +472,14 @@ class EventBox extends StatelessWidget {
                         text: currentEvent!.title,
                         style: TextStyle(
                           color: titleColor,
-                          fontSize: MediaQuery.of(context).size.height / 20,
+                          fontSize: SESizes().fontSizeMedium,
                         ),
                       ),
                       TextSpan(
                         text: " ${currentEvent!.desc}",
                         style: TextStyle(
                           color: textColor,
-                          fontSize: MediaQuery.of(context).size.height / 20,
+                          fontSize: SESizes().fontSizeMedium,
                         ),
                       ),
                     ]
@@ -513,193 +488,11 @@ class EventBox extends StatelessWidget {
                         text: currentResult!.desc,
                         style: TextStyle(
                           color: textColor,
-                          fontSize: MediaQuery.of(context).size.height / 20,
+                          fontSize: SESizes().fontSizeMedium,
                         ),
                       ),
                     ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CharBox extends StatelessWidget {
-  final int index;
-  final double? height;
-  final double? width;
-  final Color textColor;
-  final Color boxColor;
-  final Color imgBgColor;
-  final Color borderColor;
-  final Color imgBorderColor;
-  const CharBox({
-    super.key,
-    required this.index,
-    this.height,
-    this.width,
-    required this.textColor,
-    required this.boxColor,
-    required this.imgBgColor,
-    required this.borderColor,
-    required this.imgBorderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: (height != null) ? height : null,
-      width: (width != null) ? width : null,
-      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-      decoration: BoxDecoration(
-        color: boxColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(
-          width: seBorderWidth,
-          color: borderColor,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Draggable<int>(
-            data: index,
-            feedback: SizedBox(
-              width: MediaQuery.of(context).size.height / 6,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: SEColors().red,
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: SEColors().dred,
-                    ),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        join("assets", "images", selectedChars[index]!.imgName),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            childWhenDragging: Container(
-              margin: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-              width: MediaQuery.of(context).size.height / 6,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  width: MediaQuery.of(context).size.height / 6,
-                  margin:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: imgBgColor,
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: imgBorderColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            child: Container(
-              margin: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-              width: MediaQuery.of(context).size.height / 6,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: SEColors().red,
-                    border: Border.all(
-                      width: seBorderWidth,
-                      color: SEColors().dred,
-                    ),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        join("assets", "images", selectedChars[index]!.imgName),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-            alignment: Alignment.center,
-            child: Text(
-              selectedChars[index]!.name,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: SEColors().white,
-                fontSize: 15,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProfBox extends StatelessWidget {
-  final int index;
-  final Color textColor;
-  final Color boxColor;
-  final Color borderColor;
-  const ProfBox({
-    super.key,
-    required this.index,
-    required this.textColor,
-    required this.boxColor,
-    required this.borderColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return PopUpAlertBox(
-              alertTitle: selectedProfs[index]!.name,
-              alertDesc: selectedProfs[index]!.desc,
-              titleColor: SEColors().lyellow2,
-              textColor: SEColors().white,
-              boxColor: SEColors().black,
-              borderColor: SEColors().lblack,
-              closeButton: const AlertCloseButton(),
-            );
-          },
-        );
-      },
-      child: Container(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-        decoration: BoxDecoration(
-          color: boxColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            width: seBorderWidth,
-            color: borderColor,
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          selectedProfs[index]!.name,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 15,
           ),
         ),
       ),
@@ -750,7 +543,7 @@ class DoneButton extends StatelessWidget {
                     onTapAction: () {
                       Navigator.pushReplacementNamed(context, '/homescreen');
                     },
-                    height: 50,
+                    height: SESizes().defaultButtonHeight,
                     textColor: SEColors().white,
                     buttonColor: SEColors().lblue,
                     borderColor: SEColors().blue,
@@ -761,7 +554,7 @@ class DoneButton extends StatelessWidget {
           );
         }
       },
-      height: 40,
+      height: SESizes().defaultButtonHeight,
       textColor: SEColors().white,
       buttonColor: SEColors().lred,
       borderColor: SEColors().red,
@@ -788,7 +581,7 @@ class PauseMenu extends StatelessWidget {
           onTapAction: () {
             Navigator.pushReplacementNamed(context, '/homescreen');
           },
-          height: 50,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lblue,
           borderColor: SEColors().blue,
@@ -813,7 +606,7 @@ class PauseMenu extends StatelessWidget {
                       onTapAction: () {
                         Navigator.pop(context);
                       },
-                      height: 50,
+                      height: SESizes().defaultButtonHeight,
                       textColor: SEColors().white,
                       buttonColor: SEColors().lblue,
                       borderColor: SEColors().blue,
@@ -825,7 +618,7 @@ class PauseMenu extends StatelessWidget {
                             context, '/choosescreen');
                         restartTheGame();
                       },
-                      height: 50,
+                      height: SESizes().defaultButtonHeight,
                       textColor: SEColors().white,
                       buttonColor: SEColors().lred,
                       borderColor: SEColors().red,
@@ -835,7 +628,7 @@ class PauseMenu extends StatelessWidget {
               },
             );
           },
-          height: 50,
+          height: SESizes().defaultButtonHeight,
           textColor: SEColors().white,
           buttonColor: SEColors().lred,
           borderColor: SEColors().red,

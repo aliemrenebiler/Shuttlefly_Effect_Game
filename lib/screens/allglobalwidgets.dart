@@ -14,6 +14,7 @@ class ContainerWithBG extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    queryContext = MediaQuery.of(context);
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -41,7 +42,7 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 7,
+      height: SESizes().sizeScale * 50,
       decoration: BoxDecoration(
         color: SEColors().lblue,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -84,15 +85,14 @@ class TopBarButton extends StatelessWidget {
         height: (height != null) ? height : null,
         width: (width != null) ? width : null,
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.height / 20),
+        padding: EdgeInsets.symmetric(horizontal: SESizes().spaceScale * 6),
         child: Text(
           text,
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: SEColors().white,
-            fontSize: MediaQuery.of(context).size.height / 20,
+            fontSize: SESizes().fontSizeMedium,
           ),
         ),
       ),
@@ -130,8 +130,8 @@ class PopUpAlertBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       content: Container(
-        width: MediaQuery.of(context).size.width / 2,
-        padding: EdgeInsets.all(MediaQuery.of(context).size.height / 30),
+        width: queryContext!.size.width / 2,
+        padding: EdgeInsets.all(SESizes().spaceScale * 4),
         decoration: BoxDecoration(
           color: boxColor,
           borderRadius: BorderRadius.circular(10),
@@ -151,8 +151,7 @@ class PopUpAlertBox extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    padding:
-                        EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                    padding: EdgeInsets.all(SESizes().spaceScale * 2),
                     alignment: closeButton != null
                         ? Alignment.bottomLeft
                         : Alignment.bottomCenter,
@@ -164,15 +163,14 @@ class PopUpAlertBox extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: titleColor,
-                        fontSize: MediaQuery.of(context).size.height / 15,
+                        fontSize: SESizes().fontSizeLarge,
                       ),
                     ),
                   ),
                 ),
                 if (closeButton != null)
                   Container(
-                    padding:
-                        EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                    padding: EdgeInsets.all(SESizes().spaceScale * 2),
                     child: closeButton,
                   ),
               ],
@@ -182,8 +180,7 @@ class PopUpAlertBox extends StatelessWidget {
                 alignment: closeButton != null
                     ? Alignment.centerLeft
                     : Alignment.center,
-                padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                padding: EdgeInsets.all(SESizes().spaceScale * 2),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Text(
@@ -193,7 +190,7 @@ class PopUpAlertBox extends StatelessWidget {
                     overflow: TextOverflow.fade,
                     style: TextStyle(
                       color: textColor,
-                      fontSize: MediaQuery.of(context).size.height / 20,
+                      fontSize: SESizes().fontSizeMedium,
                     ),
                   ),
                 ),
@@ -201,8 +198,7 @@ class PopUpAlertBox extends StatelessWidget {
             if (buttons != null)
               for (int i = 0; i < buttons!.length; i++)
                 Container(
-                  padding:
-                      EdgeInsets.all(MediaQuery.of(context).size.height / 60),
+                  padding: EdgeInsets.all(SESizes().spaceScale * 2),
                   child: buttons![i],
                 ),
           ],
@@ -222,8 +218,8 @@ class AlertCloseButton extends StatelessWidget {
       onTapAction: () {
         Navigator.pop(context);
       },
-      height: MediaQuery.of(context).size.height / 8,
-      width: MediaQuery.of(context).size.height / 8,
+      height: SESizes().sizeScale * 45,
+      width: SESizes().sizeScale * 45,
       textColor: SEColors().dgrey,
       buttonColor: SEColors().lblack,
       borderColor: SEColors().dgrey2,
@@ -235,17 +231,24 @@ class AlertCloseButton extends StatelessWidget {
 class CharSelection extends StatelessWidget {
   final int index;
   final bool isEmpty;
-
+  final bool isDraggable;
+  final double? height;
+  final double? width;
   const CharSelection({
     super.key,
     required this.index,
     required this.isEmpty,
+    required this.isDraggable,
+    this.height,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+      height: (height != null) ? height : null,
+      width: (width != null) ? width : null,
+      padding: EdgeInsets.all(SESizes().spaceScale),
       decoration: BoxDecoration(
         color: SEColors().red,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -257,34 +260,108 @@ class CharSelection extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
-            width: MediaQuery.of(context).size.height / 6,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  color: SEColors().red,
-                  border: Border.all(
-                    width: seBorderWidth,
-                    color: SEColors().dred,
-                  ),
-                  image: (isEmpty)
-                      ? null
-                      : DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage(
-                            join("assets", "images",
-                                selectedChars[index]!.imgName),
+          Padding(
+            padding: EdgeInsets.all(SESizes().spaceScale),
+            child: (!isDraggable)
+                ? SizedBox(
+                    height: SESizes().sizeScale * 60,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          color: SEColors().red,
+                          border: Border.all(
+                            width: seBorderWidth,
+                            color: SEColors().dred,
+                          ),
+                          image: (isEmpty)
+                              ? null
+                              : DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    join("assets", "images",
+                                        selectedChars[index]!.imgName),
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Draggable<int>(
+                    data: index,
+                    feedback: SizedBox(
+                      height: SESizes().sizeScale * 60,
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: SEColors().dred,
+                            border: Border.all(
+                              width: seBorderWidth,
+                              color: SEColors().dred,
+                            ),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                join("assets", "images",
+                                    selectedChars[index]!.imgName),
+                              ),
+                            ),
                           ),
                         ),
-                ),
-              ),
-            ),
+                      ),
+                    ),
+                    childWhenDragging: SizedBox(
+                      height: SESizes().sizeScale * 60,
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: SEColors().dred,
+                            border: Border.all(
+                              width: seBorderWidth,
+                              color: SEColors().dred,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: SizedBox(
+                      height: SESizes().sizeScale * 60,
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: SEColors().red,
+                            border: Border.all(
+                              width: seBorderWidth,
+                              color: SEColors().dred,
+                            ),
+                            image: (isEmpty)
+                                ? null
+                                : DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                      join("assets", "images",
+                                          selectedChars[index]!.imgName),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
           ),
           Container(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+            padding: EdgeInsets.all(SESizes().spaceScale),
             alignment: Alignment.center,
             child: Text(
               (isEmpty) ? "..." : selectedChars[index]!.name,
@@ -292,7 +369,7 @@ class CharSelection extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: SEColors().white,
-                fontSize: MediaQuery.of(context).size.height / 25,
+                fontSize: SESizes().fontSizeSmall,
               ),
             ),
           ),
@@ -333,7 +410,7 @@ class ProfSelection extends StatelessWidget {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.height / 120),
+        padding: EdgeInsets.all(SESizes().spaceScale),
         decoration: BoxDecoration(
           color: SEColors().blue,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -349,7 +426,7 @@ class ProfSelection extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: SEColors().white,
-            fontSize: MediaQuery.of(context).size.height / 25,
+            fontSize: SESizes().fontSizeSmall,
           ),
         ),
       ),
@@ -399,7 +476,7 @@ class AnyButton extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: textColor,
-            fontSize: MediaQuery.of(context).size.height / 20,
+            fontSize: SESizes().fontSizeMedium,
           ),
         ),
       ),
