@@ -533,7 +533,7 @@ class DoneButton extends StatelessWidget {
               return PopUpAlertBox(
                 alertTitle: 'THE END',
                 alertDesc: message,
-                titleColor: SEColors().lyellow2,
+                titleColor: SEColors().grey,
                 textColor: SEColors().white,
                 boxColor: SEColors().black,
                 borderColor: SEColors().lblack,
@@ -570,8 +570,8 @@ class PauseMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopUpAlertBox(
       alertTitle: 'PAUSED',
-      titleColor: SEColors().lyellow2,
-      textColor: SEColors().white,
+      titleColor: SEColors().white,
+      textColor: SEColors().grey,
       boxColor: SEColors().black,
       borderColor: SEColors().lblack,
       closeButton: const AlertCloseButton(),
@@ -596,8 +596,8 @@ class PauseMenu extends StatelessWidget {
                 return PopUpAlertBox(
                   alertTitle: 'ARE YOU SURE?',
                   alertDesc: 'Your previous progress will be deleted.',
-                  titleColor: SEColors().lyellow2,
-                  textColor: SEColors().white,
+                  titleColor: SEColors().white,
+                  textColor: SEColors().grey,
                   boxColor: SEColors().black,
                   borderColor: SEColors().lblack,
                   buttons: [

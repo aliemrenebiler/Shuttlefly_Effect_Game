@@ -210,8 +210,8 @@ class NewGameMenu extends StatelessWidget {
     return PopUpAlertBox(
       alertTitle: 'ARE YOU SURE?',
       alertDesc: 'Your previous progress will be deleted.',
-      titleColor: SEColors().lyellow2,
-      textColor: SEColors().white,
+      titleColor: SEColors().white,
+      textColor: SEColors().grey,
       boxColor: SEColors().black,
       borderColor: SEColors().lblack,
       buttons: [
@@ -265,8 +265,8 @@ class ExitMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopUpAlertBox(
       alertTitle: 'LEAVING?',
-      titleColor: SEColors().lyellow2,
-      textColor: SEColors().white,
+      titleColor: SEColors().white,
+      textColor: SEColors().grey,
       boxColor: SEColors().black,
       borderColor: SEColors().lblack,
       buttons: [
