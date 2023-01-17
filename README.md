@@ -2,7 +2,7 @@
 
 The project was started as Yildiz Technical University Computer Engineering Midterm Project. The basic idea was to create a game that the player can create its own story.
 
-Started the first version with the collaboration of Kübra Tunç (https://github.com/kubratunc). Right now, first version is terminated and second version is a under-development hobby game.
+Started the first version with the collaboration of [Kübra Tunç](https://github.com/kubratunc). Right now, first version is terminated and second version is a under-development hobby game.
 
 ## About The Game
 
