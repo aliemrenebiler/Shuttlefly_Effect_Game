@@ -31,9 +31,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 **/build/
-
-# Web related
-lib/generated_plugin_registrant.dart
+**/android/
+**/ios/
+**/macos/
+**/web/
 
 # Symbolication related
 app.*.symbols
