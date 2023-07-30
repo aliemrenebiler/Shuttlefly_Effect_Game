@@ -21,4 +21,5 @@ Mostly inspired from Reigns (a mobile decision game).
 | ![SE Character Selection Screen V1](images/v1/AEN-se-v1-3.png) | ![SE Character Selection Screen V2](images/v2/AEN-se-v2-3.png) |
 | ![SE Game Event Screen V1](images/v1/AEN-se-v1-4.png) | ![SE Game Event Screen V2](images/v2/AEN-se-v2-4.png) |
 | ![SE Game Event Result Screen V1](images/v1/AEN-se-v1-5.png) | ![SE Game Event Result Screen V2](images/v2/AEN-se-v2-5.png) |
-| ![SE Game End Screen V1](images/v1/AEN-se-v1-6.png) | ![SE Game End Screen V2](images/v2/AEN-se-v2-6.png) |
+| Not Available | ![SE Game Event Result Screen V2](images/v2/AEN-se-v2-6.png) |
+| ![SE Game End Screen V1](images/v1/AEN-se-v1-6.png) | ![SE Game End Screen V2](images/v2/AEN-se-v2-7.png) |
