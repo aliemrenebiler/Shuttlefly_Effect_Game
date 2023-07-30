@@ -16,6 +16,6 @@ Mostly inspired from Reigns (a mobile decision game).
 
 ### V1
 
-![SE Home Screen V1](.images/v1/AEN-se-v1-1.png)
+![SE Home Screen V1](images/v1/AEN-se-v1-1.png)
 
 ### V2
